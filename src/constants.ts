@@ -2,6 +2,7 @@ import type { Props } from "astro";
 import IconMail from "@/assets/icons/IconMail.svg";
 import IconGitHub from "@/assets/icons/IconGitHub.svg";
 import IconBrandX from "@/assets/icons/IconBrandX.svg";
+import IconBluesky from "@/assets/icons/IconBluesky.svg";
 import IconLinkedin from "@/assets/icons/IconLinkedin.svg";
 import IconWhatsapp from "@/assets/icons/IconWhatsapp.svg";
 import IconFacebook from "@/assets/icons/IconFacebook.svg";
@@ -30,10 +31,10 @@ export const SOCIALS: Social[] = [
     icon: IconLinkedin,
   },
   {
-    name: "X",
-    href: "https://x.com/hossain_dev/",
-    linkTitle: `${SITE.title} on X`,
-    icon: IconBrandX,
+    name: "Bluesky",
+    href: "https://bsky.app/profile/hossain.dev",
+    linkTitle: `${SITE.title} on Bluesky`,
+    icon: IconBluesky,
   },
   {
     name: "Mail",
