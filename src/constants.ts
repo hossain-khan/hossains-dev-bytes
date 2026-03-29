@@ -19,26 +19,26 @@ interface Social {
 export const SOCIALS: Social[] = [
   {
     name: "GitHub",
-    href: "https://github.com/0xdres/",
-    linkTitle: `${SITE.title} en GitHub`,
+    href: "https://github.com/hossain-khan/",
+    linkTitle: `${SITE.title} on GitHub`,
     icon: IconGitHub,
   },
   {
-    name: "X",
-    href: "https://x.com/avdyen",
-    linkTitle: `${SITE.title} en X`,
-    icon: IconBrandX,
-  },
-  {
     name: "LinkedIn",
-    href: "https://www.linkedin.com/in/avdyan/",
-    linkTitle: `${SITE.title} en LinkedIn`,
+    href: "https://linkedin.com/in/hossain/",
+    linkTitle: `${SITE.title} on LinkedIn`,
     icon: IconLinkedin,
   },
   {
+    name: "X",
+    href: "https://x.com/hossain_dev/",
+    linkTitle: `${SITE.title} on X`,
+    icon: IconBrandX,
+  },
+  {
     name: "Mail",
-    href: "mailto:andres04u@gmail.com",
-    linkTitle: `Envia un correo a ${SITE.title}`,
+    href: "mailto:amardeshbd@gmail.com",
+    linkTitle: `Email ${SITE.title}`,
     icon: IconMail,
   },
 ] as const;
@@ -47,37 +47,37 @@ export const SHARE_LINKS: Social[] = [
   {
     name: "WhatsApp",
     href: "https://wa.me/?text=",
-    linkTitle: `Envia este post por WhatsApp`,
+    linkTitle: `Share this post on WhatsApp`,
     icon: IconWhatsapp,
   },
   {
     name: "Facebook",
     href: "https://www.facebook.com/sharer.php?u=",
-    linkTitle: `Comparte este post en Facebook`,
+    linkTitle: `Share this post on Facebook`,
     icon: IconFacebook,
   },
   {
     name: "X",
     href: "https://x.com/intent/post?url=",
-    linkTitle: `Comparte este post en X`,
+    linkTitle: `Share this post on X`,
     icon: IconBrandX,
   },
   {
     name: "Telegram",
     href: "https://t.me/share/url?url=",
-    linkTitle: `Comparte este post por Telegram`,
+    linkTitle: `Share this post on Telegram`,
     icon: IconTelegram,
   },
   {
     name: "Pinterest",
     href: "https://pinterest.com/pin/create/button/?url=",
-    linkTitle: `Comparte este post en Pinterest`,
+    linkTitle: `Share this post on Pinterest`,
     icon: IconPinterest,
   },
   {
     name: "Mail",
     href: "mailto:?subject=See%20this%20post&body=",
-    linkTitle: `Envia este post por correo`,
+    linkTitle: `Share this post via email`,
     icon: IconMail,
   },
 ] as const;

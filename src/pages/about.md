@@ -3,28 +3,39 @@ layout: ../layouts/AboutLayout.astro
 title: "About"
 ---
 
-Bienvenido a mi rincón digital. Soy un **desarrollador** y **estudiante** apasionado por la tecnología, los videojuegos y construir cosas que vivan en internet.
+# About Me
 
-## ¿Quién soy?
+I'm **Hossain Khan**, a Senior Software Engineer based in Toronto, Ontario, Canada with 15+ years of experience in Android development, mobile technologies, and AI-assisted coding.
 
-Me llamo Andrés, y desde que recuerdo siempre tuve curiosidad por entender cómo funcionan las cosas — desde desarmar juguetes de niño hasta desarmar código ajeno a las 2 AM. Actualmente estudio ingeniería mientras desarrollo proyectos que me retan a aprender algo nuevo cada día.
+Currently, I'm working at **Slack** on platform improvements including BlockKit, Workflows, and Slack Apps.
 
-Cuando no estoy programando, probablemente estoy en algún mundo virtual explorando mapas, completando misiones o compitiendo online. Los videojuegos no solo son mi hobby, también me enseñaron a resolver problemas, trabajar en equipo y, sobre todo, a no rendirme después del intento #847.
+## What I Do
 
-## Lo que hago
+My expertise spans:
 
-- **Desarrollo web** — Me encanta construir experiencias web modernas con tecnologías como Astro, React, TypeScript y todo lo que el ecosistema JavaScript tiene para ofrecer.
-- **Open Source** — Creo en el poder del código abierto. Puedes encontrar mis proyectos en [GitHub](https://github.com/0xdres/).
-- **Aprendizaje continuo** — Siempre estoy explorando nuevas herramientas, frameworks y conceptos. La tecnología evoluciona rápido y me gusta ir al ritmo.
+- **Android Development**: Deep experience with Kotlin, Jetpack, and modern Android architecture patterns
+- **Mobile Technologies**: Cross-platform solutions, performance optimization, and app distribution
+- **AI-Assisted Coding**: Leveraging AI tools for productivity and code quality
+- **Open Source**: Contributing to and maintaining various projects in the Android and Kotlin ecosystems
+- **Full-Stack Development**: From mobile frontends to backend services and APIs
 
-## Gaming
+## Key Interests
 
-Los videojuegos son parte de mi ADN. Desde RPGs épicos hasta shooters competitivos, disfruto prácticamente cualquier género. Es ese espacio donde la creatividad se encuentra con la estrategia y la diversión pura.
+- Building robust, scalable Android applications
+- Exploring AI applications in software development
+- Contributing to open-source communities
+- Writing about technology and sharing knowledge
+- Mentoring and collaborating with other engineers
 
-## Este blog
+## Projects & Contributions
 
-**Devosfera** nació como un espacio para documentar mi viaje como desarrollador, compartir lo que aprendo y conectar con personas que comparten las mismas pasiones. Aquí encontrarás posts sobre desarrollo, tecnología, y alguna que otra reflexión random de madrugada.
+I've built and contributed to numerous projects including Android apps, Kotlin libraries, and tools for developers. You can explore my work on [GitHub](https://github.com/hossain-khan) or check out my [portfolio](https://hossainkhan.com).
 
-Si quieres conectar, no dudes en encontrarme en [GitHub](https://github.com/0xdres/), [X](https://x.com/avdyen) o [LinkedIn](https://www.linkedin.com/in/avdyan/). Siempre es bueno conocer gente cool de la comunidad.
+## Let's Connect
 
-> _"El código es poesía, pero con más puntos y comas."_ — Yo, probablemente
+Feel free to reach out through any of my social profiles or [drop me an email](mailto:amardeshbd@gmail.com). I'm always interested in discussing technology, open-source projects, or potential collaborations.
+
+---
+
+> 15+ years of crafting code, one feature at a time.
+
