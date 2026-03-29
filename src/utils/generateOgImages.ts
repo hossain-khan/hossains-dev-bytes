@@ -1,9 +1,26 @@
-import { Resvg } from "@resvg/resvg-js";
+import { Resvg, initWasm } from "@resvg/resvg-wasm";
 import { type CollectionEntry } from "astro:content";
 import postOgImage from "./og-templates/post";
 import siteOgImage from "./og-templates/site";
+import fs from "node:fs";
+import path from "node:path";
 
-function svgBufferToPngBuffer(svg: string) {
+let wasmInitialized = false;
+
+async function ensureWasmInitialized() {
+  if (!wasmInitialized) {
+    const wasmPath = path.join(
+      process.cwd(),
+      "node_modules/@resvg/resvg-wasm/index_bg.wasm"
+    );
+    const wasmBuffer = await fs.promises.readFile(wasmPath);
+    await initWasm(wasmBuffer);
+    wasmInitialized = true;
+  }
+}
+
+async function svgBufferToPngBuffer(svg: string) {
+  await ensureWasmInitialized();
   const resvg = new Resvg(svg);
   const pngData = resvg.render();
   return pngData.asPng();

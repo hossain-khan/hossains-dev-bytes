@@ -46,7 +46,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     optimizeDeps: {
-      exclude: ["@resvg/resvg-js"],
+      exclude: ["@resvg/resvg-wasm"],
     },
     ssr: {
       external: ["tty"],
@@ -123,5 +123,7 @@ export default defineConfig({
     },
   ],
 
-  adapter: cloudflare(),
+  adapter: cloudflare({
+    prerenderEnvironment: "node",
+  }),
 });
