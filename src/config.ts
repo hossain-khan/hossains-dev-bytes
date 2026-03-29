@@ -1,5 +1,5 @@
 export const SITE = {
-  website: "https://devosfera.vercel.app/",
+  website: "https://hossains-dev-bytes.hk-c91.workers.dev",
   author: "Andrés Ujpán",
   profile: "https://github.com/0xdres",
   desc: "Un blog para compartir mis pensamientos y proyectos mientras aprendo cosas nuevas.",
