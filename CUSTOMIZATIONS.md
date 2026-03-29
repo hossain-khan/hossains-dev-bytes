@@ -104,7 +104,7 @@ h3 {
 **File:** `src/styles/global.css` & `src/styles/typography.css`
 - **Aurora Effect:** Added CSS classes and animations for the background "Aurora" orbs seen in the Search Modal.
 - **Cursor Glow:** Implemented CSS/JS for cursor-following glow effects on cards and modals.
-- **Assets:** Added `devosfera.svg` logo and optimized font assets.
+- **Assets:** Added `hkdevbytes.svg` logo and optimized font assets.
 
 
 **File:** `src/styles/global.css`
@@ -464,10 +464,10 @@ Split the desktop search functionality into two distinct elements:
 ## 25. Logo SVG Redesign with Cascadia Code Font & Hover Effects
 
 **Files:**
-- `src/assets/logo/devosfera.svg`
+- `src/assets/logo/hkdevbytes.svg`
 - `src/components/Header.astro`
 
-### SVG (`devosfera.svg`)
+### SVG (`hkdevbytes.svg`)
 
 Replaced the previous path-based SVG logo with a text-based SVG using `<text>` elements:
 
