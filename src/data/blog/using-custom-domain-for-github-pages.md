@@ -2,7 +2,7 @@
 title: Using custom domain for GitHub pages
 description: Recently I decided to host my personal portfolio site using GitHub pages. Even though they have very detailed instruction on how to setup a…
 pubDatetime: 2018-01-19T03:02:23.969Z
-tags: []
+tags: ["github", "github-pages", "web"]
 featured: false
 draft: false
 ---

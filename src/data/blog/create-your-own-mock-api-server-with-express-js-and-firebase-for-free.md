@@ -2,7 +2,7 @@
 title: Create your own mock API server with Express.js and Firebase for free!
 description: Recently I had to prepare a complete mocked server for an app I worked in the past. The reason mocking was required so that app’s…
 pubDatetime: 2019-03-13T03:30:08.677Z
-tags: []
+tags: ["node.js", "express", "firebase", "api"]
 featured: false
 draft: false
 ---

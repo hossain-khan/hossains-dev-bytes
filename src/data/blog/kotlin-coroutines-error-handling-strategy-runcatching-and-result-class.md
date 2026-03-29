@@ -2,7 +2,7 @@
 title: Kotlin coroutines error handling strategy — `runCatching` and `Result` class
 description: Use Kotlin’s standard function `runCatching` API to handle errors from standard or coroutines functions.
 pubDatetime: 2021-05-02T20:45:33.105Z
-tags: []
+tags: ["kotlin", "coroutines", "error-handling"]
 featured: false
 draft: false
 ---

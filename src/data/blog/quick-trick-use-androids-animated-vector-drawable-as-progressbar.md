@@ -2,7 +2,7 @@
 title: Quick Trick — Use Android’s Animated Vector Drawable as ProgressBar
 description: Trick on how to create Android custom indeterminate progress bar behaviour using ImageView and Animated Vector Drawable
 pubDatetime: 2020-08-06T04:33:08.758Z
-tags: []
+tags: ["android", "ui", "animation"]
 featured: false
 draft: false
 ---

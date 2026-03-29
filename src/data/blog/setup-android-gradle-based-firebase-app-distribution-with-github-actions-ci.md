@@ -2,7 +2,7 @@
 title: Setup Android Gradle based Firebase App Distribution with GitHub Actions CI
 description: A quick guide on how to set up Github Actions CI workflow to automatically post APK to Firebase App Distribution from your Android project.
 pubDatetime: 2020-06-16T12:50:37.864Z
-tags: []
+tags: ["android", "gradle", "firebase", "ci"]
 featured: false
 draft: false
 ---

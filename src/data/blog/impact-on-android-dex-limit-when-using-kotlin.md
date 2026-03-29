@@ -2,7 +2,7 @@
 title: Impact on Android dex limit when using Kotlin
 description: I’ve been following Kotlin for a while, and after Google I/O 17 announcement it became the officially supported language for Android.
 pubDatetime: 2017-07-18T20:11:31.489Z
-tags: []
+tags: ["android", "kotlin", "performance"]
 featured: false
 draft: false
 ---

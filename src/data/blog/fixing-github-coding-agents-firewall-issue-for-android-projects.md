@@ -2,7 +2,7 @@
 title: Fixing GitHub Coding Agent’s Firewall Issue for Android Projects
 description: If GitHub coding agent is having issue downloading artifacts from different URL, consider adding them to allow list to fix those issues.
 pubDatetime: 2025-08-03T04:19:23.335Z
-tags: []
+tags: ["android", "github", "ai"]
 featured: false
 draft: false
 ---

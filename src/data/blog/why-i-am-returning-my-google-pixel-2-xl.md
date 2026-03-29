@@ -2,7 +2,7 @@
 title: Why I am returning my Google Pixel 2 XL
 description: "Disclaimer: This is my personal experience with the device. The opinions expressed in this article are mine only. I am not affiliated with…"
 pubDatetime: 2017-11-21T03:57:17.965Z
-tags: []
+tags: ["personal", "android"]
 featured: false
 draft: false
 ---

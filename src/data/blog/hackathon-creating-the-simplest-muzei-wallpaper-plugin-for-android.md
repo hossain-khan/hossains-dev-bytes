@@ -2,7 +2,7 @@
 title: "Hackathon: Creating the simplest Muzei Wallpaper plugin for Android"
 description: A short article showcasing how to build Muzei Live Wallpaper plugin for Android using two simple steps.
 pubDatetime: 2020-05-24T06:33:28.566Z
-tags: []
+tags: ["android", "hackathon", "wallpaper"]
 featured: false
 draft: false
 ---

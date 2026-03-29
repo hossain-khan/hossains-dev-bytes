@@ -2,7 +2,7 @@
 title: Using AI to build modern Android apps — are we there yet?
 description: Assisted coding is very promising and fun! Fully autonomus app building might not be too far away! 🤓
 pubDatetime: 2025-02-18T13:55:04.780Z
-tags: []
+tags: ["android", "ai", "machine-learning"]
 featured: false
 draft: false
 ---

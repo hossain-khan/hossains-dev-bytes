@@ -2,7 +2,7 @@
 title: Source code syntax highlighting on Android — Taking full control
 description: Tips on how to take full control and create your own custom-view to add syntax highlighting support in your Android app.
 pubDatetime: 2020-07-18T22:13:00.452Z
-tags: []
+tags: ["android", "ui", "syntax"]
 featured: false
 draft: false
 ---

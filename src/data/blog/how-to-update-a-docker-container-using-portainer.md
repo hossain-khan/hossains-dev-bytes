@@ -2,7 +2,7 @@
 title: How to update a Docker Container using Portainer
 description: ℹ️ This is part of the self-learning log as I explore Docker and Portainer.
 pubDatetime: 2024-08-10T20:30:52.689Z
-tags: []
+tags: ["docker", "devops", "container"]
 featured: false
 draft: false
 ---

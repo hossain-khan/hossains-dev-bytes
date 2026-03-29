@@ -2,7 +2,7 @@
 title: How to take your beginner Android skills to the next level by studying open-source Android Apps
 description: Article contains list of Android Open-Source apps that are fully featured and ideal for learning different techniques.
 pubDatetime: 2020-04-02T03:06:58.182Z
-tags: []
+tags: ["android", "open-source", "learning"]
 featured: false
 draft: false
 ---

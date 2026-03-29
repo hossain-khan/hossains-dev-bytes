@@ -2,7 +2,7 @@
 title: The most expensive LIE!
 description: What is the most expensive lie that you are aware of?
 pubDatetime: 2017-07-18T21:02:50.912Z
-tags: []
+tags: ["personal", "opinion"]
 featured: false
 draft: false
 ---

@@ -2,7 +2,7 @@
 title: Using SQLDelight 2.0 with PostgreSQL for JVM
 description: How to create data source to connect to PostgreSQL database and work with SQLDelight 2.0
 pubDatetime: 2023-09-06T23:06:26.548Z
-tags: []
+tags: ["kotlin", "postgresql", "database"]
 featured: false
 draft: false
 ---

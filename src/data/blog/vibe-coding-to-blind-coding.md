@@ -2,7 +2,7 @@
 title: ‘Vibe Coding’ to ‘Blind Coding’ 😎
 description: "Exploring the limits of AI-assisted development through a bold experiment: build a JSON5 lib in Kotlin by blindly trusting AI-generated…"
 pubDatetime: 2025-06-11T04:37:07.368Z
-tags: []
+tags: ["coding", "accessibility"]
 featured: false
 draft: false
 ---

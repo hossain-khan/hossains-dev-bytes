@@ -2,7 +2,7 @@
 title: Travis CI script for your Swagger/OpenAPI Specification
 description: Recently I have been working with swagger in a project. Swagger 2.0 has become open standard and now referred as OpenAPI Specification…
 pubDatetime: 2016-08-21T14:39:59.214Z
-tags: []
+tags: ["ci", "swagger", "openapi"]
 featured: false
 draft: false
 ---

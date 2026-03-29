@@ -2,7 +2,7 @@
 title: Android remote logging to Airtable using Timber
 description: Have you ever needed to save your Android Logcat logs for later analysis? You can achieve this using Timber and service that has REST API
 pubDatetime: 2024-09-10T04:03:01.367Z
-tags: []
+tags: ["android", "kotlin", "logging"]
 featured: false
 draft: false
 ---

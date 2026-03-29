@@ -2,7 +2,7 @@
 title: Use node.js tools on GitHub actions CI workflow
 description: On April 14th, 2020 GitHub announced a major change in their plans to allow free private repositories. It’s a good time to make use of…
 pubDatetime: 2020-05-23T13:21:51.565Z
-tags: []
+tags: ["node.js", "github-actions", "ci"]
 featured: false
 draft: false
 ---

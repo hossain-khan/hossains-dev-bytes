@@ -2,7 +2,7 @@
 title: Clickable link text for Android TextView — Kotlin Extension
 description: Recently I have had to create UI that required user tappable/clickable text in the same text view. I know this is kind of unusual as the…
 pubDatetime: 2020-01-02T00:53:57.928Z
-tags: []
+tags: ["android", "kotlin", "ui"]
 featured: false
 draft: false
 ---

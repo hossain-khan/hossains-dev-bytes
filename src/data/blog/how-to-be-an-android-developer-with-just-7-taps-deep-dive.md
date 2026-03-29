@@ -2,7 +2,7 @@
 title: How to be an Android Developer with just 7 taps. Deep Dive 🔎
 description: In the past few years, the Android ecosystem has exploded with lots of tools, libraries, and architecture guidelines. Recently, with I/O…
 pubDatetime: 2019-05-21T00:24:42.228Z
-tags: []
+tags: ["android", "developer", "tutorial"]
 featured: false
 draft: false
 ---
