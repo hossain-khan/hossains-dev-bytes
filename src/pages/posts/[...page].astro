@@ -149,7 +149,7 @@ const totalPosts = page.total;
       if (import.meta.env.DEV) {
         container.innerHTML = `
           <div class="bg-muted/75 rounded p-4 text-sm mb-4 border border-border">
-            <p><strong>Dev Mode:</strong> La búsqueda intentará usar el índice construido más reciente. Si no ves resultados, ejecuta <code>pnpm run build</code> primero.</p>
+            <p><strong>Dev Mode:</strong> The search will attempt to use the most recently built index. If you don't see results, run <code>pnpm run build</code> first.</p>
           </div>
         `;
         // Removed the early return to allow pagefind to attempt loading the local index
