@@ -1,0 +1,89 @@
+---
+title: ‘Vibe Coding’ to ‘Blind Coding’ 😎
+description: "Exploring the limits of AI-assisted development through a bold experiment: build a JSON5 lib in Kotlin by blindly trusting AI-generated…"
+pubDatetime: 2025-06-11T04:37:07.368Z
+tags: []
+featured: false
+draft: false
+---
+
+
+> **TL;DR:** I let AI write a JSON5 parser for me using just test cases and vibes. No deep knowledge, just TDD and Agentic AIs. Shockingly, it worked!
+
+---
+
+![](https://cdn-images-1.medium.com/max/1200/1*b91kf4Kz9qzDZIiZtp3A_A.jpeg)
+
+---
+
+> Can you be irresponsibly responsible? ^\_^
+
+That was the experiment I wanted to do with a plethora of Agentic AI available for code assist.
+
+I am sure I don’t need to define [Vibe Coding](https://en.wikipedia.org/wiki/Vibe_coding) to you — but, what is “Blind Coding” you ask!? I think you have guessed it by now — It’s about almost blindly accepting AI-generated code.
+
+Sounds very irresponsible, right? But there is a twist and that is part of my experiment 🧪
+
+-   I wanted to explore if I could do TDD (*Test Driven Development*) with AI on a topic with ***minimal understanding*** of what the suggested code does.
+-   However, I would have a very good understanding of expected ***input & output*** such that I can have well-defined test cases that I can feed AI Agents to work with.
+
+#### Test Subject — Build a JSON5 Parser
+
+For this experiment I chose [JSON5](https://json5.org/) that I recently came across. This is an extension of JSON with the option to add comment and more, making it suitable for configuration definitions (like YAML).
+
+Since `**JSON5**` has a well-defined grammar and specification, it would be easy for me to point to those and **build a library** that parses JSON5 files using Kotlin language.
+
+#### Results First 📊
+
+Before I dive deep into the ‘Blind Coding’ strategy, let me reveal what was achieved first using LLM based Agentic AI 🤖
+
+-   Fully functional `JSON5` de/serializer of Kotlin Data classes using `kotlinx.serialization`
+-   Fully functional `JSON5` parser that complies with specification and provides parsed data
+
+Here is [benchmark](https://github.com/hossain-khan/json5-kotlin/tree/main/benchmark) of generated library vs two relevant contender 💪
+
+1.  JSON5-AI — AI generated library built with ‘Blind Coding’
+2.  [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization) — JetBrains library used *only* for JSON serialization and deserialization. Which has less complexity compared to JSON5.
+3.  Syntaxerror’s [JSON5 Java Library](https://github.com/Synt4xErr0r4/json5) — an actively maintained implementation of JSON5. Marked as ‘3P-External-JSON5’ in the chart below.
+
+![](https://cdn-images-1.medium.com/max/800/1*3DFCs96ytG72wUIdVxpyMw.png)
+
+Total processing time by library
+
+![](https://cdn-images-1.medium.com/max/800/1*IOj7mzeogLwokba01R2IlA.png)
+
+Total time spent for each test category
+
+Regardless of the generated library being ~4x and ~1.5x less performant compared to kotlinx.serialization and Syntaxerror’s Java library respectively, the experiment is a ✅ success in my book! Because it’s functional and has very acceptable performance for initial phase.
+
+If you are interested to look under the hood, take a look into `**lib**` module in this GitHub project.
+
+![](https://cdn-images-1.medium.com/max/800/1*lYdRctfsDRysPfYYO2pzcw.png)
+
+[**GitHub - hossain-khan/json5-kotlin: JSON5 implementation for Kotlin/JVM** — *JSON5 implementation for Kotlin/JVM. Built by Coding AI Agents.*](https://github.com/hossain-khan/json5-kotlin)
+
+---
+
+#### Behind the Scenes
+
+Believe it or not, JSON5 has been around since 2012 and has all the implementation details and specification on their GitHub repos ([https://github.com/json5](https://github.com/json5)).
+
+All I had to do was import their JavaScript based implementation and specification and ***iteratively*** ask agents to build functionalities.
+
+⏳ **How long did it take to build the JSON5 library?**  
+About 4 days of weekend and after work sessions (roughly 10–12 hours)
+
+😅 **Was there challenges along the way?**  
+Yes, some of the parsing tests were failing and agent was repeatedly failing to fix it. I almost lost hope. Then GitHub Copilot Agent rescued me.
+
+🤖 **What are the Agents that were used to achieve this?**  
+\- Claude Sonnet 3.7 (Agent Mode — IDE integration)  
+\- GPT 4.1 (Agent Mode — IDE integration)  
+\- Google Jules (async agent)  
+\- GitHub Copilot Agent (async agent — used for majority of the project)
+
+🎉 **So, what’s the verdict?**  
+I had absolute blast just watching agents do magical stuff that I couldn’t have done by myself. Even the benchmarking solution was build by Agent.   
+Seeing the benchmark result also gave me hope and sense of accomplishment. Sure, I might not be able to build the next Dagger, or OkHttp or anything of that sort, however anything simple should clearly be within reach with the limited time we have in our lives. That is a huge win for me! 🏆
+
+Now, on to something more useful! 🤓 Feel free to reach out or ask question. Cheers! ✌🏽

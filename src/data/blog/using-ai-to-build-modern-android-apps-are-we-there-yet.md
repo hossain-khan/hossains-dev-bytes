@@ -1,0 +1,68 @@
+---
+title: Using AI to build modern Android apps — are we there yet?
+description: Assisted coding is very promising and fun! Fully autonomus app building might not be too far away! 🤓
+pubDatetime: 2025-02-18T13:55:04.780Z
+tags: []
+featured: false
+draft: false
+---
+
+
+![](https://cdn-images-1.medium.com/max/1200/1*cq6Pf1hoCaGQ7KRD6nc_QA.jpeg)
+
+Building is more fun with AI 🤖
+
+---
+
+I’ve had my GitHub Copilot subscription for over a year now, but I haven’t leveraged the service until very recently I decided to build some tools and Android apps using it.
+
+I have extensively used ChatGPT 4o & o1, Google Gemini, and Claude Sonnet to build an app related to weather even though I am very aware of the following phrase:
+
+> “If all you have is a hammer, everything looks like a nail.”
+
+#### The Rationale Behind the App
+
+You get many amazing things living in Canada, one of them is snow in winter. After moving to a home, I needed a way for me to be better prepared for snow days where I have to clean my driveway and potentially neighbour’s if the snowblower has enough charge.
+
+So, I saw a “nail” that I can hammer, I built a single purpose Android app that notifies me if there will be enough snow, a threshold set by me. This allows me to make sure I charge the snowblower batteries and park the cars inside the garage. Profit!
+
+Sure, there are some outstanding weather apps including Google’s own that can provide similar info, however the tinkering engineer wants to use the hammer! 😂
+
+#### The AI Code Assist Experience
+
+It’s been absolutely fun working with AI to come up with solutions, in this case the Compose UI Screens, Presenters, and unit tests for them. From my experience, the LLM provided solution are **80–98% correct** and can just be copy pasted with some imports to fix. Sometimes I do have to refactor or move things around, but it gets me 80% there and I just finish the last 20% to make a finished app screen.
+
+I feel like, this will be an essential tool for all kinds of engineers to reduce the cognitive load and iterate on the products they want to build.
+
+#### Is the AI/LLM Ready to Print Out Full App?
+
+Short answer, NO *(based on my experience)*.
+
+I have encountered some YouTube videos where they showcase building beautiful iOS apps using LLMs. It’s possible that I was not a good prompt engineer or GitHub Copilot is not the right product to build fully functional app.
+
+Another limitation I noticed is, when asked to build full app, the LLM is likely limited by the length of response (tokens), so it responds in shorter chunks for each component of the app and does not provide fully detailed implementation. When asked in smaller chunks with specific steps, it can provide detailed code.
+
+It might get there soon enough. Or, maybe if we use multi-modal LLM and provide fully designed mocks of the app, it will be able to build it.
+
+Regardless, I am very happy to use LLM and learn from it through the process of building small apps.
+
+---
+
+#### The Learning Opportunity
+
+One of the best part of leveraging AI and looking at the response is that you get to learn new function, tools and so on.
+
+Along the way building the app, I got to 🧑‍💻 exercise my knowledge, learn and grow. Here are some of the cool stuff I have done while building the app
+
+-   Extensively leverage AI powered code assist, namely GitHub Copilot, ChatGPT, Google Gemini 🤖. I think more than 50% of the code is done by AI.
+-   Learn ⚡ [Circuit](https://slackhq.github.io/circuit/), a modern Android app architecture from Slack (that’s what we also use at Slack)
+-   Use Jetpack Room database for app, and also the SQLite (Kotlin Multiplatform) library for bundling city database used in the app
+-   Jetpack Compose for building modern UI that follows Material 3 guidelines with dark and light mode support
+-   Go through lengthy Google Play publishing process 😅
+-   And all the other usual suspects like Retrofit, OkHttp, Dagger Anvil, Moshi, Firebase and more.
+
+Here is the app that is available on GitHub
+
+[**GitHub - hossain-khan/android-weather-alert: A simple app to provide configured weather alert so…** — *A simple app to provide configured weather alert so that you are ready for next hour or day! *](https://github.com/hossain-khan/android-weather-alert)
+
+It’s also available on [Google Play](https://play.google.com/store/apps/details?id=dev.hossain.weatheralert&pcampaignid=web_share), if the use-case mentioned talks to you :-)

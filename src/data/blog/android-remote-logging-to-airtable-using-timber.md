@@ -1,0 +1,275 @@
+---
+title: Android remote logging to Airtable using Timber
+description: Have you ever needed to save your Android Logcat logs for later analysis? You can achieve this using Timber and service that has REST API
+pubDatetime: 2024-09-10T04:03:01.367Z
+tags: []
+featured: false
+draft: false
+---
+
+
+Have you ever needed to save your Android Logcat logs for later analysis?
+
+---
+
+![](https://cdn-images-1.medium.com/max/1200/1*FivEu1HW2hqDTfrtRZz6dw.jpeg)
+
+---
+
+I recently built a service-based Android app, and I needed to monitor its activity to validate its correctness. For that I could not sit in front of the computer monitor for 24+ hours, I needed a way to store the logs with app behavior to validate it’s performing as it should.
+
+I leveraged the following 2 tools to accomplish this task
+
+-   [**Timber**](https://github.com/JakeWharton/timber): *A logger with a small, extensible API which provides utility on top of Android’s normal Log class.*
+-   [**Airtable**](https://www.airtable.com/): *Airtable is a hybrid solution that mixes the intuitiveness of spreadsheets and the power and functionalities of databases.*
+
+> Airtable service can be replaced by any other similar service that allows REST API to add records that can be viewed online.
+
+#### Why Airtable?
+
+-   It provides an easy interface to view data in a spreadsheet-like experience.
+-   It has REST API to easily add data from Android app.
+
+---
+
+If you are not familiar with the amazing Android Timber library, I suggest you spend a few minutes reading the [documentation](https://github.com/JakeWharton/timber/blob/trunk/README.md). We will be building an `**AirtableLoggingTree**` that sends all the logs logged via Timber to the Airtable spreadsheet/database using their REST API.
+
+Here are some pseudo task we need to accomplish this
+
+1.  Save all the logs to a queue to process and send to REST API
+2.  Format the logs and send a batched request (to avoid rate limit)
+3.  Make the REST call based on API specification for [creating a record](https://airtable.com/developers/web/api/create-records).
+
+First, let’s build a Kotlin data class to capture some log info that should be sent to Airtable.
+
+```
+data class LogMessage(  
+    val priority: Int,  
+    val tag: String?,  
+    val message: String,  
+    val throwable: Throwable?,  
+    val logTime: Instant = Instant.now(),  
+    val device: String = Build.MODEL,  
+)
+```
+
+Next, let’s create the `AirtableLoggingTree` that queues the logs and sends logs in batches using REST API via OkHttp client.
+
+> 💁Inline comments have been added where applicable.
+
+```
+class AirtableLoggingTree(  
+    // Create your token from https://airtable.com/create/tokens  
+    private val authToken: String,  
+    // Example: https://api.airtable.com/v0/appXXXXXXXXX/Table%20Name  
+    private val endpointUrl: String,  
+) : Timber.Tree() {  
+    private val client = OkHttpClient()  
+    private val logQueue = ConcurrentLinkedQueue<LogMessage>()  
+    private var flushJob: Job? = null  
+  
+    companion object {  
+        /\*\*  
+         \* The API is limited to 5 requests per second per base.  
+         \*/  
+        private const val MAX\_LOG\_COUNT\_PER\_SECOND = 5  
+  
+        /\*\*  
+         \* The API is limited to 10 records per request.  
+         \* - https://airtable.com/developers/web/api/create-records  
+         \*/  
+        private const val MAX\_RECORDS\_PER\_REQUEST = 10  
+    }  
+  
+    init {  
+        startFlushJob()  
+    }  
+  
+    override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {  
+        // Adds the log to queue for batch processing  
+        logQueue.add(LogMessage(priority, tag, message, t))  
+  
+        if (flushJob == null || flushJob?.isCancelled == true) {  
+            // If there is enough log, it will start sending them   
+            startFlushJob()  
+        }  
+    }  
+  
+    private fun startFlushJob() {  
+        flushJob =  
+            CoroutineScope(Dispatchers.IO).launch {  
+                while (isActive) {  
+                    flushLogs()  
+                      
+                    // Wait long enough before sending next request   
+                    // https://airtable.com/developers/web/api/rate-limits  
+                    delay(1\_100L)  
+                }  
+            }  
+    }  
+  
+    private fun createLogMessage(logs: List<LogMessage\>): String? {  
+        if (logs.isEmpty()) {  
+            return null  
+        }  
+  
+        // Builds the JSON payload structure with multiple messages based on API spec  
+        val records = JSONArray().apply { logs.forEach { put(it.toLogRecord()) } }  
+        return JSONObject().apply {  
+            put("records", records)  
+        }.toString()  
+    }  
+  
+    private fun getMaximumAllowedLogs(): List<LogMessage> {  
+        val logs = mutableListOf<LogMessage>()  
+        while (logQueue.isNotEmpty() && logs.size < MAX\_RECORDS\_PER\_REQUEST) {  
+            val log = logQueue.poll()  
+            if (log != null) {  
+                logs.add(log)  
+            }  
+        }  
+        return logs  
+    }  
+  
+    private suspend fun flushLogs() {  
+        var sentLogCount = 0  
+  
+        // Collects all the queued logs and sends them in batches  
+        // Based on rate-limit a total of 5x10 = 50 reconds can be sent per second  
+        while (sentLogCount < MAX\_LOG\_COUNT\_PER\_SECOND) {  
+            val jsonPayload = createLogMessage(getMaximumAllowedLogs())  
+            if (jsonPayload != null) {  
+                sendLogToApi(jsonPayload)  
+                sentLogCount++  
+  
+                // This delay is added to ensure the order of log is maintained.  
+                // However, there is no guarantee that the log will be sent in order.  
+                delay(100L)  
+            }  
+        }  
+  
+        if (logQueue.isEmpty()) {  
+            flushJob?.cancel()  
+        }  
+    }  
+  
+    // Finally, this is the OkHttp client that sends HTTP POST request to add those log records  
+    private fun sendLogToApi(logPayloadJson: String) {  
+        val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()  
+        val body = logPayloadJson.toRequestBody(mediaType)  
+        val request =  
+            Request.Builder()  
+                .url(endpointUrl)  
+                .addHeader("Authorization", "Bearer $authToken")  
+                .post(body)  
+                .build()  
+  
+        client.newCall(request).enqueue(  
+            object : okhttp3.Callback {  
+                override fun onFailure(  
+                    call: okhttp3.Call,  
+                    e: IOException,  
+                ) {  
+                    Timber.e("Failed to send log to API: ${e.localizedMessage}")  
+                }  
+  
+                override fun onResponse(  
+                    call: okhttp3.Call,  
+                    response: okhttp3.Response,  
+                ) {  
+                    response.use { // This ensures the response body is closed  
+                        if (!response.isSuccessful) {  
+                            Timber.e(  
+                                "Log is rejected: HTTP code: ${response.code}, " +  
+                                    "message: ${response.message}, body: ${response.body?.string()}",  
+                            )  
+                        }  
+                    }  
+                }  
+            },  
+        )  
+    }  
+}
+```
+
+Everything is great except there is one piece of missing code that uses the API `LogMessage.toLogRecord()` in the `AirtableLoggingTree`. The snipped is shown below for clarity.
+
+```
+val records = JSONArray().apply { logs.forEach { put(it.toLogRecord()) } }
+```
+
+This function implementation will be very specific to how you have setup your Airtable spreadsheet.
+
+For my case, I have two columns for the table in the Airtable base:
+
+1.  `"Device"` — to store the device model. Single-line text.
+2.  `"Log"` — to store the log message. Multiline text.
+
+```
+fun toLogRecord(): JSONObject {  
+    val logMessage =  
+        buildString {  
+            append("Priority: ${priority},\\n")  
+            if (tag != null) append("Tag: $tag,\\n")  
+            append("Message: ${message},\\n")  
+            if (throwable != null) append("Throwable: ${throwable.localizedMessage},")  
+            append("App Version: ${BuildConfig.VERSION\_NAME},\\n")  
+            append("Log Time: ${logTime}\\n")  
+        }  
+  
+    val fields =  
+        JSONObject().apply {  
+            put("Device", device)  
+            put("Log", logMessage)  
+        }  
+    return JSONObject().apply {  
+        put("fields", fields)  
+    }  
+}
+```
+
+You could essentially have multiple columns for each of the properties.
+
+#### Planting your `AirtableLoggingTree` 🌳
+
+In your app’s application class you can decide when to add the remote logging tree. Here is an example where remote logging is enabled regardless of `DEBUG` or `RELEASE` build.
+
+```
+if (BuildConfig.DEBUG) {  
+    Timber.plant(Timber.DebugTree())  
+}  
+  
+// Add your remote logging tree with configs  
+Timber.plant(  
+    AirtableLoggingTree(  
+        authToken = "yourAuthTokenXXXXXXXXXXXXXXXX",  
+        endpointUrl = "https://api.airtable.com/v0/appXXXXXXXXX/RemoteLogs",  
+    )  
+)
+```
+
+✅ And that’s it. You have a working Timber tree that can send all logcat logs to the Airtable base (spreadsheet) that adheres to their API rate limit.
+
+Continue to log using Timber as usual, all logs will be also sent to Airtable
+
+```
+Timber.tag("Cart").d("New item added to cart")  
+  
+// Log will show in Airtable as follows (based on formatting we used in \`toLogRecord()\`)  
+// | Device  | Log  |  
+// | Pixel 8 | Priority: 3, Tag: Cart, Message: New item added to cart, App Version: v1.24, Log Time: 2024-09-10T05:28:04.113910Z
+```
+
+#### See it in action
+
+You can take a look at the fully [implemented tree](https://github.com/hossain-khan/android-keep-alive/blob/main/app/src/main/java/dev/hossain/keepalive/log/ApiLoggingTree.kt) in the following project
+
+[**GitHub - hossain-khan/android-keep-alive: A simple app to keep alive specific apps** — *A simple app to keep alive specific apps. Has support for remote logging.*](https://github.com/hossain-khan/android-keep-alive)
+
+Here is a screenshot of how the log looks in the Airtable
+
+---
+
+![](https://cdn-images-1.medium.com/max/1200/1*6qnyRKwjluVhE5L0S3sHIw.png)
+
+Demo of remotly logged messages in the Airtable
