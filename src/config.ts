@@ -4,7 +4,7 @@ export const SITE = {
   profile: "https://hossainkhan.com/",
   desc: "Thoughts and dev bytes",
   title: "Hossain's Dev Bytes",
-  ogImage: "devosfera-og.webp", // ubicado en la carpeta public
+  ogImage: "devosfera-og.webp", // located in public folder
   lightAndDarkMode: true,
   postPerIndex: 6,
   postPerPage: 8,
@@ -14,8 +14,8 @@ export const SITE = {
   showGalleriesInIndex: true, // Show galleries in the general paginated list
   showBackButton: true, // show back button in post detail
   backdropEffects: {
-    cursorGlow: true, // seguimiento de cursor con halo suave
-    grain: true, // capa de ruido visual de fondo
+    cursorGlow: true, // cursor tracking with soft halo
+    grain: true, // background visual noise layer
   },
   editPost: {
     enabled: false,
@@ -27,9 +27,9 @@ export const SITE = {
   lang: "en", // html lang code. Set this empty and default will be "en"
   timezone: "America/Toronto", // Default global timezone (IANA format) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   introAudio: {
-    enabled: false, // mostrar/ocultar el reproductor en el hero
-    src: "/audio/intro-web.mp3", // ruta al archivo (relativa a /public)
-    label: "INTRO.MP3", // etiqueta display en el reproductor
-    duration: 30, // duración en segundos (para la barra de progreso fija)
+    enabled: false, // show/hide the hero audio player
+    src: "/audio/intro-web.mp3", // audio file path (relative to /public)
+    label: "INTRO.MP3", // display label in the player
+    duration: 30, // duration in seconds (for the fixed progress bar)
   },
 } as const;
