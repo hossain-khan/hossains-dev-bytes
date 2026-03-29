@@ -169,3 +169,4 @@ pnpm-debug.log*
 .dev.vars*
 !.dev.vars.example
 !.env.example
+.vscode/*
