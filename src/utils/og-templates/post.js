@@ -128,7 +128,7 @@ export default async post => {
                       color: "#cbd5e1",
                     },
                     children: [
-                      "Escrito por ",
+                      "Written by ",
                       {
                         type: "span",
                         props: {
