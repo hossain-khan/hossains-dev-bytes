@@ -1,62 +1,141 @@
-# Astro Starter Kit: Blog
+# Hossain's Dev Bytes
 
-```sh
-npm create astro@latest -- --template blog
-```
+A heavily customized blog built with **Astro** featuring a **Terminal/Cyberpunk** aesthetic, image galleries, global search, and dynamic OG image generation.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+**🌐 Live demo:** [hossains-dev-bytes.hk-c91.workers.dev](https://hossains-dev-bytes.hk-c91.workers.dev)
 
-Features:
+---
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+## ✨ Features
+
+- **100/100 Lighthouse performance** – Type-safe Markdown, SEO-optimized
+- **Terminal/Cyberpunk design** – Animated prompt, glassmorphism, cursor glow effects
+- **Image galleries** – Albums with native lightbox and responsive optimization
+- **Global search** – Pagefind-powered modal with **⌘K / Ctrl+K** shortcut
+- **Dark/Light mode** – Seamless theme switching
+- **MDX support** – Use React/Astro components in posts
+- **Dynamically generated OG images** – Per-post social sharing
+- **Cloudflare deployment** – Optimized for Cloudflare Workers
+
+---
 
 ## 🚀 Project Structure
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
+```
+/
+├── public/              # Audio files, generated search index
 ├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+│   ├── assets/          # Fonts, icons, images
+│   ├── components/      # Reusable Astro components
+│   ├── data/
+│   │   ├── blog/        # Blog posts (.md, .mdx)
+│   │   └── galleries/   # Image galleries
+│   ├── layouts/         # Page layouts
+│   ├── pages/           # Astro routes
+│   ├── scripts/         # Theme toggle, etc.
+│   ├── styles/          # Global CSS, typography
+│   └── utils/           # Helpers, filters, transformers
+├── docs/theme/          # Theme documentation
+├── astro.config.ts      # Astro + Cloudflare adapter config
+├── wrangler.jsonc       # Cloudflare Workers config
+└── package.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+For detailed documentation, see [docs/theme/README.md](docs/theme/README.md).
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+---
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+## 👨🏻‍💻 Requirements & Setup
 
-Any static assets, like images, can be placed in the `public/` directory.
+**Requirements:** Node.js 20+ and pnpm
+
+```bash
+# 1. Install dependencies
+pnpm install
+
+# 2. Development server
+pnpm run dev
+# → http://localhost:4321
+```
+
+---
 
 ## 🧞 Commands
 
-All commands are run from the root of the project, from a terminal:
+| Command            | Action                                              |
+| :----------------- | :-------------------------------------------------- |
+| `pnpm install`     | Install dependencies                                |
+| `pnpm run dev`     | Local dev server at `localhost:4321`                |
+| `pnpm run build`   | Production build (`astro check` + build + Pagefind) |
+| `pnpm run preview` | Preview production build locally                    |
+| `pnpm run format`  | Format code with Prettier                           |
+| `pnpm run lint`    | Lint with ESLint                                    |
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+> **Note:** Pagefind search index is only available in production builds. Test locally with `pnpm run build && pnpm run preview`.
 
-## 👀 Want to learn more?
+---
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## 📝 Creating Content
 
-## Credit
+### Posts (`src/data/blog/`)
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+Create a `.md` or `.mdx` file with frontmatter:
+
+```yaml
+---
+title: "Post Title"
+pubDatetime: 2026-01-15T10:00:00Z
+description: "Short description for SEO"
+tags: ["astro", "dev"]
+featured: false
+draft: false
+---
+```
+
+### Galleries (`src/data/galleries/`)
+
+Folder structure:
+
+```
+src/data/galleries/
+└── my-gallery/
+    ├── index.md
+    ├── 01-image.jpg
+    └── 02-image.jpg
+```
+
+See [GALLERIES.md](docs/theme/GALLERIES.md) for advanced gallery features.
+
+---
+
+## ⚙️ Configuration
+
+Edit `src/config.ts` to change:
+
+- Site URL, author, description
+- Timezone, post counts per page
+- Show/hide archives and galleries
+- Intro audio settings
+- UI effects (cursor glow, grain, etc.)
+
+Social links are in `src/constants.ts`.
+
+---
+
+## 🚀 Deployment (Cloudflare Workers)
+
+This project is configured for Cloudflare Workers via `@astrojs/cloudflare`.
+
+```bash
+# Deploy to Cloudflare
+wrangler deploy
+```
+
+---
+
+## 📖 More Information
+
+- **Theme Documentation**: [docs/theme/README.md](docs/theme/README.md)
+- **Customizations**: [docs/theme/CUSTOMIZATIONS.md](docs/theme/CUSTOMIZATIONS.md)
+- **Gallery Guide**: [docs/theme/GALLERIES.md](docs/theme/GALLERIES.md)
+- **Astro Docs**: [astro.build](https://docs.astro.build)
