@@ -7,7 +7,6 @@ featured: false
 draft: false
 ---
 
-
 ![](https://cdn-images-1.medium.com/max/1200/1*cq6Pf1hoCaGQ7KRD6nc_QA.jpeg)
 
 Building is more fun with AI 🤖
@@ -36,7 +35,7 @@ I feel like, this will be an essential tool for all kinds of engineers to reduce
 
 #### Is the AI/LLM Ready to Print Out Full App?
 
-Short answer, NO *(based on my experience)*.
+Short answer, NO _(based on my experience)_.
 
 I have encountered some YouTube videos where they showcase building beautiful iOS apps using LLMs. It’s possible that I was not a good prompt engineer or GitHub Copilot is not the right product to build fully functional app.
 
@@ -54,15 +53,15 @@ One of the best parts of leveraging AI and looking at the response is that you g
 
 Along the way building the app, I got to 🧑‍💻 exercise my knowledge, learn and grow. Here are some of the cool stuff I have done while building the app
 
--   Extensively leverage AI powered code assist, namely GitHub Copilot, ChatGPT, Google Gemini 🤖. I think more than 50% of the code is done by AI.
--   Learn ⚡ [Circuit](https://slackhq.github.io/circuit/), a modern Android app architecture from Slack (that’s what we also use at Slack)
--   Use Jetpack Room database for app, and also the SQLite (Kotlin Multiplatform) library for bundling city database used in the app
--   Jetpack Compose for building modern UI that follows Material 3 guidelines with dark and light mode support
--   Go through lengthy Google Play publishing process 😅
--   And all the other usual suspects like Retrofit, OkHttp, Dagger Anvil, Moshi, Firebase and more.
+- Extensively leverage AI powered code assist, namely GitHub Copilot, ChatGPT, Google Gemini 🤖. I think more than 50% of the code is done by AI.
+- Learn ⚡ [Circuit](https://slackhq.github.io/circuit/), a modern Android app architecture from Slack (that’s what we also use at Slack)
+- Use Jetpack Room database for app, and also the SQLite (Kotlin Multiplatform) library for bundling city database used in the app
+- Jetpack Compose for building modern UI that follows Material 3 guidelines with dark and light mode support
+- Go through lengthy Google Play publishing process 😅
+- And all the other usual suspects like Retrofit, OkHttp, Dagger Anvil, Moshi, Firebase and more.
 
 Here is the app that is available on GitHub
 
-[**GitHub - hossain-khan/android-weather-alert: A simple app to provide configured weather alert so…** — *A simple app to provide configured weather alert so that you are ready for next hour or day! *](https://github.com/hossain-khan/android-weather-alert)
+[**GitHub - hossain-khan/android-weather-alert: A simple app to provide configured weather alert so…** — _A simple app to provide configured weather alert so that you are ready for next hour or day! _](https://github.com/hossain-khan/android-weather-alert)
 
 It’s also available on [Google Play](https://play.google.com/store/apps/details?id=dev.hossain.weatheralert&pcampaignid=web_share), if the use-case mentioned talks to you :-)

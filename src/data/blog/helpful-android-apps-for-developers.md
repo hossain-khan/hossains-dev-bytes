@@ -7,14 +7,13 @@ featured: false
 draft: false
 ---
 
-
 During development I have come across some apps which are very helpful and worth sharing with the community.
 
 Here are some of the apps with screenshot that I use from time to time.
 
 ### Keyline Pushing
 
-Great app which shows overlay of grids to help designers follow material design standards. *\[Get it from* [*Google Play*](https://play.google.com/store/apps/details?id=com.faizmalkani.keylines)*\]*
+Great app which shows overlay of grids to help designers follow material design standards. _\[Get it from_ [_Google Play_](https://play.google.com/store/apps/details?id=com.faizmalkani.keylines)_\]_
 
 ---
 
@@ -32,7 +31,7 @@ Great app which shows overlay of grids to help designers follow material design 
 
 ### Developer Tools
 
-Sometimes, you just need very simple tool to get information about your device and screen density information. “Developer Tools” app just does that. *\[Get it from* [*Google Play*](https://play.google.com/store/apps/details?id=com.roysolberg.android.developertools)*\]*
+Sometimes, you just need very simple tool to get information about your device and screen density information. “Developer Tools” app just does that. _\[Get it from_ [_Google Play_](https://play.google.com/store/apps/details?id=com.roysolberg.android.developertools)_\]_
 
 ---
 
@@ -48,7 +47,7 @@ Developer Tools Screenshot
 
 ### Pixel Ruler
 
-When working with designer spec, sometimes it’s hard to measure dimensions by looking at the screen. Pixel Ruler gives you perfect tool to get dimensions. *\[Get it from* [*Google Play*](https://play.google.com/store/apps/details?id=com.bidyut.app.pixelruler)*\]*
+When working with designer spec, sometimes it’s hard to measure dimensions by looking at the screen. Pixel Ruler gives you perfect tool to get dimensions. _\[Get it from_ [_Google Play_](https://play.google.com/store/apps/details?id=com.bidyut.app.pixelruler)_\]_
 
 ---
 

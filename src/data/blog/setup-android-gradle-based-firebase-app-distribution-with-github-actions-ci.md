@@ -7,7 +7,6 @@ featured: false
 draft: false
 ---
 
-
 This is a quick guide on how you can easily set up Github Actions CI workflow to automatically post APK to [Firebase App Distribution](https://firebase.google.com/docs/app-distribution) on merge to `release` or `master` (or soon to be known as `main`) branch.
 
 Firebase already has an [**excellent guide**](https://firebase.google.com/docs/app-distribution/android/distribute-gradle) 🏆 on how to set up the Gradle task on your Android project to post APK to App Distribution. However, I will quickly touch those areas using the easiest path ✌️.
@@ -19,9 +18,9 @@ Firebase already has an [**excellent guide**](https://firebase.google.com/docs/a
 On your root `build.gradle` file add the Gradle plugin
 
 ```groovy
-dependencies {  
-    // .. more existing dependencies here  
-    classpath 'com.google.firebase:firebase-appdistribution-gradle:2.0.0' // see official guide for latest versions  
+dependencies {
+    // .. more existing dependencies here
+    classpath 'com.google.firebase:firebase-appdistribution-gradle:2.0.0' // see official guide for latest versions
 }
 ```
 
@@ -30,6 +29,7 @@ Next, apply the plugin in your Android app’s `build.gradle` and distribution p
 ```groovy
 apply plugin: 'com.google.firebase.appdistribution'
 ```
+
 ```groovy
 android {
     buildTypes {
@@ -72,27 +72,27 @@ Go to your GitHub project and add the `FIREBASE_TOKEN` as a secret property.
 Based on git-flow, we want to set up the CI job such that whenever we merge commit to `master` branch it triggers the release build. You can obviously [customize the behavior](https://help.github.com/en/actions/reference/events-that-trigger-workflows) based on your need.
 
 ```yaml
-name: Firebase App Distribution  
-  
-on:  
-  push:  
-    branches:  
-      - master  
-  
-jobs:  
-  build:  
-    runs-on: ubuntu-latest  
-  
-    steps:  
-      - uses: actions/checkout@v2  
-      - name: set up JDK 1.8  
-        uses: actions/setup-java@v1  
-        with:  
-          java-version: 1.8  
-  
-      - name: Firebase App Distribute  
-        env:  
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}  
+name: Firebase App Distribution
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Firebase App Distribute
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: ./gradlew assembleRelease appDistributionUploadRelease
 ```
 
@@ -106,6 +106,6 @@ If you find any issues please let me know I will try to help. Good luck 👍
 
 #### Additional Resources
 
--   Firebase App Distribution — [https://firebase.google.com/docs/app-distribution](https://firebase.google.com/docs/app-distribution)
--   GitHub Actions — [https://help.github.com/en/actions](https://help.github.com/en/actions)
--   Pull Request to support Firebase App Distribution — [https://github.com/amardeshbd/android-police-brutality-incidents/pull/117/files](https://github.com/amardeshbd/android-police-brutality-incidents/pull/117/files)
+- Firebase App Distribution — [https://firebase.google.com/docs/app-distribution](https://firebase.google.com/docs/app-distribution)
+- GitHub Actions — [https://help.github.com/en/actions](https://help.github.com/en/actions)
+- Pull Request to support Firebase App Distribution — [https://github.com/amardeshbd/android-police-brutality-incidents/pull/117/files](https://github.com/amardeshbd/android-police-brutality-incidents/pull/117/files)

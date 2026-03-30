@@ -7,7 +7,6 @@ featured: false
 draft: false
 ---
 
-
 Recently I decided to host my personal portfolio site using [GitHub pages](https://pages.github.com/). Even though they have very detailed [instruction](https://help.github.com/articles/using-a-custom-domain-with-github-pages/) on how to set up a custom domain, I found it cumbersome to get to the right information. 🙄
 
 Here are **2** key steps to set up your GitHub pages [enabled](https://guides.github.com/features/pages/) project to use your **custom domain**.
@@ -40,11 +39,11 @@ This is a sample screenshot taken from the **Google Domains** portal.
 
 For `**A**` record, set `185.199.108.153`, `185.199.109.153`, `185.199.110.153` and `185.199.111.153`. To redirect `**www**` subdomain to the original domain, add a `**CNAME**` record with your GitHub pages profile URL with a `.`(dot) in the end, for example, ‘`*YOUR-GITHUB-USERNAME.github.io.*`’.
 
-***Official References****: For most up to date IP Addresses, use GitHub’s* [*official documentation*](https://help.github.com/articles/setting-up-an-apex-domain/) *and for setting up CNAME use this* [*documentation*](https://help.github.com/articles/setting-up-a-www-subdomain/)*.*
+**\*Official References\*\***: For most up to date IP Addresses, use GitHub’s* [*official documentation*](https://help.github.com/articles/setting-up-an-apex-domain/) *and for setting up CNAME use this* [*documentation*](https://help.github.com/articles/setting-up-a-www-subdomain/)*.\*
 
 ---
 
-That’s it, both `www.your-domain.com` and `your-domain.com` will now go to your selected GitHub pages site *(may need to wait up to 24 hours)*. If you want to see a live example, you may visit my portfolio “[hossainkhan.com](http://hossainkhan.com/)” hosted via GitHub [pages](https://github.com/amardeshbd/hossainkhan.com) repository ✌️.
+That’s it, both `www.your-domain.com` and `your-domain.com` will now go to your selected GitHub pages site _(may need to wait up to 24 hours)_. If you want to see a live example, you may visit my portfolio “[hossainkhan.com](http://hossainkhan.com/)” hosted via GitHub [pages](https://github.com/amardeshbd/hossainkhan.com) repository ✌️.
 
 > UPDATE #1: The IP addresses for DNS `A` record is updated. The new IP addresses are required to use the free HTTPS support for GitHub pages.
 

@@ -7,7 +7,6 @@ featured: false
 draft: false
 ---
 
-
 Recently I had to prepare a complete mocked server for an app I worked in the past. The reason mocking was required so that app’s different functionality can be showcased with a variation of mocked response which triggers different UI and functionality.
 
 There may be different solutions available in the market, however, since Firebase has a free tier and the Node.js-based [Express](https://expressjs.com/) web framework makes things much easier to customize based on need.
@@ -18,12 +17,12 @@ Google has [many many examples](https://github.com/firebase/functions-samples) f
 
 ### What will this guide touch on?
 
--   How to create a Firebase project
--   How to deploy on Firebase project
--   Configure Firebase project for mocking using hard-coded data
--   How to add new APIs that mimic what you want
--   How to use Firestore database to provide mocked data
--   Troubleshooting — some known issues and their solution
+- How to create a Firebase project
+- How to deploy on Firebase project
+- Configure Firebase project for mocking using hard-coded data
+- How to add new APIs that mimic what you want
+- How to use Firestore database to provide mocked data
+- Troubleshooting — some known issues and their solution
 
 ### Setup & Deploy Firebase
 
@@ -58,6 +57,7 @@ Use default options for the `firebase init` wizard. We will update some configur
 ```bash
 // "your-project-id-23d6x" is the ID from "firebase list" command.
 ```
+
 ```bash
 firebase use --add your-project-id-23d6x
 ```
@@ -84,10 +84,10 @@ See [github-sample](https://github.com/amardeshbd/firebase-mock-api-server/blob/
 Now, update `/functions/package.json` file to include express and cors under `"dependencies"`.
 
 ```json
-"dependencies": {      
-   "cors": "^2.8.5",     
-   "express": "^4.16.4",  
-   // .... more dependency here  
+"dependencies": {
+   "cors": "^2.8.5",
+   "express": "^4.16.4",
+   // .... more dependency here
 }
 ```
 
@@ -96,8 +96,8 @@ See [github-sample](https://github.com/amardeshbd/firebase-mock-api-server/blob/
 Once this is done, you need to update `npm` modules so that Express can be used. Use the following commands to update it.
 
 ```bash
-cd functions  
-npm install  
+cd functions
+npm install
 cd ..
 ```
 
@@ -115,8 +115,8 @@ Once you are done adding APIs, you can run `**firebase deploy**` from root of th
 
 Here are some example APIs that are available from the [example](https://github.com/amardeshbd/firebase-mock-api-server) GitHub project.
 
--   [https://mock-apis-server.firebaseapp.com/say/hello?name=Ryan](https://mock-apis-server.firebaseapp.com/say/hello?name=Ryan)
--   [https://mock-apis-server.firebaseapp.com/photos/29647](https://mock-apis-server.firebaseapp.com/photos/29647)
+- [https://mock-apis-server.firebaseapp.com/say/hello?name=Ryan](https://mock-apis-server.firebaseapp.com/say/hello?name=Ryan)
+- [https://mock-apis-server.firebaseapp.com/photos/29647](https://mock-apis-server.firebaseapp.com/photos/29647)
 
 ### UPDATE#1: Use Firebase firestore database for mocked response
 
@@ -138,7 +138,7 @@ Happy mocking 😃!
 
 See [https://github.com/amardeshbd/firebase-mock-api-server](https://github.com/amardeshbd/firebase-mock-api-server) for more detailed example and sample APIs you can test from the browser.
 
-[**amardeshbd/firebase-mock-api-server** — *A simple mock API server using expressjs that is hosted on firebase. - amardeshbd/firebase-mock-api-server*](https://github.com/amardeshbd/firebase-mock-api-server)
+[**amardeshbd/firebase-mock-api-server** — _A simple mock API server using expressjs that is hosted on firebase. - amardeshbd/firebase-mock-api-server_](https://github.com/amardeshbd/firebase-mock-api-server)
 
 ---
 
@@ -152,7 +152,7 @@ While following my guide later, I have encountered some issues that I did not se
 
 Screenshot showcasing what it should look like after adding the \`allUsers\` role .
 
-This can happen if your Firebase project does not have the right permission to allow any unauthenticated users from accessing the APIs. In that case, you need to add `allUsers` to “Cloud Function Invoker” role. That essentially allows anybody to access this API *(less secured obviously, but I assume this is only mock data and for testing only)*.
+This can happen if your Firebase project does not have the right permission to allow any unauthenticated users from accessing the APIs. In that case, you need to add `allUsers` to “Cloud Function Invoker” role. That essentially allows anybody to access this API _(less secured obviously, but I assume this is only mock data and for testing only)_.
 
 You can add that permission by going to [https://console.cloud.google.com/functions](https://console.cloud.google.com/functions) and selecting the project from the drop-down at the top bar (beside “Google Cloud Platform”).
 
@@ -162,20 +162,20 @@ Here is a screenshot showing how to add a new member role.
 
 On “Add Member” screen, select the following and click “Save”:
 
--   New members: `allUsers`
--   Role: `Cloud Functions` > `Cloud Functions Invoker`
+- New members: `allUsers`
+- Role: `Cloud Functions` > `Cloud Functions Invoker`
 
 Now, retry your API, it should succeed without any error 👍
 
-#### Error: Refresh token must contain a “client\_secret” property.
+#### Error: Refresh token must contain a “client_secret” property.
 
 This is something I recently got after adding some Firebase Firestore code in the cloud functions, I could not push code using `firebase deploy`. After some Googling, I was able to find a solution from [Github issues](https://github.com/firebase/firebase-tools/issues/1708#issuecomment-555174511) by Brandon
 
 > After upgrading to Mac OS Catalina I encountered this issue. What resolved it for me was running the following commands:
 
 ```bash
-firebase login  
-// Or try following:  
+firebase login
+// Or try following:
 export GOOGLE_APPLICATION_CREDENTIALS="<SERVICE_ACCOUNT_KEY_JSON>"
 ```
 

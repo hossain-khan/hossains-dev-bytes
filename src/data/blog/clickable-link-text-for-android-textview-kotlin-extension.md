@@ -7,7 +7,6 @@ featured: false
 draft: false
 ---
 
-
 Recently I have had to create UI that required user tappable/clickable text in the same text view. I know this is kind of unusual as the touch target for the view will likely be smaller compared to a button with no outline style. However, I wanted to share a quick Kotlin extension function that is dynamic and well tested.
 
 ![](https://cdn-images-1.medium.com/max/800/1*_xZdmLNOUR7vrQ-jQYomxA.png)

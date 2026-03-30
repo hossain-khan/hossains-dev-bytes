@@ -7,7 +7,6 @@ featured: false
 draft: false
 ---
 
-
 Recently I wanted to do some experiments with saving JSON data into a database and found out that PostgreSQL supports JSON as a data type.
 
 I also wanted to use the fantastic SQLDelight library that creates type-safe models and queries for any database (it’s also multi-platform supported).
@@ -33,11 +32,11 @@ Use `HikariCP` to create PostgreSQL `DataSource`
 First import the hikari and PostgreSQL library into your JVM project
 
 ```kotlin
-// https://github.com/brettwooldridge/HikariCP#artifacts  
-implementation("com.zaxxer:HikariCP:5.0.1")  
-  
-// This is needed for the PostgreSQL driver  
-// https://mvnrepository.com/artifact/org.postgresql/postgresql  
+// https://github.com/brettwooldridge/HikariCP#artifacts
+implementation("com.zaxxer:HikariCP:5.0.1")
+
+// This is needed for the PostgreSQL driver
+// https://mvnrepository.com/artifact/org.postgresql/postgresql
 implementation("org.postgresql:postgresql:42.6.0")
 ```
 
@@ -46,15 +45,15 @@ Then you need to build the `HikariConfig` with the right data set to connect to 
 Here is a snippet taken from the [sample project](https://github.com/hossain-khan/SQLDelight-PostgreSQL-JVM-sample/blob/main/src/main/kotlin/dev/hossain/postgresqldelight/SportsRepository.kt)
 
 ```kotlin
-private fun getDataSource(): DataSource {  
-    val hikariConfig = HikariConfig()  
-    // See https://jdbc.postgresql.org/documentation/use/  
-    hikariConfig.setJdbcUrl("jdbc:postgresql://localhost:5432/dbname")  
-    hikariConfig.driverClassName = "org.postgresql.Driver"  
-    hikariConfig.username = "dbusername"  
-    hikariConfig.password = "dbpassword"  
-  
-    return HikariDataSource(hikariConfig)  
+private fun getDataSource(): DataSource {
+    val hikariConfig = HikariConfig()
+    // See https://jdbc.postgresql.org/documentation/use/
+    hikariConfig.setJdbcUrl("jdbc:postgresql://localhost:5432/dbname")
+    hikariConfig.driverClassName = "org.postgresql.Driver"
+    hikariConfig.username = "dbusername"
+    hikariConfig.password = "dbpassword"
+
+    return HikariDataSource(hikariConfig)
 }
 ```
 
@@ -63,19 +62,19 @@ That’s it, now you can follow the official SQLDelight guide on creating a data
 For example, here is a simplified snippet to give the whole picture
 
 ```kotlin
-val dataSource: DataSource = getDataSource(appConfig)  
-  
-val driver: SqlDriver = dataSource.asJdbcDriver()  
-  
-// NOTE: The `SportsDatabase` and `PlayerQueries` are from SQLDelight  
-val database = SportsDatabase(driver)  
-val playerQueries: PlayerQueries = database.playerQueries  
-  
-val hockeyPlayers = playerQueries.selectAll().executeAsList()  
-println("Existing ${hockeyPlayers.size} records: $hockeyPlayers")  
-// Prints following 👇  
-// - - - - - - - - - -  
-// Existing 15 records:   
+val dataSource: DataSource = getDataSource(appConfig)
+
+val driver: SqlDriver = dataSource.asJdbcDriver()
+
+// NOTE: The `SportsDatabase` and `PlayerQueries` are from SQLDelight
+val database = SportsDatabase(driver)
+val playerQueries: PlayerQueries = database.playerQueries
+
+val hockeyPlayers = playerQueries.selectAll().executeAsList()
+println("Existing ${hockeyPlayers.size} records: $hockeyPlayers")
+// Prints following 👇
+// - - - - - - - - - -
+// Existing 15 records:
 // [HockeyPlayer(player_number=10, full_name=Corey Perry), ... ]
 ```
 
@@ -83,7 +82,7 @@ The full snippet is available [here](https://github.com/hossain-khan/SQLDelight-
 
 See the GitHub project for a complete example with gradle dependencies and SQLDelight configuration needed to make it work.
 
-[**GitHub - hossain-khan/SQLDelight-PostgreSQL-JVM-sample: A sample project exercising PostgreSQL with SQLDelight** — *A sample project exercising PostgreSQL with SQLDelight 2.0 - GitHub - hossain-khan/SQLDelight-PostgreSQL-JVM-sample*](https://github.com/hossain-khan/SQLDelight-PostgreSQL-JVM-sample)
+[**GitHub - hossain-khan/SQLDelight-PostgreSQL-JVM-sample: A sample project exercising PostgreSQL with SQLDelight** — _A sample project exercising PostgreSQL with SQLDelight 2.0 - GitHub - hossain-khan/SQLDelight-PostgreSQL-JVM-sample_](https://github.com/hossain-khan/SQLDelight-PostgreSQL-JVM-sample)
 
 ---
 
@@ -91,4 +90,4 @@ Happy to hear feedback or any corrections to do this in a better way.
 
 > EDIT: After I wrote the article, I found similar article about it (which could have saved me a ton of time), so do take a look at it too 😊
 
-[**SQLDelight for PostgreSQL on Kotlin JVM** — *In simple terms, SQLDelight is a tool that takes your slightly modified SQL code and converts it to easy to use Kotlin…*](https://medium.com/@theendik00/sqldelight-for-postgresql-on-kotlin-jvm-b95d14d96134)
+[**SQLDelight for PostgreSQL on Kotlin JVM** — _In simple terms, SQLDelight is a tool that takes your slightly modified SQL code and converts it to easy to use Kotlin…_](https://medium.com/@theendik00/sqldelight-for-postgresql-on-kotlin-jvm-b95d14d96134)

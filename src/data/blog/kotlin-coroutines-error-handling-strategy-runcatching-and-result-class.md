@@ -7,7 +7,6 @@ featured: false
 draft: false
 ---
 
-
 I am trying to learn Kotlin coroutines, and was trying to learn more about how to handle errors from suspended functions. One of the [recommended way](https://developer.android.com/kotlin/coroutines) by Google is to create a “Result” class like the following:
 
 ```kotlin
@@ -17,15 +16,15 @@ sealed class Result {    data class Success(val data: T) : Result()    data clas
 This allows us to take advantage of Kotlin’s `when` like following:
 
 ```kotlin
-when (result) {  
-    is Result.Success<LoginResponse> -> // Happy path  
-    else -> // Show error in UI  
+when (result) {
+    is Result.Success<LoginResponse> -> // Happy path
+    else -> // Show error in UI
 }
 ```
 
 However, I have recently [stumbled into](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/run-catching.html) Kotlin’s `runCatching {}` API that makes use of native `Result<T>` class already [available in standard lib](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/) since Kotlin `v1.3`
 
-Here I will try to explore how the native API can replace the recommended example in the Android Kotlin [training guide](https://developer.android.com/kotlin/coroutines) for *simple* use cases.
+Here I will try to explore how the native API can replace the recommended example in the Android Kotlin [training guide](https://developer.android.com/kotlin/coroutines) for _simple_ use cases.
 
 ---
 
@@ -49,8 +48,9 @@ val statusResult: Result<String> = runCatching {
     println("Got network error: ${error.message}")
 }
 ```
+
 ```kotlin
-// Assuming following supposed\* long running network API  
+// Assuming following supposed\* long running network API
 suspend fun userStatusNetworkRequest(username: String) = "ACTIVE"
 ```
 
@@ -67,6 +67,7 @@ In addition to nice callbacks, the `Result<T>` class provides multiple ways to r
 ```kotlin
 val status: String = statusResult.getOrDefault("STATUS_UNKNOWN")
 ```
+
 ```kotlin
 // Or if nullable data is acceptable use:
 val status: String? = statusResult.getOrNull()
