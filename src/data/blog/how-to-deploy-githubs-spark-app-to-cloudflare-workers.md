@@ -1,6 +1,6 @@
 ---
 title: How to Deploy GitHub’s Spark App to Cloudflare Workers
-description: GitHub’s Spark is a fantastic starting point for building modern React applications that uses spark-template as starting point. Once you…
+description: GitHub’s Spark is a fantastic starting point for building modern React applications that uses spark-template as a starting point. Once you…
 pubDatetime: 2025-09-28T13:52:59.880Z
 tags: ["cloudflare", "github", "deployment"]
 featured: false
@@ -10,7 +10,7 @@ draft: false
 
 ![](https://cdn-images-1.medium.com/max/800/1*0KIDO0mfjpv6_PTAN7uDYg.jpeg)
 
-GitHub’s [Spark](https://github.com/features/spark) is a fantastic starting point for building modern React applications that uses [spark-template](https://github.com/github/spark-template) as starting point. Once you have built the app, GitHub does allow you to publish the Spark site, however that requires users to have GitHub account to visit the site.
+GitHub’s [Spark](https://github.com/features/spark) is a fantastic starting point for building modern React applications that uses [spark-template](https://github.com/github/spark-template) as a starting point. Once you have built the app, GitHub does allow you to publish the Spark site, however that requires users to have GitHub account to visit the site.
 
 In this guide, we’ll walk through the process of adapting the spark-template to deploy seamlessly to Cloudflare Workers using the modern ASSETS binding approach.
 
@@ -36,7 +36,7 @@ Before we begin, make sure you have:
 
 ### Step-by-Step Implementation
 
-For this example, I have created a Spark app called JSON to CSV Converter. I will use that to show as example on how to configure it. Update the key information of the project where applicable.
+For this example, I have created a Spark app called JSON to CSV Converter. I will use that as an example of how to configure it. Update the key information of the project where applicable.
 
 #### Prepare Project for Cloudflare Workers
 
@@ -92,7 +92,7 @@ Key configuration options:
 -   `not_found_handling = "single-page-application"`: Enables client-side routing
 -   `html_handling = "auto-trailing-slash"`: Handles clean URLs
 -   `directory = "./dist"`: Points to your build output
--   `name = "my-spark-app"`: This will be the app id you use when creating worker in cloudflare
+-   `name = "my-spark-app"`: This will be the app ID you use when creating a worker in Cloudflare
 
 **Update package.json Scripts**
 
@@ -112,7 +112,7 @@ The key addition is `"copy-worker"` step that copies necessary files to `dist/` 
 
 **Update Vite Configuration (if needed)**
 
-If you encounter build issue in cloudflare, update following line from:
+If you encounter a build issue in Cloudflare, update the following line from:
 
 ```javascript
 const projectRoot = process.env.PROJECT_ROOT || import.meta.dirname
@@ -146,7 +146,7 @@ spark-template/
 
 ### Cloudflare Workers Deployment
 
-Once you’ve made all the changes, creating cloudflare workers is easy. First, ensure your GitHub account is connected so that when importing project you can see your repository.
+Once you’ve made all the changes, creating Cloudflare Workers is easy. First, ensure your GitHub account is connected so that when importing the project you can see your repository.
 
 ### Importing Repository
 
@@ -180,7 +180,7 @@ Once build is complete successfully, clicking on the external link button on the
 
 ![](https://cdn-images-1.medium.com/max/800/1*r__1VjZX6ctzrs0be2jMjA.png)
 
-✓ Thats it, you got your Spark app up and running on Cloudflare’s edge network. If you have domain hosted with Cloudflare you can also use that as custom domain or sub-domain for the app.
+✓ That's it, you got your Spark app up and running on Cloudflare’s edge network. If you have domain hosted with Cloudflare you can also use that as custom domain or sub-domain for the app.
 
 ---
 

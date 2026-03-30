@@ -12,7 +12,7 @@ draft: false
 
 In the past few years, the Android ecosystem has exploded with lots of tools, libraries, and architecture guidelines. Recently, with I/O 2017 announcement of Kotlin support, it just added another dimension.
 
-Today, I am going to show you quickest way of becoming an Android Developer regardless of language and plethora of libraries, all you need is a physical Android device.
+Today, I am going to show you the quickest way of becoming an Android Developer regardless of language and plethora of libraries, all you need is a physical Android device.
 
 #### Becoming Android developer
 
@@ -20,7 +20,7 @@ Today, I am going to show you quickest way of becoming an Android Developer rega
 
 On your device, go to `Settings > About` and find “**Build Number**”
 
-> p.s. The “Build Number” may be burried under additional sub section based on device manufacturer like LG, Samsung, HTC and so on. You just need to find it 🤓.
+> p.s. The “Build Number” may be buried under an additional subsection based on device manufacturer like LG, Samsung, HTC and so on. You just need to find it 🤓.
 
 Now, all you need to do is keep tapping the build number value until it says you have become a developer. And that’s it!
 
@@ -50,7 +50,7 @@ Why 7? Maybe because it’s considered a lucky number? ¯\\\_(ツ)\_/¯
 
 #### Pre-conditions
 
-Here some of the pre-conditions that have to be met before developer settings can be activated by tapping 7 times on the build number.
+Here are some of the pre-conditions that have to be met before developer settings can be activated by tapping 7 times on the build number.
 
 -   Admin user of the device (using [UserManager](https://developer.android.com/reference/android/os/UserManager.html))
 -   Device Provisioning is complete

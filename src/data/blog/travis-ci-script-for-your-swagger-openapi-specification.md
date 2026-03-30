@@ -1,6 +1,6 @@
 ---
 title: Travis CI script for your Swagger/OpenAPI Specification
-description: Recently I have been working with swagger in a project. Swagger 2.0 has become open standard and now referred as OpenAPI Specification…
+description: Recently I have been working with swagger in a project. Swagger 2.0 has become an open standard and now referred to as OpenAPI Specification…
 pubDatetime: 2016-08-21T14:39:59.214Z
 tags: ["ci", "swagger", "openapi"]
 featured: false
@@ -8,7 +8,7 @@ draft: false
 ---
 
 
-Recently I have been working with swagger in a project. [Swagger 2.0](http://swagger.io/) has become open standard and now referred as [OpenAPI Specification](https://github.com/OAI/OpenAPI-Specification) *(OAS)*.
+Recently I have been working with swagger in a project. [Swagger 2.0](http://swagger.io/) has become an open standard and now referred to as [OpenAPI Specification](https://github.com/OAI/OpenAPI-Specification) *(OAS)*.
 
 I also love **medium.com**, so when I saw their API doc was hand written in plain text, I thought it would be good exercise to convert it to OpenAPI Specification format. The result is [https://github.com/amardeshbd/medium-api-specification](https://github.com/amardeshbd/medium-api-specification)
 
@@ -20,7 +20,7 @@ Now, recently I’ve started adding [**Travis**](https://travis-ci.org/) Continu
 
 ### Adding Travis CI build support for OpenAPI specification
 
-Googling for this specific topic didn’t bring much content. I wanted to keep the scrip simple and use existing validator provided by [swagger-validator-badge](https://github.com/swagger-api/validator-badge) web service *(NOTE: There are over dozens of validator in different languages built by the community — see* [*http://swagger.io/open-source-integrations/*](http://swagger.io/open-source-integrations/)*)*.
+Googling for this specific topic didn’t bring much content. I wanted to keep the script simple and use existing validator provided by [swagger-validator-badge](https://github.com/swagger-api/validator-badge) web service *(NOTE: There are dozens of validators in different languages built by the community — see* [*http://swagger.io/open-source-integrations/*](http://swagger.io/open-source-integrations/)*)*.
 
 Here are the key elements used for CI:
 

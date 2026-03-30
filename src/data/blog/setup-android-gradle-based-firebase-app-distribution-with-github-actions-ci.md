@@ -63,13 +63,13 @@ Once authorized, you should get `FIREBASE_TOKEN` in the console. Save it for lat
 
 #### Setup Secrets for GitHub CI Workflow
 
-Go to your GitHub project and the `FIREBASE_TOKEN` as secret property.
+Go to your GitHub project and add the `FIREBASE_TOKEN` as a secret property.
 
 ![](https://cdn-images-1.medium.com/max/800/1*5E6cFFg4aMiJv58WLyS9uA.png)
 
 #### Setup GitHub Actions CI Workflow
 
-Based on git-flow, we want to setup the CI job such that whenever we merge commit to `master` branch it triggers the release build. You can obviously [customize the behavior](https://help.github.com/en/actions/reference/events-that-trigger-workflows) based on your need.
+Based on git-flow, we want to set up the CI job such that whenever we merge commit to `master` branch it triggers the release build. You can obviously [customize the behavior](https://help.github.com/en/actions/reference/events-that-trigger-workflows) based on your need.
 
 ```yaml
 name: Firebase App Distribution  

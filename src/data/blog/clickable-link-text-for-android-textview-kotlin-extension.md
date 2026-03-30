@@ -14,8 +14,8 @@ Recently I have had to create UI that required user tappable/clickable text in t
 
 Android TextView where “Register Now” is a tappable link with a callback.
 
-Here is an example usage for generating clickable link within the same `TextView`
+Here is an example usage for generating a clickable link within the same `TextView`
 
-So, if your project requires something like this take a look at the following extension function for `android.widget.TextView`.
+So, if your project requires something like this, take a look at the following extension function for `android.widget.TextView`.
 
 You should be able to easily convert this to Java if needed. Let me know if you find this useful. Cheers ✌️

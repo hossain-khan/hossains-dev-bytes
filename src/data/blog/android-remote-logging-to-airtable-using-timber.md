@@ -16,9 +16,9 @@ Have you ever needed to save your Android Logcat logs for later analysis?
 
 ---
 
-I recently built a service-based Android app, and I needed to monitor its activity to validate its correctness. For that I could not sit in front of the computer monitor for 24+ hours, I needed a way to store the logs with app behavior to validate it’s performing as it should.
+I recently built a service-based Android app, and I needed to monitor its activity to validate its correctness. For that, I could not sit in front of the computer monitor for 24+ hours, I needed a way to store the logs with app behavior to validate it’s performing as it should.
 
-I leveraged the following 2 tools to accomplish this task
+I leveraged the following 2 tools to accomplish this task.
 
 -   [**Timber**](https://github.com/JakeWharton/timber): *A logger with a small, extensible API which provides utility on top of Android’s normal Log class.*
 -   [**Airtable**](https://www.airtable.com/): *Airtable is a hybrid solution that mixes the intuitiveness of spreadsheets and the power and functionalities of databases.*
@@ -34,7 +34,7 @@ I leveraged the following 2 tools to accomplish this task
 
 If you are not familiar with the amazing Android Timber library, I suggest you spend a few minutes reading the [documentation](https://github.com/JakeWharton/timber/blob/trunk/README.md). We will be building an `**AirtableLoggingTree**` that sends all the logs logged via Timber to the Airtable spreadsheet/database using their REST API.
 
-Here are some pseudo task we need to accomplish this
+Here are some pseudo tasks we need to accomplish this
 
 1.  Save all the logs to a queue to process and send to REST API
 2.  Format the logs and send a batched request (to avoid rate limit)
@@ -135,7 +135,7 @@ class AirtableLoggingTree(
         var sentLogCount = 0  
   
         // Collects all the queued logs and sends them in batches  
-        // Based on rate-limit a total of 5x10 = 50 reconds can be sent per second  
+        // Based on rate-limit a total of 5x10 = 50 records can be sent per second  
         while (sentLogCount < MAX_LOG_COUNT_PER_SECOND) {  
             val jsonPayload = createLogMessage(getMaximumAllowedLogs())  
             if (jsonPayload != null) {  
@@ -192,7 +192,7 @@ class AirtableLoggingTree(
 }
 ```
 
-Everything is great except there is one piece of missing code that uses the API `LogMessage.toLogRecord()` in the `AirtableLoggingTree`. The snipped is shown below for clarity.
+Everything is great except there is one piece of missing code that uses the API `LogMessage.toLogRecord()` in the `AirtableLoggingTree`. The snippet is shown below for clarity.
 
 ```kotlin
 val records = JSONArray().apply { logs.forEach { put(it.toLogRecord()) } }
