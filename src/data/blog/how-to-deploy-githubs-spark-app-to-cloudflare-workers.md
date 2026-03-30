@@ -44,11 +44,11 @@ For this example, I have created a Spark app called JSON to CSV Converter. I wil
 
 Create a new file `src/_worker.js` with the following content:
 
-```
-/\*\*  
- \* Cloudflare Worker for Spark Template App  
- \* Simple ASSETS binding approach for static site hosting  
- \*/  
+```javascript
+/**  
+ * Cloudflare Worker for Spark Template App  
+ * Simple ASSETS binding approach for static site hosting  
+ */  
 export default {  
   async fetch(request, env, ctx) {  
     // Serve static assets using the ASSETS binding  
@@ -63,27 +63,27 @@ This minimal worker leverages Cloudflare’s ASSETS binding to serve your static
 
 Create `src/.assetsignore` to exclude the worker script from being served as a static asset:
 
-```
-\_worker.js
+```text
+_worker.js
 ```
 
 **Create worker config**
 
 Create a `wrangler.toml` file in your project root:
 
-```
+```toml
 name = "my-spark-app"  
-main = "dist/\_worker.js"  
-compatibility\_date = "2025-08-29"  
-workers\_dev = true  
+main = "dist/_worker.js"  
+compatibility_date = "2025-08-29"  
+workers_dev = true  
   
-\[assets\]  
+[assets]  
 directory = "./dist"  
 binding = "ASSETS"  
-html\_handling = "auto-trailing-slash"  
-not\_found\_handling = "single-page-application"  
+html_handling = "auto-trailing-slash"  
+not_found_handling = "single-page-application"  
   
-\[build\]  
+[build]  
 command = "npm run build"
 ```
 
@@ -98,11 +98,11 @@ Key configuration options:
 
 Add the deployment script to your `package.json`: Add ‘copy-worker’ step and update ‘build’ step.
 
-```
+```json
 {  
   "scripts": {  
-    \# other existing configs ...  
-    "copy-worker": "cp src/\_worker.js dist/\_worker.js && cp src/.assetsignore dist/.assetsignore",  
+    # other existing configs ...  
+    "copy-worker": "cp src/_worker.js dist/_worker.js && cp src/.assetsignore dist/.assetsignore",  
     "build": "tsc -b --noCheck && vite build && npm run copy-worker",  
   }  
 }
@@ -114,34 +114,34 @@ The key addition is `"copy-worker"` step that copies necessary files to `dist/` 
 
 If you encounter build issue in cloudflare, update following line from:
 
-```
-const projectRoot = process.env.PROJECT\_ROOT || import.meta.dirname
+```javascript
+const projectRoot = process.env.PROJECT_ROOT || import.meta.dirname
 ```
 
 to
 
-```
-const projectRoot = process.env.PROJECT\_ROOT || process.cwd()
+```javascript
+const projectRoot = process.env.PROJECT_ROOT || process.cwd()
 ```
 
 ### File Structure After Implementation
 
 Your project structure should look like this:
 
-```
+```text
 spark-template/  
 ├── src/  
-│   ├── \_worker.js          \# Cloudflare Worker script  
-│   ├── .assetsignore       \# Excludes worker from static assets  
-│   └── \[your app files\]    \# React components and assets  
+│   ├── _worker.js          # Cloudflare Worker script  
+│   ├── .assetsignore       # Excludes worker from static assets  
+│   └── [your app files]    # React components and assets  
 ├── dist/ (after build)  
-│   ├── \_worker.js          \# Copied worker script  
-│   ├── .assetsignore       \# Copied asset exclusions  
-│   ├── index.html          \# Built app entry point  
-│   └── assets/             \# Built app assets  
-├── wrangler.toml           \# Cloudflare Workers configuration  
-├── vite.config.ts          \# Updated with minor fix  
-└── package.json            \# Updated with 'copy-worker' and 'build' script
+│   ├── _worker.js          # Copied worker script  
+│   ├── .assetsignore       # Copied asset exclusions  
+│   ├── index.html          # Built app entry point  
+│   └── assets/             # Built app assets  
+├── wrangler.toml           # Cloudflare Workers configuration  
+├── vite.config.ts          # Updated with minor fix  
+└── package.json            # Updated with 'copy-worker' and 'build' script
 ```
 
 ### Cloudflare Workers Deployment
@@ -190,9 +190,9 @@ Once build is complete successfully, clicking on the external link button on the
 
 Sometimes build issues related to `package-lock.json` may happen, in that case re-build app and push changes.
 
-```
-\# Clear and rebuild  
-rm -rf node\_modules dist  
+```bash
+# Clear and rebuild  
+rm -rf node_modules dist  
 npm install  
 npm run build
 ```

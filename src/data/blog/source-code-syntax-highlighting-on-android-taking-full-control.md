@@ -49,7 +49,7 @@ This setup is going to be specific to library of your choice. Since we are focus
 
 After you [download](https://prismjs.com/download.html) the library JS and CSS file, you essentially need following HTML to render the highlighted source.
 
-```
+```html
 <!DOCTYPE html>  
 <html>  
   <head>  
@@ -70,7 +70,7 @@ Put the downloaded files in your Android app’s assets directory, ideally in ww
 
 Now that we have a baseline for the template, next part is to convert it to Kotlin function that can take additional parameter to customize different plugin options. Here is template with some additional data needed for mobile.
 
-```
+```kotlin
 **fun prismJsHtmlContent**(  
     formattedSourceCode: String,  
     language: String,  
@@ -98,20 +98,20 @@ Now that we have a baseline for the template, next part is to convert it to Kotl
 
 Making your own custom view is a great way to enhance capabilities. In this case we want to make our custom-view extend from `WebView` so that we can load the template we just defined with source code at runtime.
 
-```
+```kotlin
 package your.app.code
 ```
-```
+```kotlin
 class SyntaxHighlighterWebView [@JvmOverloads](http://twitter.com/JvmOverloads "Twitter profile for @JvmOverloads") constructor(  
     context: Context,  
     attrs: AttributeSet? = null,  
     defStyleAttr: Int = 0  
 ) : **WebView**(context, attrs, defStyleAttr) {  
     companion object {  
-        private const val ANDROID\_ASSETS\_PATH = "file:///android\_asset/"  
+        private const val ANDROID_ASSETS_PATH = "file:///android_asset/"  
     }
 ```
-```
+```kotlin
     // Our exposed function to show highlighted syntax  
     **fun bindSyntaxHighlighter**(  
         formattedSourceCode: String,  
@@ -120,17 +120,17 @@ class SyntaxHighlighterWebView [@JvmOverloads](http://twitter.com/JvmOverloads "
     ) {  
         settings.javaScriptEnabled = true
 ```
-```
+```kotlin
          loadDataWithBaseURL(  
-            ANDROID\_ASSETS\_PATH /\* baseUrl \*/,  
+            ANDROID_ASSETS_PATH /* baseUrl */,  
             **prismJsHtmlContent**(  
                formattedSourceCode,   
                language,   
                showLineNumbers  
-            ) /\* html-data \*/,  
-            "text/html" /\* mimeType \*/,  
-            "utf-8" /\* encoding \*/,  
-            "" /\* failUrl \*/  
+            ) /* html-data */,  
+            "text/html" /* mimeType */,  
+            "utf-8" /* encoding */,  
+            "" /* failUrl */  
         )  
     }  
 }
@@ -142,17 +142,17 @@ Now that we have our `SyntaxHighlighterWebView` custom-view with `bindSyntaxHigh
 
 All we need to do is use the view in XML layout like following:
 
-```
+```xml
 <your.app.code.SyntaxHighlighterWebView  
-  android:id="@+id/syntax\_highlighter\_webview"  
-  android:layout\_width="match\_parent"  
-  android:layout\_height="match\_parent" />
+  android:id="@+id/syntax_highlighter_webview"  
+  android:layout_width="match_parent"  
+  android:layout_height="match_parent" />
 ```
 
 And from your `Activity` or `Fragment` get reference to the view and bind the source code like following
 
-```
-val highlighter: SyntaxHighlighterWebView = findViewById(R.id.syntax\_highlighter\_webview)  
+```kotlin
+val highlighter: SyntaxHighlighterWebView = findViewById(R.id.syntax_highlighter_webview)  
   
 highlighter.**bindSyntaxHighlighter**(  
    formattedSourceCode = "data class Student(val name: String)",  

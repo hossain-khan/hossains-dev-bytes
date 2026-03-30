@@ -26,7 +26,7 @@ The concept is simple, you setup node environment on CI machine, install require
 
 Use case #1: Use XML Validator module to validate XML. See [workflow file](https://github.com/amardeshbd/android-hk-vision-muzei-plugin/blob/master/.github/workflows/android.yml).
 
-```
+```yaml
     - name: Setup NodeJS  
       uses: actions/setup-node@v1  
       with:  
@@ -40,13 +40,13 @@ Use case #1: Use XML Validator module to validate XML. See [workflow file](https
 
 Use case #2: Validate JSON file using JSON-Schema specification ([source](https://github.com/amardeshbd/vision.hossainkhan.com/blob/master/.github/workflows/validate-json-nodejs.yml)).
 
-```
+```yaml
     - name: Setup NodeJS  
       uses: actions/setup-node@v1  
       with:  
         node-version: 12.x
 ```
-```
+```yaml
     - run: npm install -g ajv-cli  
     - run: ajv validate -s photos-schema.json -d photos.json
 ```

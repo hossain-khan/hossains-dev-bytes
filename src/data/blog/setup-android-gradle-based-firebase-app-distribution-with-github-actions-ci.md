@@ -18,7 +18,7 @@ Firebase already has an [**excellent guide**](https://firebase.google.com/docs/a
 
 On your root `build.gradle` file add the Gradle plugin
 
-```
+```groovy
 dependencies {  
     // .. more existing dependencies here  
     classpath 'com.google.firebase:firebase-appdistribution-gradle:2.0.0' // see official guide for latest versions  
@@ -27,16 +27,20 @@ dependencies {
 
 Next, apply the plugin in your Android app’s `build.gradle` and distribution properties. See the [official guide](https://firebase.google.com/docs/app-distribution/android/distribute-gradle#step_3_configure_your_distribution_properties) for the full list of supported parameters.
 
-```
+```groovy
 apply plugin: 'com.google.firebase.appdistribution'
 ```
-```
-android *{*    buildTypes *{*        release *{ // NOTE: \`debug\` can have different cofigs too*            firebaseAppDistribution *{*                releaseNotes="Release notes at bit.ly/notes"  
-                groups="qa" // see docs for more options   
-            *}  
-        }  
-    }  
-}*
+```groovy
+android {
+    buildTypes {
+        release { // NOTE: `debug` can have different configs too
+            firebaseAppDistribution {
+                releaseNotes="Release notes at bit.ly/notes"
+                groups="qa" // see docs for more options
+            }
+        }
+    }
+}
 ```
 
 #### Generate Firebase Token
@@ -47,7 +51,7 @@ Firebase has [3 different documented ways](https://firebase.google.com/docs/app-
 
 From the root of your android app project, run following Gradle command which will give you a URL to authenticate for the Firebase project that app uses.
 
-```
+```bash
 ./gradlew appDistributionLogin
 ```
 
@@ -55,7 +59,7 @@ Copy the URL `https://accounts.google.com/o/..../auth/cloud-platform` and paste 
 
 ![](https://cdn-images-1.medium.com/max/800/1*BWREQVxtFP-tTRq0QrbXYw.png)
 
-Once authorized, you should get \`FIREBASE\_TOKEN\` in the console. Save it for later use.
+Once authorized, you should get `FIREBASE_TOKEN` in the console. Save it for later use.
 
 #### Setup Secrets for GitHub CI Workflow
 
@@ -67,7 +71,7 @@ Go to your GitHub project and the `FIREBASE_TOKEN` as secret property.
 
 Based on git-flow, we want to setup the CI job such that whenever we merge commit to `master` branch it triggers the release build. You can obviously [customize the behavior](https://help.github.com/en/actions/reference/events-that-trigger-workflows) based on your need.
 
-```
+```yaml
 name: Firebase App Distribution  
   
 on:  
@@ -88,7 +92,7 @@ jobs:
   
       - name: Firebase App Distribute  
         env:  
-          FIREBASE\_TOKEN: ${{ secrets.FIREBASE\_TOKEN }}  
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}  
         run: ./gradlew assembleRelease appDistributionUploadRelease
 ```
 
