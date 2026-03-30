@@ -1,6 +1,6 @@
 ---
 title: Using AI to build modern Android apps — are we there yet?
-description: Assisted coding is very promising and fun! Fully autonomus app building might not be too far away! 🤓
+description: Assisted coding is very promising and fun! Fully autonomous app building might not be too far away! 🤓
 pubDatetime: 2025-02-18T13:55:04.780Z
 tags: ["android", "ai", "machine-learning"]
 featured: false
@@ -14,7 +14,7 @@ Building is more fun with AI 🤖
 
 ---
 
-I’ve had my GitHub Copilot subscription for over a year now, but I haven’t leveraged the service until very recently I decided to build some tools and Android apps using it.
+I’ve had my GitHub Copilot subscription for over a year now, but I haven’t leveraged the service until very recently, when I decided to build some tools and Android apps using it.
 
 I have extensively used ChatGPT 4o & o1, Google Gemini, and Claude Sonnet to build an app related to weather even though I am very aware of the following phrase:
 
@@ -30,7 +30,7 @@ Sure, there are some outstanding weather apps including Google’s own that can 
 
 #### The AI Code Assist Experience
 
-It’s been absolutely fun working with AI to come up with solutions, in this case the Compose UI Screens, Presenters, and unit tests for them. From my experience, the LLM provided solution are **80–98% correct** and can just be copy pasted with some imports to fix. Sometimes I do have to refactor or move things around, but it gets me 80% there and I just finish the last 20% to make a finished app screen.
+It’s been absolutely fun working with AI to come up with solutions, in this case the Compose UI Screens, Presenters, and unit tests for them. From my experience, the LLM-provided solutions are **80–98% correct** and can just be copy pasted with some imports to fix. Sometimes I do have to refactor or move things around, but it gets me 80% there and I just finish the last 20% to make a finished app screen.
 
 I feel like, this will be an essential tool for all kinds of engineers to reduce the cognitive load and iterate on the products they want to build.
 
@@ -50,7 +50,7 @@ Regardless, I am very happy to use LLM and learn from it through the process of 
 
 #### The Learning Opportunity
 
-One of the best part of leveraging AI and looking at the response is that you get to learn new function, tools and so on.
+One of the best parts of leveraging AI and looking at the response is that you get to learn new functions, tools and so on.
 
 Along the way building the app, I got to 🧑‍💻 exercise my knowledge, learn and grow. Here are some of the cool stuff I have done while building the app
 

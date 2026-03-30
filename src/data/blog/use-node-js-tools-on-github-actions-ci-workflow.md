@@ -20,7 +20,7 @@ This is a quick write-up on how you can leverage Actions CI Workflow to do any t
 
 > NOTE: If you are new to GitHub Actions, I highly recommend reading their ‘[Getting Started](https://help.github.com/en/actions/getting-started-with-github-actions)’ guide first.
 
-The concept is simple, you setup node environment on CI machine, install required CLI-based node modules, and run your tests.
+The concept is simple, you set up a node environment on CI machine, install required CLI-based node modules, and run your tests.
 
 > NOTE: Use node package manager portal at [npmjs.com](https://www.npmjs.com/) to find your node-module to run on GitHub Actions CI job.
 

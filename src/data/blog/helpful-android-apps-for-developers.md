@@ -30,9 +30,9 @@ Great app which shows overlay of grids to help designers follow material design 
 
 ---
 
-### Developer Toos
+### Developer Tools
 
-Sometimes, you just need very simple tool to get infromation about your device and screen density information. “Developer Tools” app just does that. *\[Get it from* [*Google Play*](https://play.google.com/store/apps/details?id=com.roysolberg.android.developertools)*\]*
+Sometimes, you just need very simple tool to get information about your device and screen density information. “Developer Tools” app just does that. *\[Get it from* [*Google Play*](https://play.google.com/store/apps/details?id=com.roysolberg.android.developertools)*\]*
 
 ---
 
@@ -46,9 +46,9 @@ Developer Tools Screenshot
 
 ---
 
-### Pixel Rular
+### Pixel Ruler
 
-When working with designer spec, sometimes it’s hard to measure dimensions by looking at the screen. Pixel Rular gives you perfect tool to get dimensions. *\[Get it from* [*Google Play*](https://play.google.com/store/apps/details?id=com.bidyut.app.pixelruler)*\]*
+When working with designer spec, sometimes it’s hard to measure dimensions by looking at the screen. Pixel Ruler gives you perfect tool to get dimensions. *\[Get it from* [*Google Play*](https://play.google.com/store/apps/details?id=com.bidyut.app.pixelruler)*\]*
 
 ---
 
@@ -56,7 +56,7 @@ When working with designer spec, sometimes it’s hard to measure dimensions by 
 
 ![](https://cdn-images-1.medium.com/max/600/1*Fp7Y1EiFcxdMLCwJRrNzVg.png)
 
-Pixel Rular Screenshots
+Pixel Ruler Screenshots
 
 ---
 

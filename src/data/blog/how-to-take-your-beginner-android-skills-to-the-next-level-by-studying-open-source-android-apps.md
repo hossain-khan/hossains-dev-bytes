@@ -41,7 +41,7 @@ They do have a vanilla implementation in `master` branch, however, I will focus 
 
 In early days Plaid 1.0 application (created in 2014) was [Nick Butcher](https://twitter.com/crafty)’s app where he showcased how [material design](https://material.io/) and animation can bring joy and life to an Android application. After years of improving, the Plaid app has come to a point where it makes perfect sense to make this app a reference app that showcases how an ideal Android application can be built using material design and fluid animation. So, in 2019, Nick did exactly that, they have moved the Plaid Github repo to Google’s official repository — [here is the article explaining the move and goal](https://medium.com/@crafty/restitching-plaid-9ca5588d3b0a) *(I highly recommend to read it)*.
 
-NOTE: The Plaid 2.0 is still under heavy development, which as a bonus, gives you an opportunity to learn how an application is migrated to modern architecture and Kotlin. See the Github project page with different technical articles explaining how the app is being migrated to 2.0
+NOTE: The Plaid 2.0 is still under heavy development, which as a bonus, gives you an opportunity to learn how an application is migrated to modern architecture and Kotlin. See the GitHub project page with different technical articles explaining how the app is being migrated to 2.0
 
 -   **Key Features:** Material Design, Android Theming, Dark Mode, Multi-Module, Animation
 -   **Language:** Kotlin
@@ -85,7 +85,7 @@ Sunflower — Demo Screenshots
 
 This app aggregates articles and posts from different services like Hackernews, Medium, Reddit, Slashdot, Dribble, Uplabs and so on. This is a very recent app from [Zac Sweers](https://www.zacsweers.dev/) who has put a significant amount of time to develop this app. The app architecture is [inspired](https://github.com/ZacSweers/CatchUp#influences) by Plaid and U+2020 app. CatchUp is being actively developed, you can clone and build locally to try it out.
 
-Please note, this is kinda large scale complex application that is well done and contains many advanced techniques. So, if you are a beginner, I would postpone looking into the application towards the end of your study ^\_^
+Please note, this is a kinda large-scale, complex application that is well done and contains many advanced techniques. So, if you are a beginner, I would postpone looking into the application towards the end of your study ^\_^
 
 > ps. I, myself have [found](https://twitter.com/rharter/status/1240773309316378626?s=20) this application recently. Personally I like how the Gradle script is organized using Kotlin based Gradle scripts (kts), and how the dagger is used extensively to manage dependencies of different component and service implementations.
 

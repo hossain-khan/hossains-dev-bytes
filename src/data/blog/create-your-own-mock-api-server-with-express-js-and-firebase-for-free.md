@@ -10,11 +10,11 @@ draft: false
 
 Recently I had to prepare a complete mocked server for an app I worked in the past. The reason mocking was required so that app’s different functionality can be showcased with a variation of mocked response which triggers different UI and functionality.
 
-There may be different solutions available in the market, however, since Firebase has a free tier that allows Node.js based [Express](https://expressjs.com/) web framework makes things much easier to customize based on need.
+There may be different solutions available in the market, however, since Firebase has a free tier and the Node.js-based [Express](https://expressjs.com/) web framework makes things much easier to customize based on need.
 
 Google has [many many examples](https://github.com/firebase/functions-samples) for cloud functions which showcase 100s of use case, however, I just wanted to focus on using Express to mock API responses.
 
-> **UPDATE (Feb 2021): This article may be outdated. Firebase now requires note 11 and up and a payment method is required to use the free tier. It may not be possible to provide a credit-card. Just keep these in mind and follow official documents on how to deploy node app.**
+> **UPDATE (Feb 2021): This article may be outdated. Firebase now requires Node 11 and up and a payment method is required to use the free tier. It may not be possible to provide a credit card. Just keep these in mind and follow official documents on how to deploy node app.**
 
 ### What will this guide touch on?
 
@@ -33,7 +33,7 @@ First, go to [https://console.firebase.google.com/](https://console.firebase.goo
 
 Create project. Note: The project ID will be visible in URL used in mocking.
 
-If you don’t have “**Firebase CLI**” installed, follow steps from [https://firebase.google.com/docs/cli/](https://firebase.google.com/docs/cli/) to install the Firebase CLI. This will allow you update code to deploy mock server to Firebase.
+If you don’t have “**Firebase CLI**” installed, follow steps from [https://firebase.google.com/docs/cli/](https://firebase.google.com/docs/cli/) to install the Firebase CLI. This will allow you to update code to deploy mock server to Firebase.
 
 Run `**firebase projects:list**` command in terminal to validate the project you just created shows up in the list.
 
@@ -53,10 +53,10 @@ Select “Functions” and “Hosting” by going up and down and pressing space
 
 ---
 
-Use default options for the `firebase init` wizard. We will update some configuration later. Once initialization is completed, link your newly created firebase project with current directory project by executing following command with your project ID you just created:
+Use default options for the `firebase init` wizard. We will update some configuration later. Once initialization is completed, link your newly created firebase project with the current directory project by executing the following command with your project ID you just created:
 
 ```bash
-// “**your-project-id-23d6x**” is the ID from “firebase list” command.
+// "your-project-id-23d6x" is the ID from "firebase list" command.
 ```
 ```bash
 firebase use --add your-project-id-23d6x
@@ -71,12 +71,12 @@ Now that the default project is up and running, it’s time to setup Express so 
 First, update **rewrites** rule of `/firebase.json` to forward all requests to Firebase Cloud Function.
 
 ```json
-"rewrites": \[  
-     {  
-        "source": "\*\*",  
-        "function": "api"        
-     }  
-\]
+"rewrites": [
+     {
+        "source": "**",
+        "function": "api"
+     }
+]
 ```
 
 See [github-sample](https://github.com/amardeshbd/firebase-mock-api-server/blob/master/firebase.json#L17) for reference.
@@ -111,7 +111,7 @@ See [GitHub example](https://github.com/amardeshbd/firebase-mock-api-server/blob
 
 Once you are done adding APIs, you can run `**firebase deploy**` from root of the project to deploy your APIs.
 
-> NOTE: If you are getting HTTP 500 error — You client does not have permission, then see troubleshooting section at the end of this article.
+> NOTE: If you are getting HTTP 500 error — Your client does not have permission, then see troubleshooting section at the end of this article.
 
 Here are some example APIs that are available from the [example](https://github.com/amardeshbd/firebase-mock-api-server) GitHub project.
 

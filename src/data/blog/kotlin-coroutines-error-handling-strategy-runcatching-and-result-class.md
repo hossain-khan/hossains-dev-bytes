@@ -23,7 +23,7 @@ when (result) {
 }
 ```
 
-However, I have recently [stumbled into](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/run-catching.html) Kotlin’s `runCathing {}` API that makes use of native`Result<T>` class already [available in standard lib](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/) since Kotlin `v1.3`
+However, I have recently [stumbled into](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/run-catching.html) Kotlin’s `runCatching {}` API that makes use of native `Result<T>` class already [available in standard lib](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/) since Kotlin `v1.3`
 
 Here I will try to explore how the native API can replace the recommended example in the Android Kotlin [training guide](https://developer.android.com/kotlin/coroutines) for *simple* use cases.
 
@@ -40,11 +40,14 @@ Based on Kotlin standard lib [doc](https://kotlinlang.org/api/latest/jvm/stdlib/
 To handle a function that may throw an exception in coroutines or regular function use this:
 
 ```kotlin
-val statusResult: **Result<String>** = *runCatching* **{**    // function that may throw exception that needs to be handled  
-    repository.userStatusNetworkRequest(username)  
-**}**.*onSuccess* **{** status: String **\->**    *println*("User status is: $status")  
-**}**.*onFailure* **{** error: Throwable **\->**    *println*("Go network error: ${error.message}")  
-**}**
+val statusResult: Result<String> = runCatching {
+    // function that may throw exception that needs to be handled
+    repository.userStatusNetworkRequest(username)
+}.onSuccess { status: String ->
+    println("User status is: $status")
+}.onFailure { error: Throwable ->
+    println("Got network error: ${error.message}")
+}
 ```
 ```kotlin
 // Assuming following supposed\* long running network API  
@@ -53,7 +56,7 @@ suspend fun userStatusNetworkRequest(username: String) = "ACTIVE"
 
 Notice the ‘[Result](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/)’ returned from the `runCatching` this is where the power comes in to write semantic code to handle errors.
 
-The `onSuccess` and `onFailrue` callback is part of `Result<T>` class that allows you to easily handle both cases.
+The `onSuccess` and `onFailure` callback is part of `Result<T>` class that allows you to easily handle both cases.
 
 #### How to handle Exceptions
 
@@ -62,21 +65,21 @@ In addition to nice callbacks, the `Result<T>` class provides multiple ways to r
 1.  **Using** `**getOrDefault()**` **and** `**getOrNull()**` **API**
 
 ```kotlin
-val status: **String** = statusResult.*getOrDefault*("STATUS_UNKNOWN")
+val status: String = statusResult.getOrDefault("STATUS_UNKNOWN")
 ```
 ```kotlin
-// Or if nullable data is acceptable use:  
-val status: **String?** = statusResult.getOrNull()
+// Or if nullable data is acceptable use:
+val status: String? = statusResult.getOrNull()
 ```
 
-Since the `onSuccess` and `onFailure` returns `Result<T>` you can chain most of these API calls like following
+Since the `onSuccess` and `onFailure` returns `Result<T>` you can chain most of these API calls like the following
 
 ```kotlin
-val status: **String** = *runCatching* **{**    repository.userStatusNetworkRequest("username")  
-**}  
-**.*onSuccess* **{}  
-**.*onFailure* **{}  
-**.*getOrDefault*("STATUS_UNKNOWN")
+val status: String = runCatching {
+    repository.userStatusNetworkRequest("username")
+}.onSuccess {}
+.onFailure {}
+.getOrDefault("STATUS_UNKNOWN")
 ```
 
 **2\. Using** `**recover { }**` **API**
@@ -84,13 +87,13 @@ val status: **String** = *runCatching* **{**    repository.userStatusNetworkRequ
 The `recover` API allows you to handle the error and recover from there with a fallback value of the same data type. See the following example.
 
 ```kotlin
-val status: **Result<String>** = *runCatching* **{**    repository.userStatusNetworkRequest("username")  
-**}  
-**.*onSuccess* **{}  
-**.*onFailure* **{}  
-**.*recover* **{** error: Throwable **\->** "STATUS_UNKNOWN" **}  
-  
-***println*(status.isSuccess) // Prints "true" even if error is thrown
+val status: Result<String> = runCatching {
+    repository.userStatusNetworkRequest("username")
+}.onSuccess {}
+.onFailure {}
+.recover { error: Throwable -> "STATUS_UNKNOWN" }
+
+println(status.isSuccess) // Prints "true" even if error is thrown
 ```
 
 **3\. Using** `**fold {}**` **API to map data**
@@ -98,14 +101,14 @@ val status: **Result<String>** = *runCatching* **{**    repository.userStatusNet
 The `fold` extension function allows you to map the error to a different data type you wish. In this example, I kept the user status as `String`.
 
 ```kotlin
-val status: **String** = *runCatching* **{**    repository.userStatusNetworkRequest("username")  
-**}  
-**.*onSuccess* **{}  
-**.*onFailure* **{}  
-**.*fold*(  
-    onSuccess = **{** status: String **\->** status **}**,  
-    onFailure = **{** error: Throwable **\->** "STATUS_UNKNOWN" **}  
-**)
+val status: String = runCatching {
+    repository.userStatusNetworkRequest("username")
+}.onSuccess {}
+.onFailure {}
+.fold(
+    onSuccess = { status: String -> status },
+    onFailure = { error: Throwable -> "STATUS_UNKNOWN" }
+)
 ```
 
 ---
@@ -116,6 +119,6 @@ I hope this was useful or a new discovery for you as it was for me 😊
 
 ---
 
-**UPDATE #1:** As Gabor has mentioned below, there is an unintended consequence about using it in coroutines. I will look into it and provide more updates on the usage soon. Thanks to Garbor for mentioning it.
+**UPDATE #1:** As Gabor has mentioned below, there is an unintended consequence about using it in coroutines. I will look into it and provide more updates on the usage soon. Thanks to Gabor for mentioning it.
 
 > [](https://twitter.com/Zhuinden/status/1389063911702470656?s=20)

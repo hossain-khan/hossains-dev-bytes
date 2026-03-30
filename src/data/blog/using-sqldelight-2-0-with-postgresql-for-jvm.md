@@ -58,7 +58,7 @@ private fun getDataSource(): DataSource {
 }
 ```
 
-That’s it, now you can follow the official SQLDelight guide on creating databse to create tables and do CRUD operations.
+That’s it, now you can follow the official SQLDelight guide on creating a database to create tables and do CRUD operations.
 
 For example, here is a simplified snippet to give the whole picture
 
@@ -89,6 +89,6 @@ See the GitHub project for a complete example with gradle dependencies and SQLDe
 
 Happy to hear feedback or any corrections to do this in a better way.
 
-> EDIT: After I wrote the article, I found similar article about it (which could have saved me ton of time), so do take a look at it too 😊
+> EDIT: After I wrote the article, I found similar article about it (which could have saved me a ton of time), so do take a look at it too 😊
 
 [**SQLDelight for PostgreSQL on Kotlin JVM** — *In simple terms, SQLDelight is a tool that takes your slightly modified SQL code and converts it to easy to use Kotlin…*](https://medium.com/@theendik00/sqldelight-for-postgresql-on-kotlin-jvm-b95d14d96134)
