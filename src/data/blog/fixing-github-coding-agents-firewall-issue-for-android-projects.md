@@ -12,9 +12,9 @@ draft: false
 
 ---
 
-Ever since [GitHub coding agent](https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/) is released, I have been big fan of async agentic work. I have been primarily working and Android projects and one of the issue constantly bothering me was the Gradle build issue.
+Ever since [GitHub coding agent](https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/) is released, I have been a big fan of async agentic work. I have been primarily working on Android projects and one of the issues constantly bothering me was the Gradle build issue.
 
-Everyone agent goes off to work, it almost always encounters this issue:
+Every time an agent goes off to work, it almost always encounters this issue:
 
 ```text
 * What went wrong:  

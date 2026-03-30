@@ -14,7 +14,7 @@ My personal visualization of Dark-Mode for medium.com
 
 ---
 
-I have love and [hate](https://twitter.com/hossainkhan/status/1264173083885273088) relationship with Medium with a much higher percentage towards love 🥰. I have been craving for 🌗 dark/night-mode support for the web site for a long time. Thankfully they *already support* dark-mode on the [Android](https://play.google.com/store/apps/details?id=com.medium.reader) & [iOS](https://apps.apple.com/us/app/medium/id828256236) app 😍.
+I have a love and [hate](https://twitter.com/hossainkhan/status/1264173083885273088) relationship with Medium with a much higher percentage towards love 🥰. I have been craving for 🌗 dark/night-mode support for the web site for a long time. Thankfully they *already support* dark-mode on the [Android](https://play.google.com/store/apps/details?id=com.medium.reader) & [iOS](https://apps.apple.com/us/app/medium/id828256236) app 😍.
 
 ![](https://cdn-images-1.medium.com/max/800/1*grPD5DOUzGhIm2ERd70ARg.jpeg)
 
@@ -36,7 +36,7 @@ There are actually several ways to get dark-mode for any major\* site through br
 -   Night Eye — [https://nighteye.app/](https://nighteye.app/)
 -   Stylish (custom theme per site) — [https://userstyles.org/](https://userstyles.org/)
 
-From my experience, the ‘Dark Reader’ plugin works the best in most scenarios. However, just inverting color or doing other tricks does not work all the time. But it is at least way better than not having an option at night, especially when 💡 light is off.
+From my experience, the ‘Dark Reader’ plugin works the best in most scenarios. However, just inverting color or doing other tricks does not work all the time. But it is at least way better than not having an option at night, especially when the 💡 light is off.
 
 #### My personal (🚧 experimental) take!
 
@@ -50,7 +50,7 @@ Surprisingly medium uses cryptic CSS style classes, which seems like auto-genera
 
 Anyway, I hope they add dark theme for the site and allow users to switch between dark and light themes. ✌️
 
-> UPDATE (Feb 2021): Dark mode is still not supported globally on Medium, however, in case you haven’t notices all my blogs are in dark-mode 🌓. Thanks to their theming support for each publisher or author. Hope they support it some day globally.
+> UPDATE (Feb 2021): Dark mode is still not supported globally on Medium, however, in case you haven’t noticed all my blogs are in dark-mode 🌓. Thanks to their theming support for each publisher or author. Hope they support it some day globally.
 
 > UPDATE #2 (Apr 2023): Custom profile colors are no longer supported. See [https://blog.medium.com/an-update-on-profile-colors-and-themes-2cb471e61e40](https://blog.medium.com/an-update-on-profile-colors-and-themes-2cb471e61e40)
 

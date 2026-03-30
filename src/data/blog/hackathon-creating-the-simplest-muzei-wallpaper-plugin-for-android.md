@@ -16,7 +16,7 @@ A snapshot of the ‘H.K. Vision’ Muzei Plugin on Android Device — Avail
 
 I have a hobby of taking a lot of pictures, and some of the pictures do turn out nice (*at least to me* 😊). So, I’ve also created a [web portal](https://vision.hossainkhan.com/) to showcase those pictures 🖼️.
 
-As an Android engineer, I was aware of [**Muzei Live Wallpaper**](https://play.google.com/store/apps/details?id=net.nurik.roman.muzei) app created by [Roman Nurik](https://medium.com/u/90c74515fd18) back in 2014. Recently I’ve seen some updates from [Ian Lake](https://medium.com/u/51a4f24f5367) who took over the project while ago, so I decided to make a plugin for Muzei to use my pictures as wallpaper on my Android phone.
+As an Android engineer, I was aware of [**Muzei Live Wallpaper**](https://play.google.com/store/apps/details?id=net.nurik.roman.muzei) app created by [Roman Nurik](https://medium.com/u/90c74515fd18) back in 2014. Recently I’ve seen some updates from [Ian Lake](https://medium.com/u/51a4f24f5367) who took over the project a while ago, so I decided to make a plugin for Muzei to use my pictures as wallpaper on my Android phone.
 
 > ps. If you simply want to use the plugin, see [README](https://github.com/amardeshbd/android-hk-vision-muzei-plugin/blob/master/README.md) for instruction 🤗
 
@@ -49,7 +49,7 @@ That’s it. Once you build and install the APK, the source will show up in the 
 
 ---
 
-I have released the plugin app on Google Play as a *public* release. If you are interested, then [get it on Google Play](https://play.google.com/store/apps/details?id=com.hossainkhan.vision). If you do like the wallpapers, feel free to drop a line here.✌️
+I have released the plugin app on Google Play as a *public* release. If you are interested, then [get it on Google Play](https://play.google.com/store/apps/details?id=com.hossainkhan.vision). If you do like the wallpapers, feel free to drop a line here. ✌️
 
 💻 Source code of the Android project is available at GitHub repo below:
 

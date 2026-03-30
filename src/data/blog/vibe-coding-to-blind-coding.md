@@ -28,18 +28,18 @@ Sounds very irresponsible, right? But there is a twist and that is part of my ex
 
 #### Test Subject — Build a JSON5 Parser
 
-For this experiment I chose [JSON5](https://json5.org/) that I recently came across. This is an extension of JSON with the option to add comment and more, making it suitable for configuration definitions (like YAML).
+For this experiment I chose [JSON5](https://json5.org/) that I recently came across. This is an extension of JSON with the option to add comments and more, making it suitable for configuration definitions (like YAML).
 
-Since `**JSON5**` has a well-defined grammar and specification, it would be easy for me to point to those and **build a library** that parses JSON5 files using Kotlin language.
+Since `JSON5` has a well-defined grammar and specification, it would be easy for me to point to those and **build a library** that parses JSON5 files using Kotlin language.
 
 #### Results First 📊
 
-Before I dive deep into the ‘Blind Coding’ strategy, let me reveal what was achieved first using LLM based Agentic AI 🤖
+Before I dive deep into the ‘Blind Coding’ strategy, let me reveal what was achieved first using LLM-based Agentic AI 🤖
 
 - Fully functional `JSON5` de/serializer of Kotlin Data classes using `kotlinx.serialization`
 - Fully functional `JSON5` parser that complies with specification and provides parsed data
 
-Here is [benchmark](https://github.com/hossain-khan/json5-kotlin/tree/main/benchmark) of generated library vs two relevant contender 💪
+Here is a [benchmark](https://github.com/hossain-khan/json5-kotlin/tree/main/benchmark) of generated library vs two relevant contender 💪
 
 1.  JSON5-AI — AI generated library built with ‘Blind Coding’
 2.  [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization) — JetBrains library used _only_ for JSON serialization and deserialization. Which has less complexity compared to JSON5.
@@ -55,7 +55,7 @@ Total time spent for each test category
 
 Regardless of the generated library being ~4x and ~1.5x less performant compared to kotlinx.serialization and Syntaxerror’s Java library respectively, the experiment is a ✅ success in my book! Because it’s functional and has very acceptable performance for initial phase.
 
-If you are interested to look under the hood, take a look into `**lib**` module in this GitHub project.
+If you are interested to look under the hood, take a look into the `lib` module in this GitHub project.
 
 ![](https://cdn-images-1.medium.com/max/800/1*lYdRctfsDRysPfYYO2pzcw.png)
 
@@ -72,7 +72,7 @@ All I had to do was import their JavaScript based implementation and specificati
 ⏳ **How long did it take to build the JSON5 library?**  
 About 4 days of weekend and after work sessions (roughly 10–12 hours)
 
-😅 **Was there challenges along the way?**  
+😅 **Were there challenges along the way?**  
 Yes, some of the parsing tests were failing and agent was repeatedly failing to fix it. I almost lost hope. Then GitHub Copilot Agent rescued me.
 
 🤖 **What are the Agents that were used to achieve this?**  
@@ -82,7 +82,7 @@ Yes, some of the parsing tests were failing and agent was repeatedly failing to 
 \- GitHub Copilot Agent (async agent — used for majority of the project)
 
 🎉 **So, what’s the verdict?**  
-I had absolute blast just watching agents do magical stuff that I couldn’t have done by myself. Even the benchmarking solution was build by Agent.   
+I had an absolute blast just watching agents do magical stuff that I couldn’t have done by myself. Even the benchmarking solution was built by Agent.   
 Seeing the benchmark result also gave me hope and sense of accomplishment. Sure, I might not be able to build the next Dagger, or OkHttp or anything of that sort, however anything simple should clearly be within reach with the limited time we have in our lives. That is a huge win for me! 🏆
 
-Now, on to something more useful! 🤓 Feel free to reach out or ask question. Cheers! ✌🏽
+Now, on to something more useful! 🤓 Feel free to reach out or ask questions. Cheers! ✌🏽
