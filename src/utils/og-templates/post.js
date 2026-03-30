@@ -20,7 +20,7 @@ export default async post => {
           position: "relative",
         },
         children: [
-          // 1. Elemento Decorativo de Fondo (Se pinta primero = queda al fondo)
+          // 1. Decorative background element (Painted first = stays in background)
           {
             type: "div",
             props: {
@@ -38,7 +38,7 @@ export default async post => {
             },
           },
 
-          // 2. Cabecera: Nombre del sitio (Se pinta encima del fondo)
+          // 2. Header: Site name (Painted on top of background)
           {
             type: "div",
             props: {
@@ -65,7 +65,7 @@ export default async post => {
             },
           },
 
-          // 3. Contenido Principal: Título del Post
+          // 3. Main content: Post title
           {
             type: "div",
             props: {
@@ -73,7 +73,7 @@ export default async post => {
                 display: "flex",
                 flexDirection: "column",
                 width: "100%",
-                // zIndex eliminado (no es necesario por el orden de los hijos)
+                // zIndex removed (not needed due to DOM order)
               },
               children: {
                 type: "h1",
@@ -97,7 +97,7 @@ export default async post => {
             },
           },
 
-          // 4. Pie de página: Autor
+          // 4. Footer: Author
           {
             type: "div",
             props: {
@@ -159,7 +159,7 @@ export default async post => {
       height: 630,
       embedFont: true,
       fonts: await loadGoogleFonts(
-        post.data.title + post.data.author + SITE.title + "Written by" + ".com"
+        post.data.title + post.data.author + SITE.title + "Written by" + SITE.website.replace("https://", "").replace(/\/$/, "")
       ),
     }
   );
