@@ -46,7 +46,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     optimizeDeps: {
-      exclude: ["@resvg/resvg-wasm"],
+      exclude: ["@resvg/resvg-wasm", "astro", "audit", "xray"],
     },
     ssr: {
       external: ["tty"],
