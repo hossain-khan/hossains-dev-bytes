@@ -7,7 +7,6 @@ featured: false
 draft: false
 ---
 
-
 What is the most expensive lie that you are aware of?
 
 The one comes to my mind immediately is “Volkswagen Emission Scandal”

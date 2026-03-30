@@ -7,10 +7,9 @@ featured: false
 draft: false
 ---
 
-
 ![](https://cdn-images-1.medium.com/max/800/1*4xS_4sM9l4FmYF0UTYTSlg.png)
 
-*ℹ️ This is part of the self-learning log as I explore Docker and Portainer.*
+_ℹ️ This is part of the self-learning log as I explore Docker and Portainer._
 
 Recently, I have been playing with [Portainer](https://www.portainer.io/) — a Container Management system for Docker. Because of my curiosity, I constantly try different containers for different solutions and sometimes stick to some useful apps.
 
@@ -44,6 +43,6 @@ This will pull the latest image and re-deploy the container with latest image.
 
 ⚠️ A few important caveats to keep in mind
 
--   This assumes that the container configuration is persisted in the host machine, so that when it redeploys it will be able to resume from where you left off with the container app.
--   Downgrading may have unintended consequences.
--   Always look at the project/app documentation on upgrading if there is something special that needs to be done to migrate your app.
+- This assumes that the container configuration is persisted in the host machine, so that when it redeploys it will be able to resume from where you left off with the container app.
+- Downgrading may have unintended consequences.
+- Always look at the project/app documentation on upgrading if there is something special that needs to be done to migrate your app.

@@ -38,4 +38,3 @@ Feel free to reach out through any of my social profiles or [drop me an email](m
 ---
 
 > 15+ years of crafting code, one feature at a time.
-

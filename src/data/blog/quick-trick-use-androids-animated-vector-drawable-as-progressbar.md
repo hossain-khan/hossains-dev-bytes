@@ -7,7 +7,6 @@ featured: false
 draft: false
 ---
 
-
 ![](https://cdn-images-1.medium.com/max/1200/1*vEfWna5Bawp65JD0X4m1-A.png)
 
 Preview of [https://shapeshifter.design/](https://shapeshifter.design/) editing animated vector drawable (AVD).
@@ -59,5 +58,5 @@ Here is preview of the AVD in [https://shapeshifter.design/](https://shapeshifte
 
 #### Further reading
 
-[**Animation: Jump-through** — *Recently a call for help caught my eye; asking how to implement a fancy ‘getting location’ animation on Android:*](https://medium.com/androiddevelopers/animation-jump-through-861f4f5b3de4)
-[**Re-animation** — *In a previous article, I described a technique for creating vector animations on Android:*](https://medium.com/androiddevelopers/re-animation-7869722af206)
+[**Animation: Jump-through** — _Recently a call for help caught my eye; asking how to implement a fancy ‘getting location’ animation on Android:_](https://medium.com/androiddevelopers/animation-jump-through-861f4f5b3de4)
+[**Re-animation** — _In a previous article, I described a technique for creating vector animations on Android:_](https://medium.com/androiddevelopers/re-animation-7869722af206)

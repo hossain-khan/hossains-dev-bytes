@@ -7,7 +7,6 @@ featured: false
 draft: false
 ---
 
-
 > Disclaimer: This is my personal experience with the device. The opinions expressed in this article are mine only. I am not affiliated with any companies mentioned here.
 
 I am a tech enthusiast and huge fan of Google and their products. I have Google ‘Home’, ‘TV’, ‘Wear’ and obviously phone. I’ve been using Nexus line for quiet some time — Nexus S, Galaxy Nexus, Nexus 4, 5, 6P. I’ve always felt lack of better camera until 6P came along. It was slow, but it took amazing pictures. For my next phone I opted for OnePlus 3 & 5 instead of Pixel for the huge price difference.
@@ -72,4 +71,4 @@ All these small factors made me decide to return the Pixel. I would still keep t
 
 I’ll definitely be in the look out for the Pixel 3!
 
-*Ps. I still love* 💕 *Google products* ✌️
+_Ps. I still love_ 💕 _Google products_ ✌️
