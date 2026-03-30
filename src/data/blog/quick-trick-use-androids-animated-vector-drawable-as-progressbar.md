@@ -18,16 +18,24 @@ Android’s [ProgressBar](https://developer.android.com/reference/android/widget
 
 So, this is a quick trick on how to use custom ImageView to create indeterminate progress indicator using Animated Vector Drawable (AVD).
 
-```
-class AvdLoadingProgressBar @JvmOverloads constructor*(*    context: Context,  
-    attrs: AttributeSet? = null,  
-    defStyleAttr: Int = 0  
-*)* : AppCompatImageView*(*context, attrs, defStyleAttr*) {*    private val avd = AnimatedVectorDrawableCompat.create*(*context, R.drawable.avd\_anim*)*!!  
-  
-    init *{*        setImageDrawable*(*avd*)*        avd.registerAnimationCallback*(*object : Animatable2Compat.AnimationCallback*() {*            override fun onAnimationEnd*(*drawable: Drawable?*) {*                post **{** avd.start*()* **}**            *}  
-        })*        avd.start*()  
-    }  
-}*
+```kotlin
+class AvdLoadingProgressBar @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : AppCompatImageView(context, attrs, defStyleAttr) {
+    private val avd = AnimatedVectorDrawableCompat.create(context, R.drawable.avd_anim)!!
+
+    init {
+        setImageDrawable(avd)
+        avd.registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
+            override fun onAnimationEnd(drawable: Drawable?) {
+                post { avd.start() }
+            }
+        })
+        avd.start()
+    }
+}
 ```
 
 Here is more verbose Gist version of the snippet above
@@ -36,17 +44,13 @@ Here is more verbose Gist version of the snippet above
 
 That’s it. You can now use this in your layout as usual view and show it when data is loading from network or any long running async request is happening.
 
-```
-*<*androidx.constraintlayout.widget.ConstraintLayout>
-```
-```
-  *<*dev.hossain.avdprogress.AvdLoadingProgressBar  
-    android:layout\_width="wrap\_content"  
-    android:layout\_height="wrap\_content"  
-    app:srcCompat="@drawable/avd\_anim\_kijiji\_loading" */>*
-```
-```
-*</*androidx.constraintlayout.widget.ConstraintLayout*\>*
+```xml
+<androidx.constraintlayout.widget.ConstraintLayout>
+  <dev.hossain.avdprogress.AvdLoadingProgressBar
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:srcCompat="@drawable/avd_anim_kijiji_loading" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
 ![](https://cdn-images-1.medium.com/max/800/1*kJDC8wIDX1tV5ah4Y-xehw.gif)

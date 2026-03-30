@@ -41,7 +41,7 @@ Run `**firebase projects:list**` command in terminal to validate the project you
 
 Now, go to a new directory and initialize a new firebase project by running the following command:
 
-```
+```bash
 firebase init
 ```
 
@@ -55,10 +55,10 @@ Select “Functions” and “Hosting” by going up and down and pressing space
 
 Use default options for the `firebase init` wizard. We will update some configuration later. Once initialization is completed, link your newly created firebase project with current directory project by executing following command with your project ID you just created:
 
-```
+```bash
 // “**your-project-id-23d6x**” is the ID from “firebase list” command.
 ```
-```
+```bash
 firebase use --add your-project-id-23d6x
 ```
 
@@ -70,7 +70,7 @@ Now that the default project is up and running, it’s time to setup Express so 
 
 First, update **rewrites** rule of `/firebase.json` to forward all requests to Firebase Cloud Function.
 
-```
+```json
 "rewrites": \[  
      {  
         "source": "\*\*",  
@@ -83,7 +83,7 @@ See [github-sample](https://github.com/amardeshbd/firebase-mock-api-server/blob/
 
 Now, update `/functions/package.json` file to include express and cors under `"dependencies"`.
 
-```
+```json
 "dependencies": {      
    "cors": "^2.8.5",     
    "express": "^4.16.4",  
@@ -95,7 +95,7 @@ See [github-sample](https://github.com/amardeshbd/firebase-mock-api-server/blob/
 
 Once this is done, you need to update `npm` modules so that Express can be used. Use the following commands to update it.
 
-```
+```bash
 cd functions  
 npm install  
 cd ..
@@ -173,10 +173,10 @@ This is something I recently got after adding some Firebase Firestore code in th
 
 > After upgrading to Mac OS Catalina I encountered this issue. What resolved it for me was running the following commands:
 
-```
+```bash
 firebase login  
 // Or try following:  
-export GOOGLE\_APPLICATION\_CREDENTIALS="<SERVICE\_ACCOUNT\_KEY\_JSON>"
+export GOOGLE_APPLICATION_CREDENTIALS="<SERVICE_ACCOUNT_KEY_JSON>"
 ```
 
 For me, trying `firebase login` worked.

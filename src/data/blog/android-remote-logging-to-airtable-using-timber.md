@@ -42,7 +42,7 @@ Here are some pseudo task we need to accomplish this
 
 First, let’s build a Kotlin data class to capture some log info that should be sent to Airtable.
 
-```
+```kotlin
 data class LogMessage(  
     val priority: Int,  
     val tag: String?,  
@@ -57,7 +57,7 @@ Next, let’s create the `AirtableLoggingTree` that queues the logs and sends lo
 
 > 💁Inline comments have been added where applicable.
 
-```
+```kotlin
 class AirtableLoggingTree(  
     // Create your token from https://airtable.com/create/tokens  
     private val authToken: String,  
@@ -69,16 +69,16 @@ class AirtableLoggingTree(
     private var flushJob: Job? = null  
   
     companion object {  
-        /\*\*  
-         \* The API is limited to 5 requests per second per base.  
-         \*/  
-        private const val MAX\_LOG\_COUNT\_PER\_SECOND = 5  
+        /**
+         * The API is limited to 5 requests per second per base.
+         */
+        private const val MAX_LOG_COUNT_PER_SECOND = 5  
   
-        /\*\*  
-         \* The API is limited to 10 records per request.  
-         \* - https://airtable.com/developers/web/api/create-records  
-         \*/  
-        private const val MAX\_RECORDS\_PER\_REQUEST = 10  
+        /**
+         * The API is limited to 10 records per request.
+         * - https://airtable.com/developers/web/api/create-records
+         */
+        private const val MAX_RECORDS_PER_REQUEST = 10  
     }  
   
     init {  
@@ -103,12 +103,12 @@ class AirtableLoggingTree(
                       
                     // Wait long enough before sending next request   
                     // https://airtable.com/developers/web/api/rate-limits  
-                    delay(1\_100L)  
+                    delay(1_100L)  
                 }  
             }  
     }  
   
-    private fun createLogMessage(logs: List<LogMessage\>): String? {  
+    private fun createLogMessage(logs: List<LogMessage>): String? {  
         if (logs.isEmpty()) {  
             return null  
         }  
@@ -122,7 +122,7 @@ class AirtableLoggingTree(
   
     private fun getMaximumAllowedLogs(): List<LogMessage> {  
         val logs = mutableListOf<LogMessage>()  
-        while (logQueue.isNotEmpty() && logs.size < MAX\_RECORDS\_PER\_REQUEST) {  
+        while (logQueue.isNotEmpty() && logs.size < MAX_RECORDS_PER_REQUEST) {  
             val log = logQueue.poll()  
             if (log != null) {  
                 logs.add(log)  
@@ -136,7 +136,7 @@ class AirtableLoggingTree(
   
         // Collects all the queued logs and sends them in batches  
         // Based on rate-limit a total of 5x10 = 50 reconds can be sent per second  
-        while (sentLogCount < MAX\_LOG\_COUNT\_PER\_SECOND) {  
+        while (sentLogCount < MAX_LOG_COUNT_PER_SECOND) {  
             val jsonPayload = createLogMessage(getMaximumAllowedLogs())  
             if (jsonPayload != null) {  
                 sendLogToApi(jsonPayload)  
@@ -194,7 +194,7 @@ class AirtableLoggingTree(
 
 Everything is great except there is one piece of missing code that uses the API `LogMessage.toLogRecord()` in the `AirtableLoggingTree`. The snipped is shown below for clarity.
 
-```
+```kotlin
 val records = JSONArray().apply { logs.forEach { put(it.toLogRecord()) } }
 ```
 
@@ -205,7 +205,7 @@ For my case, I have two columns for the table in the Airtable base:
 1.  `"Device"` — to store the device model. Single-line text.
 2.  `"Log"` — to store the log message. Multiline text.
 
-```
+```kotlin
 fun toLogRecord(): JSONObject {  
     val logMessage =  
         buildString {  
@@ -213,7 +213,7 @@ fun toLogRecord(): JSONObject {
             if (tag != null) append("Tag: $tag,\\n")  
             append("Message: ${message},\\n")  
             if (throwable != null) append("Throwable: ${throwable.localizedMessage},")  
-            append("App Version: ${BuildConfig.VERSION\_NAME},\\n")  
+            append("App Version: ${BuildConfig.VERSION_NAME},\\n")  
             append("Log Time: ${logTime}\\n")  
         }  
   
@@ -234,7 +234,7 @@ You could essentially have multiple columns for each of the properties.
 
 In your app’s application class you can decide when to add the remote logging tree. Here is an example where remote logging is enabled regardless of `DEBUG` or `RELEASE` build.
 
-```
+```kotlin
 if (BuildConfig.DEBUG) {  
     Timber.plant(Timber.DebugTree())  
 }  
@@ -252,10 +252,10 @@ Timber.plant(
 
 Continue to log using Timber as usual, all logs will be also sent to Airtable
 
-```
+```kotlin
 Timber.tag("Cart").d("New item added to cart")  
   
-// Log will show in Airtable as follows (based on formatting we used in \`toLogRecord()\`)  
+// Log will show in Airtable as follows (based on formatting we used in `toLogRecord()`)  
 // | Device  | Log  |  
 // | Pixel 8 | Priority: 3, Tag: Cart, Message: New item added to cart, App Version: v1.24, Log Time: 2024-09-10T05:28:04.113910Z
 ```

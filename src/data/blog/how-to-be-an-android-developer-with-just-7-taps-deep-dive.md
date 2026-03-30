@@ -42,8 +42,8 @@ As I was curious, I wanted to see how the logic works in the Android settings sc
 
 First, the most important constant that defines how many times we have to tap to become the ‘developer’ is:
 
-```
-static final int **TAPS\_TO\_BE\_A\_DEVELOPER** = **7**;
+```java
+static final int **TAPS_TO_BE_A_DEVELOPER** = **7**;
 ```
 
 Why 7? Maybe because it’s considered a lucky number? ¯\\\_(ツ)\_/¯
@@ -59,7 +59,7 @@ Here some of the pre-conditions that have to be met before developer settings ca
 
 After these requirements are met, all there is left to do is count-down the number of taps. Here is a *simplified* code snapshot with some added inline comments:
 
-```
+```java
 if (mDevHitCountdown > 0) {  
     mDevHitCountdown--;  
     if (mDevHitCountdown == 0 && !mProcessingLastDevHit) {  
@@ -70,20 +70,20 @@ if (mDevHitCountdown > 0) {
             enableDevelopmentSettings();  
         }  
     } else if (mDevHitCountdown > 0  
-            && mDevHitCountdown < (TAPS\_TO\_BE\_A\_DEVELOPER - 2)) {  
+            && mDevHitCountdown < (TAPS_TO_BE_A_DEVELOPER - 2)) {  
   
         // Show - "You are X taps away from being developer."  
         mDevHitToast = Toast.makeText(getQuantityString(  
-                        R.plurals.show\_dev\_countdown,  
+                        R.plurals.show_dev_countdown,  
                         mDevHitCountdown,  
                         mDevHitCountdown),  
-                Toast.LENGTH\_SHORT);  
+                Toast.LENGTH_SHORT);  
         mDevHitToast.show();  
     }  
 } else if (mDevHitCountdown < 0) {  
     // This means, you have already tapped 7 times, you're a DEV!  
-    mDevHitToast = Toast.makeText(R.string.show\_dev\_already,  
-            Toast.LENGTH\_LONG);  
+    mDevHitToast = Toast.makeText(R.string.show_dev_already,  
+            Toast.LENGTH_LONG);  
     mDevHitToast.show();  
 }
 ```

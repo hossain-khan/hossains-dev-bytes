@@ -16,13 +16,13 @@ Ever since [GitHub coding agent](https://github.blog/news-insights/product-news/
 
 Everyone agent goes off to work, it almost always encounters this issue:
 
-```
-\* What went wrong:  
-Plugin \[id: 'com.android.application', version: '8.12.0', apply: false\] was not found in any of the following sources:  
+```text
+* What went wrong:  
+Plugin [id: 'com.android.application', version: '8.12.0', apply: false] was not found in any of the following sources:  
   
-\- Gradle Core Plugins (plugin is not in 'org.gradle' namespace)  
-\- Included Builds (No included builds contain this plugin)  
-\- Plugin Repositories (could not resolve plugin artifact 'com.android.application:com.android.application.gradle.plugin:8.12.0')  
+- Gradle Core Plugins (plugin is not in 'org.gradle' namespace)  
+- Included Builds (No included builds contain this plugin)  
+- Plugin Repositories (could not resolve plugin artifact 'com.android.application:com.android.application.gradle.plugin:8.12.0')  
   Searched in the following repositories:  
     Google  
     MavenRepo  
@@ -33,20 +33,20 @@ BUILD FAILED in 29s
 
 In the PR that is created by agent you will see something like:
 
-```
- <summary\>Firewall rules blocked me from connecting to one or more addresses</summary\>  
+```text
+ <summary>Firewall rules blocked me from connecting to one or more addresses</summary>  
   
  #### I tried to connect to the following addresses, but was blocked by firewall rules:  
   
- - \`developer.android.com\`  
-   - Triggering command: \`curl -s REDACTED\` (dns block)  
- - \`dl.google.com\`  
-   - Triggering command: \`/usr/lib/jvm/temurin-17-jdk-amd64/bin/java --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED -Xmx2048m -Dfile.encoding=UTF-8 -Duser.country -Duser.language=en -Duser.variant -cp /home/REDACTED/.gradle/wrapper/dists/gradle-8.14.3-bin/cv11ve7ro1n3o1j4so8xd9n66/gradle-8.14.3/lib/gradle-daemon-main-8.14.3.jar -javaagent:/home/REDACTED/.gradle/wrapper/dists/gradle-8.14.3-bin/cv11ve7ro1n3o1j4so8xd9n66/gradle-8.14.3/lib/agents/gradle-instrumentation-agent-8.14.3.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 8.14.3\` (dns block)  
+ - `developer.android.com`  
+   - Triggering command: `curl -s REDACTED` (dns block)  
+ - `dl.google.com`  
+   - Triggering command: `/usr/lib/jvm/temurin-17-jdk-amd64/bin/java --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED -Xmx2048m -Dfile.encoding=UTF-8 -Duser.country -Duser.language=en -Duser.variant -cp /home/REDACTED/.gradle/wrapper/dists/gradle-8.14.3-bin/cv11ve7ro1n3o1j4so8xd9n66/gradle-8.14.3/lib/gradle-daemon-main-8.14.3.jar -javaagent:/home/REDACTED/.gradle/wrapper/dists/gradle-8.14.3-bin/cv11ve7ro1n3o1j4so8xd9n66/gradle-8.14.3/lib/agents/gradle-instrumentation-agent-8.14.3.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 8.14.3` (dns block)  
   
  If you need me to access, download, or install something from one of these locations, you can either:  
   
- - Configure \[Actions setup steps\](https://gh.io/copilot/actions-setup-steps) to set up my environment, which run before the firewall is enabled  
- - Add the appropriate URLs or hosts to the custom allowlist in this repository's \[Copilot coding agent settings\](https://github.com/hossain-khan/android-compose-app-template/settings/copilot/coding\_agent) (admins only)
+ - Configure [Actions setup steps](https://gh.io/copilot/actions-setup-steps) to set up my environment, which run before the firewall is enabled  
+ - Add the appropriate URLs or hosts to the custom allowlist in this repository's [Copilot coding agent settings](https://github.com/hossain-khan/android-compose-app-template/settings/copilot/coding_agent) (admins only)
 ```
 
 Here is a preview of how it looks on your PR!

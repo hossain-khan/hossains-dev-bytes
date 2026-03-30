@@ -32,7 +32,7 @@ Use `HikariCP` to create PostgreSQL `DataSource`
 
 First import the hikari and PostgreSQL library into your JVM project
 
-```
+```kotlin
 // https://github.com/brettwooldridge/HikariCP#artifacts  
 implementation("com.zaxxer:HikariCP:5.0.1")  
   
@@ -45,7 +45,7 @@ Then you need to build the `HikariConfig` with the right data set to connect to 
 
 Here is a snippet taken from the [sample project](https://github.com/hossain-khan/SQLDelight-PostgreSQL-JVM-sample/blob/main/src/main/kotlin/dev/hossain/postgresqldelight/SportsRepository.kt)
 
-```
+```kotlin
 private fun getDataSource(): DataSource {  
     val hikariConfig = HikariConfig()  
     // See https://jdbc.postgresql.org/documentation/use/  
@@ -62,12 +62,12 @@ That’s it, now you can follow the official SQLDelight guide on creating databs
 
 For example, here is a simplified snippet to give the whole picture
 
-```
+```kotlin
 val dataSource: DataSource = getDataSource(appConfig)  
   
 val driver: SqlDriver = dataSource.asJdbcDriver()  
   
-// NOTE: The \`SportsDatabase\` and \`PlayerQueries\` are from SQLDelight  
+// NOTE: The `SportsDatabase` and `PlayerQueries` are from SQLDelight  
 val database = SportsDatabase(driver)  
 val playerQueries: PlayerQueries = database.playerQueries  
   
@@ -76,7 +76,7 @@ println("Existing ${hockeyPlayers.size} records: $hockeyPlayers")
 // Prints following 👇  
 // - - - - - - - - - -  
 // Existing 15 records:   
-// \[HockeyPlayer(player\_number=10, full\_name=Corey Perry), ... \]
+// [HockeyPlayer(player_number=10, full_name=Corey Perry), ... ]
 ```
 
 The full snippet is available [here](https://github.com/hossain-khan/SQLDelight-PostgreSQL-JVM-sample/blob/main/src/main/kotlin/dev/hossain/postgresqldelight/SportsRepository.kt#L41-L53).
