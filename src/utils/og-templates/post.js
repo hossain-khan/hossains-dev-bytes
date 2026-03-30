@@ -128,7 +128,12 @@ export default async post => {
                       color: "#cbd5e1",
                     },
                     children: [
-                      "Written by ",
+                      {
+                        type: "span",
+                        props: {
+                          children: "Written by ",
+                        },
+                      },
                       {
                         type: "span",
                         props: {
@@ -154,7 +159,7 @@ export default async post => {
       height: 630,
       embedFont: true,
       fonts: await loadGoogleFonts(
-        post.data.title + post.data.author + SITE.title + "Escritopor" + ".com"
+        post.data.title + post.data.author + SITE.title + "Written by" + ".com"
       ),
     }
   );
