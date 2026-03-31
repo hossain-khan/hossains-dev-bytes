@@ -239,7 +239,7 @@ Changed progress bar container z-index from `z-10` to `z-50` so it renders above
 
 Redesigned back button with integrated breadcrumb navigation:
 
-- **Back button pill:** Glassmorphism pill with border, `backdrop-filter: blur(8px)`, chevron icon with hover translation animation, label "Volver".
+- **Back button pill:** Glassmorphism pill with border, `backdrop-filter: blur(8px)`, chevron icon with hover translation animation, terminal-style "cd .." label.
 - **Inline breadcrumbs:** Home icon (SVG house) → chevron separators → path segments, last segment in accent color as current page (truncated at 22ch).
 - **Responsive:** Breadcrumbs hidden on mobile (`sm:` breakpoint), only back button visible.
 
@@ -270,7 +270,7 @@ Modern centered post header:
 Tags and share links in a responsive row layout:
 
 - **Tags:** Left-aligned on desktop, centered on mobile. Pills with `#` prefix, accent hover.
-- **Share links:** Right-aligned on desktop. Square `8×8` buttons with glassmorphism, accent hover glow, under "Compartir" label in mono font.
+- **Share links:** Right-aligned on desktop. Square `8×8` buttons with glassmorphism, accent hover glow, under "Share" label in mono font.
 
 **File:** `src/components/ShareLinks.astro`
 
