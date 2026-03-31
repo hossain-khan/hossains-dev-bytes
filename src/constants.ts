@@ -5,7 +5,6 @@ import IconBrandX from "@/assets/icons/IconBrandX.svg";
 import IconBluesky from "@/assets/icons/IconBluesky.svg";
 import IconLinkedin from "@/assets/icons/IconLinkedin.svg";
 import IconWhatsapp from "@/assets/icons/IconWhatsapp.svg";
-import IconFacebook from "@/assets/icons/IconFacebook.svg";
 import IconTelegram from "@/assets/icons/IconTelegram.svg";
 import IconPinterest from "@/assets/icons/IconPinterest.svg";
 import { SITE } from "@/config";
@@ -50,12 +49,6 @@ export const SHARE_LINKS: Social[] = [
     href: "https://wa.me/?text=",
     linkTitle: `Share this post on WhatsApp`,
     icon: IconWhatsapp,
-  },
-  {
-    name: "Facebook",
-    href: "https://www.facebook.com/sharer.php?u=",
-    linkTitle: `Share this post on Facebook`,
-    icon: IconFacebook,
   },
   {
     name: "X",
