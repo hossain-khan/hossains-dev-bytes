@@ -59,7 +59,9 @@ export default async post => {
                     color: "#e2e8f0",
                     letterSpacing: "2px",
                   },
-                  children: SITE.website.replace("https://", "").replace(/\/$/, ""),
+                  children: SITE.website
+                    .replace("https://", "")
+                    .replace(/\/$/, ""),
                 },
               },
             },
@@ -159,7 +161,11 @@ export default async post => {
       height: 630,
       embedFont: true,
       fonts: await loadGoogleFonts(
-        post.data.title + post.data.author + SITE.title + "Written by" + SITE.website.replace("https://", "").replace(/\/$/, "")
+        post.data.title +
+          post.data.author +
+          SITE.title +
+          "Written by" +
+          SITE.website.replace("https://", "").replace(/\/$/, "")
       ),
     }
   );

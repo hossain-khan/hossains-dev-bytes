@@ -1,0 +1,120 @@
+---
+/**
+ * Giscus — GitHub Discussions-based commenting component.
+ * Configurable via SITE.giscus in config.ts.
+ * Automatically syncs with the site's light/dark theme.
+ */
+interface Props {
+  repo: `${string}/${string}`;
+  repoId: string;
+  category: string;
+  categoryId: string;
+}
+
+const { repo, repoId, category, categoryId } = Astro.props;
+---
+
+<div class="giscus-container mt-10 mb-2">
+  <div class="mb-4 flex items-center gap-3" aria-hidden="true">
+    <div
+      class="h-px flex-1 bg-linear-to-r from-transparent via-border/30 to-transparent"
+    >
+    </div>
+    <span
+      class="font-cartograph text-[10px] tracking-widest text-accent/40 uppercase select-none"
+      >Comments</span
+    >
+    <div
+      class="h-px flex-1 bg-linear-to-l from-transparent via-border/30 to-transparent"
+    >
+    </div>
+  </div>
+
+  <div
+    id="giscus-wrapper"
+    data-repo={repo}
+    data-repo-id={repoId}
+    data-category={category}
+    data-category-id={categoryId}
+  >
+  </div>
+</div>
+
+<script is:inline data-astro-rerun>
+  /**
+   * Maps site themes ("light" / "dark") to Giscus theme tokens.
+   */
+  function getGiscusTheme() {
+    const htmlTheme =
+      document.documentElement.getAttribute("data-theme") ?? "dark";
+    return htmlTheme === "light" ? "light" : "dark_dimmed";
+  }
+
+  /**
+   * Sends the current site theme to the Giscus iframe via postMessage.
+   */
+  function syncGiscusTheme() {
+    const iframe = document.querySelector("iframe.giscus-frame");
+    if (iframe) {
+      iframe.contentWindow?.postMessage(
+        { giscus: { setConfig: { theme: getGiscusTheme() } } },
+        "https://giscus.app"
+      );
+    }
+  }
+
+  /**
+   * Dynamically injects the Giscus client script so the initial theme
+   * is read from the current data-theme attribute rather than being
+   * hardcoded at build time.
+   */
+  function initGiscus() {
+    const wrapper = document.getElementById("giscus-wrapper");
+    if (!wrapper || wrapper.querySelector("script[src*='giscus']")) return;
+
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.setAttribute("data-repo", wrapper.dataset.repo ?? "");
+    script.setAttribute("data-repo-id", wrapper.dataset.repoId ?? "");
+    script.setAttribute("data-category", wrapper.dataset.category ?? "");
+    script.setAttribute("data-category-id", wrapper.dataset.categoryId ?? "");
+    script.setAttribute("data-mapping", "pathname");
+    script.setAttribute("data-strict", "0");
+    script.setAttribute("data-reactions-enabled", "1");
+    script.setAttribute("data-emit-metadata", "0");
+    script.setAttribute("data-input-position", "top");
+    script.setAttribute("data-theme", getGiscusTheme());
+    script.setAttribute("data-lang", "en");
+    script.setAttribute("data-loading", "lazy");
+    script.crossOrigin = "anonymous";
+    script.async = true;
+    wrapper.appendChild(script);
+  }
+
+  initGiscus();
+
+  // Sync theme once the Giscus iframe has loaded
+  window.addEventListener("message", function onGiscusLoad(event) {
+    if (
+      event.origin !== "https://giscus.app" ||
+      event.data?.giscus?.discussion === undefined
+    )
+      return;
+    syncGiscusTheme();
+    window.removeEventListener("message", onGiscusLoad);
+  });
+
+  // Watch for theme attribute changes on <html> (triggered by theme toggle)
+  const themeObserver = new MutationObserver(mutations => {
+    for (const mutation of mutations) {
+      if (
+        mutation.type === "attributes" &&
+        mutation.attributeName === "data-theme"
+      ) {
+        syncGiscusTheme();
+        break;
+      }
+    }
+  });
+  themeObserver.observe(document.documentElement, { attributes: true });
+</script>

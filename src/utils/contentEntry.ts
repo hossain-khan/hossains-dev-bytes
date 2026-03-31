@@ -9,7 +9,8 @@ const isGalleryEntry = (
   entry: Pick<ContentEntry, "collection">
 ): entry is CollectionEntry<"galleries"> => entry.collection === "galleries";
 
-export const getGallerySlug = (id: string) => id.replace(/\/index(?:\.(?:md|mdx))?$/, "");
+export const getGallerySlug = (id: string) =>
+  id.replace(/\/index(?:\.(?:md|mdx))?$/, "");
 
 export const getEntryPath = (
   entry: Pick<ContentEntry, "collection" | "id" | "filePath">
@@ -19,6 +20,7 @@ export const getEntryPath = (
     : getPath(entry.id, entry.filePath);
 
 export const getEntryPublishedMs = (entry: ContentEntry) => {
-  const modDatetime = "modDatetime" in entry.data ? entry.data.modDatetime : null;
+  const modDatetime =
+    "modDatetime" in entry.data ? entry.data.modDatetime : null;
   return new Date(modDatetime ?? entry.data.pubDatetime).getTime();
 };

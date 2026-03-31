@@ -11,9 +11,7 @@ import { SITE } from "@/config";
 
 const [blogPosts, galleryPosts] = await Promise.all([
   getCollection("blog"),
-  SITE.showGalleriesInIndex
-    ? getCollection("galleries")
-    : Promise.resolve([]),
+  SITE.showGalleriesInIndex ? getCollection("galleries") : Promise.resolve([]),
 ]);
 const posts = [...blogPosts, ...galleryPosts];
 

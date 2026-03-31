@@ -32,4 +32,11 @@ export const SITE = {
     label: "INTRO.MP3", // display label in the player
     duration: 30, // duration in seconds (for the fixed progress bar)
   },
+  giscus: {
+    enabled: false, // set to true to enable Giscus comments on blog posts
+    repo: "hossain-khan/hossains-dev-bytes" as `${string}/${string}`, // GitHub repo (owner/repo)
+    repoId: "", // Repo ID from https://giscus.app
+    category: "Announcements", // GitHub Discussions category name
+    categoryId: "", // Category ID from https://giscus.app
+  },
 } as const;

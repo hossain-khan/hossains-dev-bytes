@@ -559,7 +559,59 @@ Registered globally via `PostDetails.astro` `render()` components map — no imp
 
 Each embed creates its own `<dialog id="ge-lb-{slug}">` lightbox, allowing multiple embeds per post without ID conflicts. Invalid slugs render a warning block instead of breaking the build.
 
-## 28. Intro Audio Player
+
+## 29. Giscus Comments Integration
+
+**Files:**
+- `src/config.ts` — added `SITE.giscus` config block
+- `src/components/Giscus.astro` — new component
+- `src/layouts/PostDetails.astro` — renders component when enabled
+
+### Overview
+
+[Giscus](https://giscus.app) is a GitHub Discussions-based commenting system. It is free, requires no separate backend, and authenticates users via GitHub — a perfect fit for a developer-focused blog.
+
+### Configuration (`src/config.ts`)
+
+```typescript
+giscus: {
+  enabled: false,          // set true to activate comments on all posts
+  repo: "owner/repo",      // GitHub repo where Discussions live
+  repoId: "",              // Repo ID — copy from https://giscus.app
+  category: "Announcements", // Discussions category name
+  categoryId: "",          // Category ID — copy from https://giscus.app
+},
+```
+
+To obtain `repoId` and `categoryId`:
+1. Visit <https://giscus.app>
+2. Enter your repository name
+3. Select the Discussions category
+4. Copy the generated `data-repo-id` and `data-category-id` values
+
+### Component (`src/components/Giscus.astro`)
+
+- Loads the `giscus.app/client.js` script with `data-loading="lazy"`
+- Uses `data-mapping="pathname"` so each post URL maps to a unique Discussion thread
+- Syncs the Giscus iframe theme with the site's light/dark mode via `postMessage`
+- A `MutationObserver` watches `data-theme` on `<html>` to trigger theme updates whenever the user toggles the theme button
+
+### Integration
+
+Rendered after the tags/share block in `PostDetails.astro`, guarded by `SITE.giscus.enabled`:
+
+```astro
+{
+  SITE.giscus.enabled && (
+    <Giscus
+      repo={SITE.giscus.repo}
+      repoId={SITE.giscus.repoId}
+      category={SITE.giscus.category}
+      categoryId={SITE.giscus.categoryId}
+    />
+  )
+}
+```
 
 > Implementado el 20/02/2026.
 

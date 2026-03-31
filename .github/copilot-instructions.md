@@ -6,23 +6,25 @@
 
 ## Quick Command Reference
 
-| Task | Command |
-|------|---------|
-| **Start dev server** | `pnpm run dev` (localhost:4321) |
-| **Build for production** | `pnpm run build` |
-| **Check formatting** | `pnpm run format:check` |
-| **Auto-format code** | `pnpm run format` |
-| **Lint code** | `pnpm run lint` |
-| **Type check** | `astro check` (automatic on build) |
-| **Preview build locally** | `pnpm run preview` |
+| Task                      | Command                            |
+| ------------------------- | ---------------------------------- |
+| **Start dev server**      | `pnpm run dev` (localhost:4321)    |
+| **Build for production**  | `pnpm run build`                   |
+| **Check formatting**      | `pnpm run format:check`            |
+| **Auto-format code**      | `pnpm run format`                  |
+| **Lint code**             | `pnpm run lint`                    |
+| **Type check**            | `astro check` (automatic on build) |
+| **Preview build locally** | `pnpm run preview`                 |
 
 ## Content Creation Patterns
 
 ### Blog Posts
+
 **Location**: `src/data/blog/`
 **Filename**: kebab-case (e.g., `my-post-title.md` or `.mdx` for rich components)
 
 **Frontmatter template**:
+
 ```yaml
 ---
 title: "Post Title"
@@ -35,6 +37,7 @@ draft: false
 ```
 
 **Guidelines**:
+
 - `pubDatetime` format: ISO 8601 (required for sorting)
 - `description`: 155–160 chars (SEO/social preview)
 - `tags`: Use lowercase kebab-case; existing tags found in all post frontmatter
@@ -43,8 +46,10 @@ draft: false
 - Content can be Markdown or MDX (Astro components supported)
 
 ### Image Galleries
+
 **Location**: `src/data/galleries/`
 **Structure**:
+
 ```
 src/data/galleries/{gallery-name}/
 ├── index.md          # Gallery metadata + description
@@ -54,6 +59,7 @@ src/data/galleries/{gallery-name}/
 ```
 
 **Gallery index.md**:
+
 ```yaml
 ---
 title: "Gallery Title"
@@ -86,18 +92,19 @@ src/
 
 ## Key Configuration Files
 
-| File | Purpose |
-|------|---------|
-| `src/config.ts` | Site metadata, author, RSS/SEO config |
-| `astro.config.ts` | Astro integrations, Markdown plugins, build config |
-| `.prettierrc.mjs` | Prettier formatting rules (80 print width, 2-space tabs) |
-| `eslint.config.js` | ESLint rules |
-| `tsconfig.json` | TypeScript configuration |
-| `.github/workflows/ci.yml` | CI/CD: build, lint, format check on Node 22.x & 24.x |
+| File                       | Purpose                                                  |
+| -------------------------- | -------------------------------------------------------- |
+| `src/config.ts`            | Site metadata, author, RSS/SEO config                    |
+| `astro.config.ts`          | Astro integrations, Markdown plugins, build config       |
+| `.prettierrc.mjs`          | Prettier formatting rules (80 print width, 2-space tabs) |
+| `eslint.config.js`         | ESLint rules                                             |
+| `tsconfig.json`            | TypeScript configuration                                 |
+| `.github/workflows/ci.yml` | CI/CD: build, lint, format check on Node 22.x & 24.x     |
 
 ## Development Workflow
 
 ### Adding a Blog Post
+
 1. Create `src/data/blog/{post-name}.md` with frontmatter (see pattern above)
 2. Write content in Markdown (or use MDX for components)
 3. Run `pnpm run format` to auto-format
@@ -105,13 +112,16 @@ src/
 5. Commit with: `git add -A && git commit -m "feat: add post about {topic}"`
 
 ### Modifying Components
+
 - **Global layout**: See `src/layouts/Layout.astro`
 - **Post layout**: See `src/layouts/PostDetails.astro`
 - **Page components**: See `src/components/` (Header, Footer, Search, etc.)
 - After changes: Run `pnpm run lint` and `pnpm run format:check`
 
 ### Updating Site Config
+
 Edit `src/config.ts` for:
+
 - Site URL, author name, description
 - Social links (Bluesky, GitHub, etc.)
 - RSS feed settings
@@ -121,17 +131,20 @@ Edit `src/config.ts` for:
 ## Formatting & Linting
 
 **Auto-format on save** (optional):
+
 ```bash
 pnpm run format
 ```
 
 **CI/CD enforces**:
+
 - Prettier formatting (80 char width, 2 spaces)
 - ESLint rules (Astro-aware)
 - TypeScript type checking
 - All three must pass for merges
 
 **Fix formatting errors**:
+
 ```bash
 pnpm run format && pnpm run lint --fix
 ```
@@ -150,6 +163,7 @@ pnpm run format && pnpm run lint --fix
 ## Deployment
 
 Deployment happens automatically via GitHub Actions when pushing to `main`:
+
 - Runs on Node 22.x and 24.x
 - Checks ESLint rules, Prettier formatting, builds successfully
 - All checks must pass
@@ -157,16 +171,19 @@ Deployment happens automatically via GitHub Actions when pushing to `main`:
 ## Code Conventions
 
 ### Naming
+
 - **Files**: kebab-case (e.g., `post-title.md`, `header.astro`)
 - **Components**: PascalCase (e.g., `Header.astro`)
 - **Utilities**: camelCase (e.g., `getSortedPosts.ts`)
 - **CSS classes**: kebab-case (Tailwind utility chaining)
 
 ### Imports
+
 - Use path aliases: `@/components`, `@/layouts`, `@/utils` (defined in `tsconfig.json`)
 - Organize: built-ins → packages → aliases
 
 ### TypeScript
+
 - Strict mode enabled
 - Use `type` keyword for type definitions
 - Define component props with `interface Props`
@@ -174,6 +191,7 @@ Deployment happens automatically via GitHub Actions when pushing to `main`:
 ### Markdown
 
 **Code blocks** with syntax highlighting:
+
 ````markdown
 ```javascript
 // Syntax highlighting enabled via Shiki
@@ -182,11 +200,13 @@ const greeting = "hello";
 ````
 
 **Special notations** (Shiki transformers):
+
 - Diffs: `// [!code ++]` or `// [!code --]`
 - Highlight: `// [!code highlight]`
 - Word highlight: `// [!code word:variable]`
 
 ### Components
+
 - Single-file Astro components
 - Props defined with `interface`
 - Use Tailwind CSS for styling
@@ -194,19 +214,20 @@ const greeting = "hello";
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| **Dev server won't start** | `pnpm install --frozen-lockfile` then `pnpm run dev` |
-| **Build fails** | Run `pnpm run format && pnpm run lint --fix` to fix syntax |
-| **Search not working** | Ensure `pnpm run build` completes; pagefind index must be generated |
-| **Imports fail** | Check alias paths in `tsconfig.json` match `astro.config.ts` |
-| **Formatting conflicts** | Delete `.prettierrc.mjs` and rebuild if corrupted |
+| Issue                      | Solution                                                            |
+| -------------------------- | ------------------------------------------------------------------- |
+| **Dev server won't start** | `pnpm install --frozen-lockfile` then `pnpm run dev`                |
+| **Build fails**            | Run `pnpm run format && pnpm run lint --fix` to fix syntax          |
+| **Search not working**     | Ensure `pnpm run build` completes; pagefind index must be generated |
+| **Imports fail**           | Check alias paths in `tsconfig.json` match `astro.config.ts`        |
+| **Formatting conflicts**   | Delete `.prettierrc.mjs` and rebuild if corrupted                   |
 
 ## CI/CD Pipeline
 
 **Workflow file**: `.github/workflows/ci.yml`
 
 **On push/PR to main**:
+
 - Install dependencies with `pnpm install --frozen-lockfile`
 - Run `pnpm run lint` - ESLint checks
 - Run `pnpm run format:check` - Prettier validation
@@ -218,6 +239,7 @@ const greeting = "hello";
 ## Git Conventions
 
 **Commit messages** follow conventional commits:
+
 - `feat:` - New feature or content
 - `fix:` - Bug fix
 - `ci:` - CI/CD changes
@@ -225,6 +247,7 @@ const greeting = "hello";
 - `docs:` - Documentation
 
 **Examples**:
+
 ```
 feat: add post about Rust for JavaScript developers
 fix: correct sidebar navigation on mobile
