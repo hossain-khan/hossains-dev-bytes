@@ -13,7 +13,7 @@ _ℹ️ This is part of the self-learning log as I explore Docker and Portainer.
 
 Recently, I have been playing with [Portainer](https://www.portainer.io/) — a Container Management system for Docker. Because of my curiosity, I constantly try different containers for different solutions and sometimes stick to some useful apps.
 
-Once in a while, I keep seeing Docker containerized app notification that there is an update available. However, It was tricky for me to figure out how to update the container using Portainer. It turns out, it’s as simple as just pressing edit container and update container image. Here is a visual guide for my future self :-)
+Once in a while, I keep seeing Docker containerized app notification that there is an update available. However, it was tricky for me to figure out how to update the container using Portainer. It turns out, it’s as simple as just pressing edit container and update container image. Here is a visual guide for my future self :-)
 
 ### Updating Docker Container
 
@@ -23,7 +23,7 @@ First, go to your list of containers and select the container that needs to be u
 
 Select “Duplicate/Edit” option.
 
-Once you select “Edit”, you will have option for container image version.
+Once you select “Edit”, you will have an option for container image version.
 
 ![](https://cdn-images-1.medium.com/max/800/1*plEbrsLVAp5rBuUU3t_Lxw.png)
 
@@ -37,7 +37,7 @@ Finally, click on the “Deploy the container”.
 
 Once done, deployment will trigger the image update.
 
-This will pull the latest image and re-deploy the container with latest image.
+This will pull the latest image and re-deploy the container with the latest image.
 
 ---
 

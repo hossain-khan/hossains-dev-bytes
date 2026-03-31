@@ -7,8 +7,7 @@ featured: false
 draft: false
 ---
 
-
-Android and it’s community has evolved a lot over past decade. Now a days we can find open-source libraries to do almost anything — Zoomable ImageView, CameraX, RecyclerView Sticky Header, Tooltip, and many more.
+Android and its community has evolved a lot over past decade. Nowadays we can find open-source libraries to do almost anything — Zoomable ImageView, CameraX, RecyclerView Sticky Header, Tooltip, and many more.
 
 ![](https://cdn-images-1.medium.com/max/800/0*Ywlp-1OAf-_EgtyR)
 
@@ -16,28 +15,28 @@ Photo by [Shahadat Rahman](https://unsplash.com/@hishahadat?utm_source=medium&ut
 
 Syntax highlighting is one of them and there are [few](https://github.com/kbiakov/CodeView-Android) [libraries](https://github.com/PDDStudio/highlightjs-android) [for](https://github.com/Badranh/Syntax-View-Android) [that](https://github.com/testica/codeeditor) too. If this is a solved problem, then why am I writing about another solution then?
 
-Well, some of the libraries I have explored are outdated, and some of them might not be as feature rich. So, I wanted to explore how to do-it-myself and write about it so that anybody can take full advantage of well-know JavaScript libraries for syntax highlighting in their Android app.
+Well, some of the libraries I have explored are outdated, and some of them might not be as feature rich. So, I wanted to explore how to do it myself and write about it so that anybody can take full advantage of well-known JavaScript libraries for syntax highlighting in their Android app.
 
 👍 **Pros**
 
--   Complete control over how JS plugin is used in the app
--   Complete control over the Android code that renders it using `WebView`
+- Complete control over how JS plugin is used in the app
+- Complete control over the Android code that renders it using `WebView`
 
 👎 **Cons**
 
--   You need to have some understanding of web technologies, namely HTML, CSS and JavaScript
--   You need to build your own Android `CustomView` or `Fragment` to render highlighted syntax. *(No worries — this is where this article comes in to help you do that* 🤗*)*
+- You need to have some understanding of web technologies, namely HTML, CSS and JavaScript
+- You need to build your own Android `CustomView` or `Fragment` to render highlighted syntax. _(No worries — this is where this article comes in to help you do that_ 🤗*)*
 
-With the pros and cons in mind, lets explore some well-established and proven syntax highlighting libraries
+With the pros and cons in mind, let’s explore some well-established and proven syntax highlighting libraries
 
--   [**PrismJS**](https://prismjs.com/index.html) — Very light weight `2KB-100+KB` with extensive plugin collection  
-    “*Lightweight, robust, elegant syntax highlighting.*”
--   [**highlight.js**](https://highlightjs.org/) — Fully loaded `25KB-100KB` and simple syntax highlighting  
-    “*Syntax highlighting for the Web”*
--   [**Rainbow**](https://craig.is/making/rainbows) — Another popular lightweight `6KB-25KB` highlighter  
-    “*Rainbow is a code syntax highlighting library written in Javascript.*”
+- [**PrismJS**](https://prismjs.com/index.html) — Very light weight `2KB-100+KB` with extensive plugin collection  
+  “_Lightweight, robust, elegant syntax highlighting._”
+- [**highlight.js**](https://highlightjs.org/) — Fully loaded `25KB-100KB` and simple syntax highlighting  
+  “_Syntax highlighting for the Web”_
+- [**Rainbow**](https://craig.is/making/rainbows) — Another popular lightweight `6KB-25KB` highlighter  
+  “_Rainbow is a code syntax highlighting library written in Javascript._”
 
-There are many more libraries that does the job, however for rest of the example I will be using PrismJS because of it’s highly modular nature. Note that, the process of using different library will be *almost* the same.
+There are many more libraries that do the job, however for rest of the example I will be using PrismJS because of its highly modular nature. Note that, the process of using different library will be _almost_ the same.
 
 > 💡 TIP: All the example code provided here is available in great detail in the GitHub repository mentioned below👇.
 
@@ -45,22 +44,22 @@ There are many more libraries that does the job, however for rest of the example
 
 We will be leveraging Android’s`WebView` to load syntax highlighting library with the source code that we want to be highlighted.
 
-This setup is going to be specific to library of your choice. Since we are focusing on PrimsJS, we will follow it’s [official guideline](https://prismjs.com/#basic-usage).
+This setup is going to be specific to library of your choice. Since we are focusing on PrimsJS, we will follow its [official guideline](https://prismjs.com/#basic-usage).
 
 After you [download](https://prismjs.com/download.html) the library JS and CSS file, you essentially need following HTML to render the highlighted source.
 
 ```html
-<!DOCTYPE html>  
-<html>  
-  <head>  
-    <link href="themes/prism.css" rel="stylesheet" />  
-    <script src="prism.js"></script>  
-  </head>  
-  <body>  
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="themes/prism.css" rel="stylesheet" />
+    <script src="prism.js"></script>
+  </head>
+  <body>
     <pre><code class="language-kotlin">  
     data class Student(val name: String)  
-    </code></pre>  
-  </body>  
+    </code></pre>
+  </body>
 </html>
 ```
 
@@ -71,26 +70,26 @@ Put the downloaded files in your Android app’s assets directory, ideally in ww
 Now that we have a baseline for the template, next part is to convert it to Kotlin function that can take additional parameter to customize different plugin options. Here is template with some additional data needed for mobile.
 
 ```kotlin
-**fun prismJsHtmlContent**(  
-    formattedSourceCode: String,  
-    language: String,  
-    showLineNumbers: Boolean = true  
-): String {  
-    return """<!DOCTYPE html>  
-<html>  
-<head>  
-    <meta name="viewport" content="width=device-width, initial-scale=1">  
-  
-    <link href="www/prism.css" rel="stylesheet"/>  
-    <script src="www/prism.js"></script>  
-</head>  
-<body>  
-<pre class="${if (**showLineNumbers**) "line-numbers" else ""}">  
-<code class="language-${**language**}">${**formattedSourceCode**}</code>  
-</pre>  
-</body>  
-</html>  
-"""  
+fun prismJsHtmlContent(
+    formattedSourceCode: String,
+    language: String,
+    showLineNumbers: Boolean = true
+): String {
+    return """<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="www/prism.css" rel="stylesheet"/>
+    <script src="www/prism.js"></script>
+</head>
+<body>
+<pre class="${if (showLineNumbers) "line-numbers" else ""}">
+<code class="language-${language}">${formattedSourceCode}</code>
+</pre>
+</body>
+</html>
+"""
 }
 ```
 
@@ -100,39 +99,36 @@ Making your own custom view is a great way to enhance capabilities. In this case
 
 ```kotlin
 package your.app.code
-```
-```kotlin
-class SyntaxHighlighterWebView [@JvmOverloads](http://twitter.com/JvmOverloads "Twitter profile for @JvmOverloads") constructor(  
-    context: Context,  
-    attrs: AttributeSet? = null,  
-    defStyleAttr: Int = 0  
-) : **WebView**(context, attrs, defStyleAttr) {  
-    companion object {  
-        private const val ANDROID_ASSETS_PATH = "file:///android_asset/"  
+
+class SyntaxHighlighterWebView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : WebView(context, attrs, defStyleAttr) {
+    companion object {
+        private const val ANDROID_ASSETS_PATH = "file:///android_asset/"
     }
-```
-```kotlin
-    // Our exposed function to show highlighted syntax  
-    **fun bindSyntaxHighlighter**(  
-        formattedSourceCode: String,  
-        language: String,  
-        showLineNumbers: Boolean = false  
-    ) {  
+
+    // Our exposed function to show highlighted syntax
+    fun bindSyntaxHighlighter(
+        formattedSourceCode: String,
+        language: String,
+        showLineNumbers: Boolean = false
+    ) {
         settings.javaScriptEnabled = true
-```
-```kotlin
-         loadDataWithBaseURL(  
-            ANDROID_ASSETS_PATH /* baseUrl */,  
-            **prismJsHtmlContent**(  
-               formattedSourceCode,   
-               language,   
-               showLineNumbers  
-            ) /* html-data */,  
-            "text/html" /* mimeType */,  
-            "utf-8" /* encoding */,  
-            "" /* failUrl */  
-        )  
-    }  
+
+        loadDataWithBaseURL(
+            ANDROID_ASSETS_PATH /* baseUrl */,
+            prismJsHtmlContent(
+               formattedSourceCode,
+               language,
+               showLineNumbers
+            ) /* html-data */,
+            "text/html" /* mimeType */,
+            "utf-8" /* encoding */,
+            "" /* failUrl */
+        )
+    }
 }
 ```
 
@@ -143,21 +139,21 @@ Now that we have our `SyntaxHighlighterWebView` custom-view with `bindSyntaxHigh
 All we need to do is use the view in XML layout like following:
 
 ```xml
-<your.app.code.SyntaxHighlighterWebView  
-  android:id="@+id/syntax_highlighter_webview"  
-  android:layout_width="match_parent"  
+<your.app.code.SyntaxHighlighterWebView
+  android:id="@+id/syntax_highlighter_webview"
+  android:layout_width="match_parent"
   android:layout_height="match_parent" />
 ```
 
 And from your `Activity` or `Fragment` get reference to the view and bind the source code like following
 
 ```kotlin
-val highlighter: SyntaxHighlighterWebView = findViewById(R.id.syntax_highlighter_webview)  
-  
-highlighter.**bindSyntaxHighlighter**(  
-   formattedSourceCode = "data class Student(val name: String)",  
-   language = "kotlin",  
-   showLineNumbers = true  
+val highlighter: SyntaxHighlighterWebView = findViewById(R.id.syntax_highlighter_webview)
+
+highlighter.bindSyntaxHighlighter(
+   formattedSourceCode = "data class Student(val name: String)",
+   language = "kotlin",
+   showLineNumbers = true
 )
 ```
 
@@ -173,7 +169,7 @@ All the example source code provided here is available in following GitHub repos
 
 If you find any issue, leave a comment here or report an issue at GitHub repository. Hope it helps somebody. ✌️
 
-[**amardeshbd/android-syntax-highlighter** — *Yet Another Android Syntax Highlighter (YAASH). Example of how to use any JavaScript library to enable syntax highlighting in your android app.*](https://github.com/amardeshbd/android-syntax-highlighter)
+[**amardeshbd/android-syntax-highlighter** — _Yet Another Android Syntax Highlighter (YAASH). Example of how to use any JavaScript library to enable syntax highlighting in your android app._](https://github.com/amardeshbd/android-syntax-highlighter)
 
 ![](https://cdn-images-1.medium.com/max/800/1*mOgncKuhm9vj_kpE1LupSg.jpeg)
 

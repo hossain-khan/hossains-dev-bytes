@@ -7,12 +7,11 @@ featured: false
 draft: false
 ---
 
-
 > DISCLAIMER: This is a non-technical just-for-fun post!
 
 In the past few years, the Android ecosystem has exploded with lots of tools, libraries, and architecture guidelines. Recently, with I/O 2017 announcement of Kotlin support, it just added another dimension.
 
-Today, I am going to show you quickest way of becoming an Android Developer regardless of language and plethora of libraries, all you need is a physical Android device.
+Today, I am going to show you the quickest way of becoming an Android Developer regardless of language and plethora of libraries, all you need is a physical Android device.
 
 #### Becoming Android developer
 
@@ -20,7 +19,7 @@ Today, I am going to show you quickest way of becoming an Android Developer rega
 
 On your device, go to `Settings > About` and find “**Build Number**”
 
-> p.s. The “Build Number” may be burried under additional sub section based on device manufacturer like LG, Samsung, HTC and so on. You just need to find it 🤓.
+> p.s. The “Build Number” may be buried under an additional subsection based on device manufacturer like LG, Samsung, HTC and so on. You just need to find it 🤓.
 
 Now, all you need to do is keep tapping the build number value until it says you have become a developer. And that’s it!
 
@@ -30,7 +29,7 @@ Here is how I became a developer using my Pixel 2 XL device:
 
 A short clip showcasing how to enable ‘Developer options’
 
-If you made this far, you know this is a *joke* 🙈! By now, every Android devs know how to activate the developer options on any Android device.
+If you made this far, you know this is a _joke_ 🙈! By now, every Android devs know how to activate the developer options on any Android device.
 
 However, back in the days, there was no tapping required to activate it, it was always there. So, when they added this feature, I’ll be honest, I did have to Google for it 😁.
 
@@ -38,7 +37,7 @@ However, back in the days, there was no tapping required to activate it, it was 
 
 #### Under the hood
 
-As I was curious, I wanted to see how the logic works in the Android settings screen. I found that all these logic of activating the developer options is in [**BuildNumberPreferenceController.java**](https://android.googlesource.com/platform/packages/apps/Settings/+/master/src/com/android/settings/deviceinfo/BuildNumberPreferenceController.java) (*AOSP*) source code.
+As I was curious, I wanted to see how the logic works in the Android settings screen. I found that all these logic of activating the developer options is in [**BuildNumberPreferenceController.java**](https://android.googlesource.com/platform/packages/apps/Settings/+/master/src/com/android/settings/deviceinfo/BuildNumberPreferenceController.java) (_AOSP_) source code.
 
 First, the most important constant that defines how many times we have to tap to become the ‘developer’ is:
 
@@ -50,41 +49,41 @@ Why 7? Maybe because it’s considered a lucky number? ¯\\\_(ツ)\_/¯
 
 #### Pre-conditions
 
-Here some of the pre-conditions that have to be met before developer settings can be activated by tapping 7 times on the build number.
+Here are some of the pre-conditions that have to be met before developer settings can be activated by tapping 7 times on the build number.
 
--   Admin user of the device (using [UserManager](https://developer.android.com/reference/android/os/UserManager.html))
--   Device Provisioning is complete
--   Tapping is not done by [monkey-runner](https://developer.android.com/studio/test/monkeyrunner)
--   Debugging feature is not disabled by Device Owner/Work Profile
+- Admin user of the device (using [UserManager](https://developer.android.com/reference/android/os/UserManager.html))
+- Device Provisioning is complete
+- Tapping is not done by [monkey-runner](https://developer.android.com/studio/test/monkeyrunner)
+- Debugging feature is not disabled by Device Owner/Work Profile
 
-After these requirements are met, all there is left to do is count-down the number of taps. Here is a *simplified* code snapshot with some added inline comments:
+After these requirements are met, all there is left to do is count-down the number of taps. Here is a _simplified_ code snapshot with some added inline comments:
 
 ```java
-if (mDevHitCountdown > 0) {  
-    mDevHitCountdown--;  
-    if (mDevHitCountdown == 0 && !mProcessingLastDevHit) {  
-        // Open the lock screen validation screen before activating  
-        mProcessingLastDevHit = helper.launchConfirmationActivity();  
-        if (!mProcessingLastDevHit) {  
-            // Activates developer settings after lock verification  
-            enableDevelopmentSettings();  
-        }  
-    } else if (mDevHitCountdown > 0  
-            && mDevHitCountdown < (TAPS_TO_BE_A_DEVELOPER - 2)) {  
-  
-        // Show - "You are X taps away from being developer."  
-        mDevHitToast = Toast.makeText(getQuantityString(  
-                        R.plurals.show_dev_countdown,  
-                        mDevHitCountdown,  
-                        mDevHitCountdown),  
-                Toast.LENGTH_SHORT);  
-        mDevHitToast.show();  
-    }  
-} else if (mDevHitCountdown < 0) {  
-    // This means, you have already tapped 7 times, you're a DEV!  
-    mDevHitToast = Toast.makeText(R.string.show_dev_already,  
-            Toast.LENGTH_LONG);  
-    mDevHitToast.show();  
+if (mDevHitCountdown > 0) {
+    mDevHitCountdown--;
+    if (mDevHitCountdown == 0 && !mProcessingLastDevHit) {
+        // Open the lock screen validation screen before activating
+        mProcessingLastDevHit = helper.launchConfirmationActivity();
+        if (!mProcessingLastDevHit) {
+            // Activates developer settings after lock verification
+            enableDevelopmentSettings();
+        }
+    } else if (mDevHitCountdown > 0
+            && mDevHitCountdown < (TAPS_TO_BE_A_DEVELOPER - 2)) {
+
+        // Show - "You are X taps away from being developer."
+        mDevHitToast = Toast.makeText(getQuantityString(
+                        R.plurals.show_dev_countdown,
+                        mDevHitCountdown,
+                        mDevHitCountdown),
+                Toast.LENGTH_SHORT);
+        mDevHitToast.show();
+    }
+} else if (mDevHitCountdown < 0) {
+    // This means, you have already tapped 7 times, you're a DEV!
+    mDevHitToast = Toast.makeText(R.string.show_dev_already,
+            Toast.LENGTH_LONG);
+    mDevHitToast.show();
 }
 ```
 

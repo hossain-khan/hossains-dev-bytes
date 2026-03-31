@@ -1,16 +1,15 @@
 ---
 title: How to Deploy GitHub’s Spark App to Cloudflare Workers
-description: GitHub’s Spark is a fantastic starting point for building modern React applications that uses spark-template as starting point. Once you…
+description: GitHub’s Spark is a fantastic starting point for building modern React applications that uses spark-template as a starting point. Once you…
 pubDatetime: 2025-09-28T13:52:59.880Z
 tags: ["cloudflare", "github", "deployment"]
 featured: false
 draft: false
 ---
 
-
 ![](https://cdn-images-1.medium.com/max/800/1*0KIDO0mfjpv6_PTAN7uDYg.jpeg)
 
-GitHub’s [Spark](https://github.com/features/spark) is a fantastic starting point for building modern React applications that uses [spark-template](https://github.com/github/spark-template) as starting point. Once you have built the app, GitHub does allow you to publish the Spark site, however that requires users to have GitHub account to visit the site.
+GitHub’s [Spark](https://github.com/features/spark) is a fantastic starting point for building modern React applications that uses [spark-template](https://github.com/github/spark-template) as a starting point. Once you have built the app, GitHub does allow you to publish the Spark site, however that requires users to have GitHub account to visit the site.
 
 In this guide, we’ll walk through the process of adapting the spark-template to deploy seamlessly to Cloudflare Workers using the modern ASSETS binding approach.
 
@@ -20,12 +19,12 @@ In this guide, we’ll walk through the process of adapting the spark-template t
 
 Cloudflare Workers offers several compelling advantages for deploying React SPAs:
 
--   Global CDN: Your app is served from 330+ locations worldwide
--   Zero-config static hosting: No server configuration needed
--   SPA routing support: Client-side routes work seamlessly
--   Cost-effective: Free tier includes 100,000 requests/day
--   Instant cold starts: No server spin-up time
--   Built-in security: Automatic HTTPS, DDoS protection, and rate limiting
+- Global CDN: Your app is served from 330+ locations worldwide
+- Zero-config static hosting: No server configuration needed
+- SPA routing support: Client-side routes work seamlessly
+- Cost-effective: Free tier includes 100,000 requests/day
+- Instant cold starts: No server spin-up time
+- Built-in security: Automatic HTTPS, DDoS protection, and rate limiting
 
 ### Prerequisites
 
@@ -36,7 +35,7 @@ Before we begin, make sure you have:
 
 ### Step-by-Step Implementation
 
-For this example, I have created a Spark app called JSON to CSV Converter. I will use that to show as example on how to configure it. Update the key information of the project where applicable.
+For this example, I have created a Spark app called JSON to CSV Converter. I will use that as an example of how to configure it. Update the key information of the project where applicable.
 
 #### Prepare Project for Cloudflare Workers
 
@@ -45,15 +44,15 @@ For this example, I have created a Spark app called JSON to CSV Converter. I wil
 Create a new file `src/_worker.js` with the following content:
 
 ```javascript
-/**  
- * Cloudflare Worker for Spark Template App  
- * Simple ASSETS binding approach for static site hosting  
- */  
-export default {  
-  async fetch(request, env, ctx) {  
-    // Serve static assets using the ASSETS binding  
-    return env.ASSETS.fetch(request);  
-  },  
+/**
+ * Cloudflare Worker for Spark Template App
+ * Simple ASSETS binding approach for static site hosting
+ */
+export default {
+  async fetch(request, env, ctx) {
+    // Serve static assets using the ASSETS binding
+    return env.ASSETS.fetch(request);
+  },
 };
 ```
 
@@ -72,39 +71,39 @@ _worker.js
 Create a `wrangler.toml` file in your project root:
 
 ```toml
-name = "my-spark-app"  
-main = "dist/_worker.js"  
-compatibility_date = "2025-08-29"  
-workers_dev = true  
-  
-[assets]  
-directory = "./dist"  
-binding = "ASSETS"  
-html_handling = "auto-trailing-slash"  
-not_found_handling = "single-page-application"  
-  
-[build]  
+name = "my-spark-app"
+main = "dist/_worker.js"
+compatibility_date = "2025-08-29"
+workers_dev = true
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+html_handling = "auto-trailing-slash"
+not_found_handling = "single-page-application"
+
+[build]
 command = "npm run build"
 ```
 
 Key configuration options:
 
--   `not_found_handling = "single-page-application"`: Enables client-side routing
--   `html_handling = "auto-trailing-slash"`: Handles clean URLs
--   `directory = "./dist"`: Points to your build output
--   `name = "my-spark-app"`: This will be the app id you use when creating worker in cloudflare
+- `not_found_handling = "single-page-application"`: Enables client-side routing
+- `html_handling = "auto-trailing-slash"`: Handles clean URLs
+- `directory = "./dist"`: Points to your build output
+- `name = "my-spark-app"`: This will be the app ID you use when creating a worker in Cloudflare
 
 **Update package.json Scripts**
 
 Add the deployment script to your `package.json`: Add ‘copy-worker’ step and update ‘build’ step.
 
 ```json
-{  
-  "scripts": {  
-    # other existing configs ...  
-    "copy-worker": "cp src/_worker.js dist/_worker.js && cp src/.assetsignore dist/.assetsignore",  
-    "build": "tsc -b --noCheck && vite build && npm run copy-worker",  
-  }  
+{
+  "scripts": {
+    # other existing configs ...
+    "copy-worker": "cp src/_worker.js dist/_worker.js && cp src/.assetsignore dist/.assetsignore",
+    "build": "tsc -b --noCheck && vite build && npm run copy-worker",
+  }
 }
 ```
 
@@ -112,16 +111,16 @@ The key addition is `"copy-worker"` step that copies necessary files to `dist/` 
 
 **Update Vite Configuration (if needed)**
 
-If you encounter build issue in cloudflare, update following line from:
+If you encounter a build issue in Cloudflare, update the following line from:
 
 ```javascript
-const projectRoot = process.env.PROJECT_ROOT || import.meta.dirname
+const projectRoot = process.env.PROJECT_ROOT || import.meta.dirname;
 ```
 
 to
 
 ```javascript
-const projectRoot = process.env.PROJECT_ROOT || process.cwd()
+const projectRoot = process.env.PROJECT_ROOT || process.cwd();
 ```
 
 ### File Structure After Implementation
@@ -129,24 +128,24 @@ const projectRoot = process.env.PROJECT_ROOT || process.cwd()
 Your project structure should look like this:
 
 ```text
-spark-template/  
-├── src/  
-│   ├── _worker.js          # Cloudflare Worker script  
-│   ├── .assetsignore       # Excludes worker from static assets  
-│   └── [your app files]    # React components and assets  
-├── dist/ (after build)  
-│   ├── _worker.js          # Copied worker script  
-│   ├── .assetsignore       # Copied asset exclusions  
-│   ├── index.html          # Built app entry point  
-│   └── assets/             # Built app assets  
-├── wrangler.toml           # Cloudflare Workers configuration  
-├── vite.config.ts          # Updated with minor fix  
+spark-template/
+├── src/
+│   ├── _worker.js          # Cloudflare Worker script
+│   ├── .assetsignore       # Excludes worker from static assets
+│   └── [your app files]    # React components and assets
+├── dist/ (after build)
+│   ├── _worker.js          # Copied worker script
+│   ├── .assetsignore       # Copied asset exclusions
+│   ├── index.html          # Built app entry point
+│   └── assets/             # Built app assets
+├── wrangler.toml           # Cloudflare Workers configuration
+├── vite.config.ts          # Updated with minor fix
 └── package.json            # Updated with 'copy-worker' and 'build' script
 ```
 
 ### Cloudflare Workers Deployment
 
-Once you’ve made all the changes, creating cloudflare workers is easy. First, ensure your GitHub account is connected so that when importing project you can see your repository.
+Once you’ve made all the changes, creating Cloudflare Workers is easy. First, ensure your GitHub account is connected so that when importing the project you can see your repository.
 
 ### Importing Repository
 
@@ -180,7 +179,7 @@ Once build is complete successfully, clicking on the external link button on the
 
 ![](https://cdn-images-1.medium.com/max/800/1*r__1VjZX6ctzrs0be2jMjA.png)
 
-✓ Thats it, you got your Spark app up and running on Cloudflare’s edge network. If you have domain hosted with Cloudflare you can also use that as custom domain or sub-domain for the app.
+✓ That's it, you got your Spark app up and running on Cloudflare’s edge network. If you have domain hosted with Cloudflare you can also use that as custom domain or sub-domain for the app.
 
 ---
 
@@ -191,8 +190,8 @@ Once build is complete successfully, clicking on the external link button on the
 Sometimes build issues related to `package-lock.json` may happen, in that case re-build app and push changes.
 
 ```bash
-# Clear and rebuild  
-rm -rf node_modules dist  
-npm install  
+# Clear and rebuild
+rm -rf node_modules dist
+npm install
 npm run build
 ```

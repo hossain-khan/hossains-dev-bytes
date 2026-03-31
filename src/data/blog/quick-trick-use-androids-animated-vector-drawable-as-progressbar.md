@@ -13,7 +13,7 @@ Preview of [https://shapeshifter.design/](https://shapeshifter.design/) editing 
 
 ---
 
-Android’s [ProgressBar](https://developer.android.com/reference/android/widget/ProgressBar) widget comes with lot of customization controls and flexibility to set custom animated drawable. However, setting [AnimatedVectorDrawable](https://developer.android.com/reference/kotlin/android/graphics/drawable/AnimatedVectorDrawable?hl=en) is not one of the option.
+Android’s [ProgressBar](https://developer.android.com/reference/android/widget/ProgressBar) widget comes with a lot of customization controls and flexibility to set custom animated drawable. However, setting [AnimatedVectorDrawable](https://developer.android.com/reference/kotlin/android/graphics/drawable/AnimatedVectorDrawable?hl=en) is not one of the options.
 
 So, this is a quick trick on how to use custom ImageView to create indeterminate progress indicator using Animated Vector Drawable (AVD).
 
@@ -39,7 +39,7 @@ class AvdLoadingProgressBar @JvmOverloads constructor(
 
 Here is more verbose Gist version of the snippet above
 
-> NOTE: The idea of repeated indefinite AVD is heavily borrowed from Nick Butcher’s medium article on AVD. I highly recommend you read them to know more tips and ticks with AVD.
+> NOTE: The idea of repeated indefinite AVD is heavily borrowed from Nick Butcher’s medium article on AVD. I highly recommend you read them to know more tips and tricks with AVD.
 
 That’s it. You can now use this in your layout as usual view and show it when data is loading from network or any long running async request is happening.
 

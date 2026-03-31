@@ -15,7 +15,7 @@ The one comes to my mind immediately is “Volkswagen Emission Scandal”
 
 Volkswagen — lied about their emission ratings for millions of cars.
 
-I don’t know exactly how much it costed Volkswagen in the end, but it would be in billions of dollars. Here are some headlines from few news sources to give you an idea.
+I don’t know exactly how much it cost Volkswagen in the end, but it would be in billions of dollars. Here are some headlines from a few news sources to give you an idea.
 
 > Volkswagen Posts Deep Loss After Taking **$18.28** Billion Hit on Emissions Scandal — [The Wall Street Journal](https://www.wsj.com/articles/volkswagen-posts-deep-loss-after-taking-18-28-billion-hit-on-emissions-scandal-1461333307)
 
