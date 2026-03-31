@@ -51,6 +51,12 @@ export const SHARE_LINKS: Social[] = [
     icon: IconWhatsapp,
   },
   {
+    name: "Bluesky",
+    href: "https://bsky.app/intent/compose?text=",
+    linkTitle: `Share this post on Bluesky`,
+    icon: IconBluesky,
+  },
+  {
     name: "X",
     href: "https://x.com/intent/post?url=",
     linkTitle: `Share this post on X`,
