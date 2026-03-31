@@ -144,7 +144,7 @@ pnpm run format && pnpm run lint --fix
   1. `astro check` - TypeScript validation
   2. `astro build` - Compile Astro + static files
   3. `pagefind --site dist` - Generate search index
-  4. Copy pagefind artifacts to `public/`
+  4. Copy pagefind to `dist/client/pagefind/` (Cloudflare assets directory)
 - **Deployed to**: Cloudflare Workers
 
 ## Deployment
@@ -243,5 +243,5 @@ docs: update README with gallery instructions
 
 ---
 
-**Last updated**: March 29, 2026
+**Last updated**: March 31, 2026
 **Maintainer**: Hossain Khan (@hossain-khan)
