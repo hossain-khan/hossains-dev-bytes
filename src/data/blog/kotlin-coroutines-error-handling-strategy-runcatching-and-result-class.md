@@ -10,7 +10,10 @@ draft: false
 I am trying to learn Kotlin coroutines, and was trying to learn more about how to handle errors from suspended functions. One of the [recommended way](https://developer.android.com/kotlin/coroutines) by Google is to create a “Result” class like the following:
 
 ```kotlin
-sealed class Result {    data class Success(val data: T) : Result()    data class Error(val exception: Exception) : Result()}
+sealed class Result {
+    data class Success(val data: T) : Result()
+    data class Error(val exception: Exception) : Result()
+}
 ```
 
 This allows us to take advantage of Kotlin’s `when` like following:
@@ -62,7 +65,7 @@ The `onSuccess` and `onFailure` callback is part of `Result<T>` class that allow
 
 In addition to nice callbacks, the `Result<T>` class provides multiple ways to recover from the error and provide a default value or fallback options.
 
-1.  **Using** `**getOrDefault()**` **and** `**getOrNull()**` **API**
+1. Using `getOrDefault()` and `getOrNull()` API
 
 ```kotlin
 val status: String = statusResult.getOrDefault("STATUS_UNKNOWN")
@@ -83,7 +86,7 @@ val status: String = runCatching {
 .getOrDefault("STATUS_UNKNOWN")
 ```
 
-**2\. Using** `**recover { }**` **API**
+2. Using `recover { }` API
 
 The `recover` API allows you to handle the error and recover from there with a fallback value of the same data type. See the following example.
 
@@ -97,7 +100,7 @@ val status: Result<String> = runCatching {
 println(status.isSuccess) // Prints "true" even if error is thrown
 ```
 
-**3\. Using** `**fold {}**` **API to map data**
+3. Using `fold {}` API to map data
 
 The `fold` extension function allows you to map the error to a different data type you wish. In this example, I kept the user status as `String`.
 
@@ -122,4 +125,4 @@ I hope this was useful or a new discovery for you as it was for me 😊
 
 **UPDATE #1:** As Gabor has mentioned below, there is an unintended consequence about using it in coroutines. I will look into it and provide more updates on the usage soon. Thanks to Gabor for mentioning it.
 
-> [](https://twitter.com/Zhuinden/status/1389063911702470656?s=20)
+> [Gabor Varadi's tweet](https://twitter.com/Zhuinden/status/1389063911702470656?s=20)
