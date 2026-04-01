@@ -15,7 +15,7 @@ draft: false
 
 ---
 
-> Can you be irresponsibly responsible? ^\_^
+> Can you be irresponsibly responsible? ^_^
 
 That was the experiment I wanted to do with a plethora of Agentic AI available for code assist.
 
@@ -26,13 +26,13 @@ Sounds very irresponsible, right? But there is a twist and that is part of my ex
 - I wanted to explore if I could do TDD (_Test Driven Development_) with AI on a topic with **_minimal understanding_** of what the suggested code does.
 - However, I would have a very good understanding of expected **_input & output_** such that I can have well-defined test cases that I can feed AI Agents to work with.
 
-#### Test Subject — Build a JSON5 Parser
+## Test Subject — Build a JSON5 Parser
 
 For this experiment I chose [JSON5](https://json5.org/) that I recently came across. This is an extension of JSON with the option to add comments and more, making it suitable for configuration definitions (like YAML).
 
 Since `JSON5` has a well-defined grammar and specification, it would be easy for me to point to those and **build a library** that parses JSON5 files using Kotlin language.
 
-#### Results First 📊
+## Results First 📊
 
 Before I dive deep into the ‘Blind Coding’ strategy, let me reveal what was achieved first using LLM-based Agentic AI 🤖
 
@@ -63,25 +63,25 @@ If you are interested to look under the hood, take a look into the `lib` module 
 
 ---
 
-#### Behind the Scenes
+## Behind the Scenes
 
 Believe it or not, JSON5 has been around since 2012 and has all the implementation details and specification on their GitHub repos ([https://github.com/json5](https://github.com/json5)).
 
 All I had to do was import their JavaScript based implementation and specification and **_iteratively_** ask agents to build functionalities.
 
-⏳ **How long did it take to build the JSON5 library?**  
+### ⏳ **How long did it take to build the JSON5 library?**  
 About 4 days of weekend and after work sessions (roughly 10–12 hours)
 
-😅 **Were there challenges along the way?**  
+### 😅 **Were there challenges along the way?**  
 Yes, some of the parsing tests were failing and agent was repeatedly failing to fix it. I almost lost hope. Then GitHub Copilot Agent rescued me.
 
-🤖 **What are the Agents that were used to achieve this?**  
-\- Claude Sonnet 3.7 (Agent Mode — IDE integration)  
-\- GPT 4.1 (Agent Mode — IDE integration)  
-\- Google Jules (async agent)  
-\- GitHub Copilot Agent (async agent — used for majority of the project)
+### 🤖 **What are the Agents that were used to achieve this?**  
+- Claude Sonnet 3.7 (Agent Mode — IDE integration)  
+- GPT 4.1 (Agent Mode — IDE integration)  
+- Google Jules (async agent)  
+- GitHub Copilot Agent (async agent — used for majority of the project)
 
-🎉 **So, what’s the verdict?**  
+### 🎉 **So, what’s the verdict?**  
 I had an absolute blast just watching agents do magical stuff that I couldn’t have done by myself. Even the benchmarking solution was built by Agent.   
 Seeing the benchmark result also gave me hope and sense of accomplishment. Sure, I might not be able to build the next Dagger, or OkHttp or anything of that sort, however anything simple should clearly be within reach with the limited time we have in our lives. That is a huge win for me! 🏆
 
