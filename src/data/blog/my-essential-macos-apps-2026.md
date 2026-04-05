@@ -1,10 +1,10 @@
 ---
 title: "My Essential macOS Apps in 2026"
 pubDatetime: 2026-04-05T12:00:00Z
-description: "Short description for SEO & social (155-160 chars)"
+description: "List of essential macOS apps I use in 2026 for productivity and development."
 tags: ["macos", "apps", "productivity"]
 featured: false
-draft: true
+draft: false
 ---
 
 Recently I have switched to the M5 Macbook Air and I am loving it. Here are some of the essential apps I keep coming back to whenever I setup new backbook (2026 edition)
@@ -59,3 +59,25 @@ For optimizing images/svg, I use ImageOptim. It's a simple and effective tool th
 
 https://imageoptim.com/mac
 
+
+## OpenMTP
+The official Android File Transfer app for macOS is discontinued and has been a source of frustration for many Android users. OpenMTP is a great alternative that offers a much better user experience and supports the latest versions of macOS.
+
+https://openmtp.ganeshrvel.com/
+
+## Orb Stack
+OrbStack a great alternative to Docker Desktop that is lightweight and easy to use. It also has a nice UI for managing containers and images.
+
+https://orbstack.dev/
+
+
+## Tailscale
+Believe it or not, I recently heard about Tailscale and it has been a game changer for remote access to my home network. It's a VPN service that allows you to securely connect to your devices from anywhere in the world.
+
+https://tailscale.com/
+
+
+## Other CLI tools
+- **[Homebrew](https://brew.sh/)**: The package manager for macOS that makes it easy to install and manage command-line tools and applications.
+- **[Oh My Zsh](https://ohmyz.sh/)**: A framework for managing your Zsh configuration that comes with a lot of useful plugins and themes.
+- **[Colipot CLI](https://github.com/features/copilot/cli)**: A command-line interface for GitHub Copilot that allows you to use Copilot's AI code suggestions directly in your terminal.
