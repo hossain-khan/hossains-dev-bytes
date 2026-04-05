@@ -35,6 +35,7 @@ async function loadGoogleFonts(
   Array<{ name: string; data: ArrayBuffer; weight: number; style: string }>
 > {
   const fontsConfig = [
+    { name: "Boogaloo", font: "Boogaloo", weight: 400, style: "normal" },
     { name: "Noto Sans", font: "Noto+Sans", weight: 400, style: "normal" },
     {
       name: "Noto Sans",
