@@ -21,5 +21,8 @@ Another funny thing was that the theme was built by Spanish author and the label
 ## Verdict
 Overall I think it was worth the effort and I am happy with the result. I have full control over my content and I can customize the site to my liking. 
 
+---
 
+Here is the GitHub repo that serves this blog site:
+<GitHubEmbed repo="hossain-khan/hossains-dev-bytes" />
 
