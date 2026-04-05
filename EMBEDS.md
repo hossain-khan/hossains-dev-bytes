@@ -560,6 +560,41 @@ const response = await fetch(`https://api.github.com/repos/${repo}`, { headers }
 3. Select `public_repo` scope (read-only access to public repositories)
 4. Copy and store securely
 
+### Verifying Token Setup
+
+**Check if token is being recognized during build**:
+
+1. **Local development** — Look at build output logs:
+   ```bash
+   GITHUB_TOKEN="your_token" pnpm run build
+   
+   # Look for log output:
+   # [GitHubEmbed] Using authenticated GitHub API request for owner/repo
+   # OR
+   # [GitHubEmbed] No GITHUB_TOKEN found, using unauthenticated request...
+   ```
+
+2. **Test token manually** (verify it's valid):
+   ```bash
+   curl -H "Authorization: token YOUR_TOKEN" \
+     https://api.github.com/repos/owner/repo
+   
+   # Should return 200 with repo data
+   # If you get 403, token may be invalid or revoked
+   # If you get 401, check Authorization header format
+   ```
+
+3. **Copy `.env.example` to `.env`** for local development:
+   ```bash
+   cp .env.example .env
+   # Edit .env and replace YOUR_TOKEN with your actual token
+   ```
+
+4. **Cloudflare Workers** — Verify secret is set:
+   - Dashboard → Workers & Pages → [Your Project]
+   - Settings → **Secrets and Variables** → **Secrets**
+   - Check `GITHUB_TOKEN` exists and has correct value (first 3 chars: `ghp_`)
+
 ## File Organization
 
 Your embed components belong in `src/components/`:

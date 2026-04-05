@@ -39,6 +39,9 @@ try {
   const token = import.meta.env.GITHUB_TOKEN;
   if (token) {
     headers.Authorization = `token ${token}`;
+    console.log(`[GitHubEmbed] Using authenticated GitHub API request for ${repo}`);
+  } else {
+    console.log(`[GitHubEmbed] No GITHUB_TOKEN found, using unauthenticated request for ${repo} (limited to 60 requests/hour)`);
   }
   
   const response = await fetch(`https://api.github.com/repos/${repo}`, { headers });
