@@ -508,6 +508,58 @@ try {
 </div>
 ```
 
+### API Authentication Errors (401/403)
+
+**Problem**: Embed works locally but fails on production with `Repository not found (401)` or rate limit errors
+
+**Solution**:
+- Set `GITHUB_TOKEN` environment variable in your build environment
+- Without a token, API requests are limited to 60/hour (rates shared across all users)
+- With a token, limit increases to 5,000/hour
+- Token is optional; component gracefully handles missing credentials
+
+**For GitHub API embeds**:
+
+```astro
+---
+// In your embed component
+const token = import.meta.env.GITHUB_TOKEN;
+const headers: HeadersInit = { Accept: "application/vnd.github.v3+json" };
+
+if (token) {
+  headers.Authorization = `token ${token}`;
+}
+
+const response = await fetch(`https://api.github.com/repos/${repo}`, { headers });
+---
+```
+
+**Set token for production**:
+
+*Cloudflare Workers* (via `wrangler.json`):
+```json
+{
+  "env": {
+    "production": {
+      "vars": {
+        "GITHUB_TOKEN": "your_personal_access_token_here"
+      }
+    }
+  }
+}
+```
+
+*GitHub Actions* (via Actions secrets):
+1. Go to repository Settings → Secrets and variables → Actions
+2. Add `GITHUB_TOKEN` as a new repository secret
+3. Use in workflow: `GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}`
+
+**Create a personal access token**:
+1. Go to https://github.com/settings/tokens
+2. Click "Generate new token (classic)"
+3. Select `public_repo` scope (read-only access to public repositories)
+4. Copy and store securely
+
 ## File Organization
 
 Your embed components belong in `src/components/`:
