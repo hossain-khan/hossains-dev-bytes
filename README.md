@@ -78,6 +78,22 @@ src/data/galleries/my-gallery/
 └── 03-photo.jpg
 ```
 
+### Custom Embeds
+
+Use reusable components to embed rich content in blog posts (GitHub repos, videos, etc).
+
+For a comprehensive guide on creating and using embeds, see [**EMBEDS.md**](EMBEDS.md).
+
+**Quick example:**
+
+```mdx
+import GitHubEmbed from "@/components/GitHubEmbed.astro";
+
+Check out this project:
+
+<GitHubEmbed repo="username/repo-name" />
+```
+
 See [TEMPLATE_README.md](TEMPLATE_README.md) for full feature documentation.
 
 ## Configuration
