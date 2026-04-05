@@ -89,12 +89,12 @@ export default async post => {
             props: {
               style: {
                 position: "absolute",
-                right: "-60px",
+                right: "0px",
                 top: "50%",
                 transform: "translateY(-50%)",
-                width: "400px",
-                height: "400px",
-                opacity: 0.15,
+                width: "500px",
+                height: "500px",
+                opacity: 0.07,
                 overflow: "visible",
                 pointerEvents: "none",
               },
