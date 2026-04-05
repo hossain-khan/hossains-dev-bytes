@@ -3,7 +3,7 @@ title: "Moving away from Medium to self-hosted blogging for good"
 pubDatetime: 2026-04-05T13:15:00Z
 description: "An adventure to setup my own blogging site using Astro and Cloudflare Workers."
 tags: ["blog", "selfhosted", "astro", "cloudflare"]
-featured: false
+featured: true
 draft: false
 ---
 
