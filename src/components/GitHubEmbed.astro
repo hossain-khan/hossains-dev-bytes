@@ -46,7 +46,9 @@ try {
     console.error("GitHubEmbed fetch error:", error);
   } else {
     repoData = await response.json();
-    console.log("GitHubEmbed fetched successfully:", repoData.name);
+    if (repoData) {
+      console.log("GitHubEmbed fetched successfully:", repoData.name);
+    }
   }
 } catch (e) {
   error = `Failed to fetch repository data: ${String(e)}`;
