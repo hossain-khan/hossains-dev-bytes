@@ -3,7 +3,7 @@ title: How to Deploy GitHub’s Spark App to Cloudflare Workers
 description: GitHub’s Spark is a fantastic starting point for building modern React applications that uses spark-template as a starting point. Once you…
 pubDatetime: 2025-09-28T13:52:59.880Z
 tags: ["cloudflare", "github", "deployment"]
-featured: false
+featured: true
 draft: false
 ---
 
