@@ -1,3 +1,39 @@
+/**
+ * Post Open Graph Image Generator
+ * 
+ * Generates dynamic 1200x630px OG images for blog posts using Satori + Resvg
+ * 
+ * Card Layout (1200x630):
+ * 
+ * ┌──────────────────────────────────────────────────────────────────────┐
+ * │                                                                      │
+ * │  ┌──────────────────┐                              ╱╲  (SVG         │
+ * │  │ hossain.dev      │  (Header pill)              ╱  ╲ watermark    │
+ * │  └──────────────────┘                            ╱    ╲ opacity 7%) │
+ * │                                                 ╱      ╲             │
+ * │                                                ╱        ╲            │
+ * │      ╱╱╱ (Indigo-purple blur overlay)                    │
+ * │  How to Deploy GitHub's Spark App to                     │
+ * │  Cloudflare Workers                                      │
+ * │  (Dynamic font: 48-72px based on title length)           │
+ * │                                                           │
+ * │  ┌─────────────┐  ┌─────────────┐                        │
+ * │  │ cloudflare  │  │ github      │  (Tags: first 2)      │
+ * │  └─────────────┘  └─────────────┘                        │
+ * │                                                          │
+ * └──────────────────────────────────────────────────────────────────────┘
+ * 
+ * Features:
+ * - Responsive title sizing (72px → 60px → 48px based on length)
+ * - Dynamic line clamping (3 lines → 2 lines for long titles)
+ * - Gradient overlay behind title for depth
+ * - SVG watermark (SourceCode icon) with 7% opacity
+ * - Dark theme with Slate 900 background (#0f172a)
+ * - Tag display (first 2 tags in dark pills)
+ * - Domain pill badge at top
+ * - Indigo-purple gradient blur decoration
+ */
+
 import satori from "satori";
 import { SITE } from "@/config";
 import loadGoogleFonts from "../loadGoogleFont";
