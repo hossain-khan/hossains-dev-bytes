@@ -35,3 +35,27 @@ For vector graphics and design work, I use Affinity Designer for quick edits. In
 
 https://affinity.serif.com/en-us/designer/
 
+## Cyberduck
+For FTP and cloud storage management, I use Cyberduck. It's a reliable and easy-to-use app that supports a wide range of protocols.
+
+https://cyberduck.io/
+
+
+## Fork
+For Git GUI, I use Fork. I have been using it close to a decade now and it has been my go-to Git client for both personal and professional projects.
+
+https://git-fork.com/
+
+## Gifox
+Small tool to create GIFs from screen recordings. Super handy for pull request reviews and bug reports.
+
+> [Kap](https://getkap.co/) is a great fee alternative.
+
+https://gifox.io/
+
+
+## Image Optim
+For optimizing images/svg, I use ImageOptim. It's a simple and effective tool that helps reduce file sizes without sacrificing quality. It's also great tool to remove metadata from images for privacy reasons.
+
+https://imageoptim.com/mac
+
