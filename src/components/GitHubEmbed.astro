@@ -28,6 +28,7 @@ if (!repo || !repo.includes("/")) {
 
 // Fetch repository data from GitHub API at build time
 let repoData: GitHubRepo | null = null;
+let languages: string[] = [];
 let error: string | null = null;
 
 try {
@@ -50,6 +51,22 @@ try {
     error = `Repository not found (${response.status})`;
   } else {
     repoData = await response.json();
+    
+    // Fetch languages used in the repository
+    try {
+      const langResponse = await fetch(`https://api.github.com/repos/${repo}/languages`, { headers });
+      if (langResponse.ok) {
+        const langData = await langResponse.json();
+        // Sort languages by byte count (descending) and get top 2
+        languages = Object.entries(langData)
+          .sort(([, bytesA], [, bytesB]) => (bytesB as number) - (bytesA as number))
+          .slice(0, 2)
+          .map(([lang]) => lang);
+      }
+    } catch (e) {
+      // If languages fetch fails, we still have the primary language from repoData
+      console.warn(`[GitHubEmbed] Failed to fetch languages for ${repo}`);
+    }
   }
 } catch (e) {
   error = `Failed to fetch repository: ${String(e)}`;
@@ -120,9 +137,22 @@ const getLanguageColor = (language: string | null): string => {
           </p>
         )}
 
-        {/* Metadata: Language, Stars */}
+        {/* Metadata: Languages, Stars */}
         <div class="flex flex-wrap items-center gap-4 text-xs font-medium text-slate-600 dark:text-slate-400">
-          {repoData.language && (
+          {/* Show top 2 languages */}
+          {languages.length > 0 ? (
+            <>
+              {languages.map((lang) => (
+                <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-200/40 dark:bg-slate-700/40">
+                  <div
+                    class="w-2.5 h-2.5 rounded-full"
+                    style={`background-color: ${getLanguageColor(lang)}`}
+                  />
+                  <span class="text-slate-700 dark:text-slate-300">{lang}</span>
+                </div>
+              ))}
+            </>
+          ) : repoData.language ? (
             <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-200/40 dark:bg-slate-700/40">
               <div
                 class="w-2.5 h-2.5 rounded-full"
@@ -130,7 +160,7 @@ const getLanguageColor = (language: string | null): string => {
               />
               <span class="text-slate-700 dark:text-slate-300">{repoData.language}</span>
             </div>
-          )}
+          ) : null}
 
           <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100/40 dark:bg-amber-900/20">
             <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 24 24">
