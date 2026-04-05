@@ -9,6 +9,7 @@ import ShareLinks from "@/components/ShareLinks.astro";
 import BackButton from "@/components/BackButton.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
 import GalleryEmbed from "@/components/GalleryEmbed.astro";
+import GitHubEmbed from "@/components/GitHubEmbed.astro";
 import { getPath } from "@/utils/getPath";
 import { slugifyStr } from "@/utils/slugify";
 import { SITE } from "@/config";
@@ -181,7 +182,7 @@ const nextPost =
       id="article"
       class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
     >
-      <Content components={{ GalleryEmbed }} />
+      <Content components={{ GalleryEmbed, GitHubEmbed }} />
     </article>
 
     <!-- ═══════ Post footer section ═══════ -->
