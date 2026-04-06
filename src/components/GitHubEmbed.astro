@@ -40,8 +40,10 @@ try {
   const token = import.meta.env.GITHUB_TOKEN;
   if (token) {
     headers.Authorization = `token ${token}`;
+    // eslint-disable-next-line no-console
     console.log(`[GitHubEmbed] Using authenticated GitHub API request for ${repo}`);
   } else {
+    // eslint-disable-next-line no-console
     console.log(`[GitHubEmbed] No GITHUB_TOKEN found, using unauthenticated request for ${repo} (limited to 60 requests/hour)`);
   }
   
@@ -63,8 +65,9 @@ try {
           .slice(0, 2)
           .map(([lang]) => lang);
       }
-    } catch (e) {
+    } catch {
       // If languages fetch fails, we still have the primary language from repoData
+      // eslint-disable-next-line no-console
       console.warn(`[GitHubEmbed] Failed to fetch languages for ${repo}`);
     }
   }
