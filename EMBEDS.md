@@ -584,16 +584,31 @@ const response = await fetch(`https://api.github.com/repos/${repo}`, { headers }
    # If you get 401, check Authorization header format
    ```
 
-3. **Copy `.env.example` to `.env`** for local development:
+3. **Local Development** — Create `.env` file:
    ```bash
    cp .env.example .env
-   # Edit .env and replace YOUR_TOKEN with your actual token
+   # Edit .env and add your GitHub token:
+   # GITHUB_TOKEN=ghp_your_actual_token_here
    ```
+   
+   This file is **gitignored** and never committed.
 
-4. **Cloudflare Workers** — Verify secret is set:
-   - Dashboard → Workers & Pages → [Your Project]
-   - Settings → **Secrets and Variables** → **Secrets**
-   - Check `GITHUB_TOKEN` exists and has correct value (first 3 chars: `ghp_`)
+4. **CI/CD (GitHub Actions)** — Add token as GitHub Secret:
+   - Go to your repository: **Settings → Secrets and variables → Actions**
+   - Create new secret: **`GITHUB_TOKEN`** (with your personal access token value)
+   - The GitHub Actions workflow will automatically pass it to the build:
+     ```yaml
+     - name: Build
+       run: pnpm run build
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+     ```
+
+5. **Deployment** (Cloudflare CI) — Verify token is available:
+   - Check Cloudflare build logs to see which auth method was used
+   - Should log: `[GitHubEmbed] Using authenticated GitHub API request for ...`
+   - If not authenticated: `[GitHubEmbed] No GITHUB_TOKEN found, using unauthenticated request ...`
+
 
 ## File Organization
 
