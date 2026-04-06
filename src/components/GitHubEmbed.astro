@@ -26,25 +26,46 @@ if (!repo || !repo.includes("/")) {
   throw new Error(`GitHubEmbed: Invalid repo format. Use "username/repo-name"`);
 }
 
-// Fetch repository data from GitHub API proxy at build time
+// Fetch repository data from GitHub API at build time
 let repoData: GitHubRepo | null = null;
 let languages: string[] = [];
 let error: string | null = null;
 
 try {
-  // Call local API endpoint that handles GitHub authentication
-  const baseUrl = Astro.site?.origin || "http://localhost:3000";
-  const response = await fetch(`${baseUrl}/api/github/repo?repo=${repo}`);
+  const headers: HeadersInit = {
+    Accept: "application/vnd.github.v3+json",
+  };
+  
+  // Use GitHub token for authenticated requests (5000/hour instead of 60/hour)
+  const token = import.meta.env.GITHUB_TOKEN;
+  if (token) {
+    headers.Authorization = `token ${token}`;
+    console.log(`[GitHubEmbed] Using authenticated GitHub API request for ${repo}`);
+  } else {
+    console.log(`[GitHubEmbed] No GITHUB_TOKEN found, using unauthenticated request for ${repo} (limited to 60 requests/hour)`);
+  }
+  
+  const response = await fetch(`https://api.github.com/repos/${repo}`, { headers });
   
   if (!response.ok) {
-    error = `Failed to fetch repository (${response.status})`;
+    error = `Repository not found (${response.status})`;
   } else {
-    const data = await response.json();
-    if (data.error) {
-      error = data.error;
-    } else {
-      repoData = data.repo;
-      languages = data.languages || [];
+    repoData = await response.json();
+    
+    // Fetch languages used in the repository
+    try {
+      const langResponse = await fetch(`https://api.github.com/repos/${repo}/languages`, { headers });
+      if (langResponse.ok) {
+        const langData = await langResponse.json();
+        // Sort languages by byte count (descending) and get top 2
+        languages = Object.entries(langData)
+          .sort(([, bytesA], [, bytesB]) => (bytesB as number) - (bytesA as number))
+          .slice(0, 2)
+          .map(([lang]) => lang);
+      }
+    } catch (e) {
+      // If languages fetch fails, we still have the primary language from repoData
+      console.warn(`[GitHubEmbed] Failed to fetch languages for ${repo}`);
     }
   }
 } catch (e) {
