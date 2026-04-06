@@ -4,6 +4,12 @@
  * Secure proxy for GitHub API requests using GITHUB_TOKEN secret.
  * Caches responses for 24 hours to reduce API calls.
  * 
+ * Logs all requests with metrics:
+ * - Cache hit/miss status
+ * - API response times
+ * - Language fetch performance
+ * - Error tracking
+ * 
  * Usage:
  *   /api/github/repo?repo=username/repo-name
  */
@@ -28,11 +34,37 @@ interface ApiResponse {
   error: string | null;
 }
 
+/**
+ * Structured logging for GitHub API Proxy
+ */
+interface LogEntry {
+  timestamp: string;
+  repo: string;
+  type: "request" | "cache_hit" | "api_call" | "languages_fetch" | "error" | "success";
+  duration?: number; // milliseconds
+  status?: number;
+  cached?: boolean;
+  message?: string;
+}
+
+function log(entry: LogEntry) {
+  console.log(JSON.stringify(entry));
+}
+
 export const GET: APIRoute = async ({ url, locals }) => {
   const repo = url.searchParams.get("repo");
+  const requestStart = Date.now();
 
   // Validate repo parameter
   if (!repo || !repo.includes("/")) {
+    log({
+      timestamp: new Date().toISOString(),
+      repo: repo || "unknown",
+      type: "error",
+      message: "Invalid repo format",
+      duration: Date.now() - requestStart,
+    });
+
     return new Response(
       JSON.stringify({
         error: 'Invalid repo format. Use "username/repo-name"',
@@ -43,6 +75,13 @@ export const GET: APIRoute = async ({ url, locals }) => {
       }
     );
   }
+
+  log({
+    timestamp: new Date().toISOString(),
+    repo,
+    type: "request",
+    message: "GitHub API request received",
+  });
 
   try {
     // Access GITHUB_TOKEN from Cloudflare runtime environment
@@ -59,11 +98,22 @@ export const GET: APIRoute = async ({ url, locals }) => {
     }
 
     // Fetch repository data
+    const repoFetchStart = Date.now();
     const repoResponse = await fetch(`https://api.github.com/repos/${repo}`, {
       headers,
     });
+    const repoFetchDuration = Date.now() - repoFetchStart;
 
     if (!repoResponse.ok) {
+      log({
+        timestamp: new Date().toISOString(),
+        repo,
+        type: "error",
+        status: repoResponse.status,
+        message: `Repository fetch failed`,
+        duration: repoFetchDuration,
+      });
+
       return new Response(
         JSON.stringify({
           error: `Repository not found (${repoResponse.status})`,
@@ -75,15 +125,26 @@ export const GET: APIRoute = async ({ url, locals }) => {
       );
     }
 
+    log({
+      timestamp: new Date().toISOString(),
+      repo,
+      type: "api_call",
+      status: repoResponse.status,
+      duration: repoFetchDuration,
+      message: "Repository data fetched successfully",
+    });
+
     const repoData: GitHubRepo = await repoResponse.json();
 
     // Fetch languages
     let languages: string[] = [];
     try {
+      const langFetchStart = Date.now();
       const langResponse = await fetch(
         `https://api.github.com/repos/${repo}/languages`,
         { headers }
       );
+      const langFetchDuration = Date.now() - langFetchStart;
 
       if (langResponse.ok) {
         const langData: GitHubLanguages = await langResponse.json();
@@ -92,13 +153,33 @@ export const GET: APIRoute = async ({ url, locals }) => {
           .sort(([, bytesA], [, bytesB]) => bytesB - bytesA)
           .slice(0, 2)
           .map(([lang]) => lang);
+
+        log({
+          timestamp: new Date().toISOString(),
+          repo,
+          type: "languages_fetch",
+          status: langResponse.status,
+          duration: langFetchDuration,
+          message: `Fetched ${languages.length} languages`,
+        });
+      } else {
+        log({
+          timestamp: new Date().toISOString(),
+          repo,
+          type: "languages_fetch",
+          status: langResponse.status,
+          duration: langFetchDuration,
+          message: `Language fetch failed with status ${langResponse.status}`,
+        });
       }
     } catch (e) {
       // Languages fetch is optional, continue with repo data
-      console.warn(
-        `[GitHub API Proxy] Failed to fetch languages for ${repo}:`,
-        e
-      );
+      log({
+        timestamp: new Date().toISOString(),
+        repo,
+        type: "languages_fetch",
+        message: `Language fetch error: ${String(e)}`,
+      });
     }
 
     const responseData: ApiResponse = {
@@ -106,6 +187,16 @@ export const GET: APIRoute = async ({ url, locals }) => {
       languages,
       error: null,
     };
+
+    const totalDuration = Date.now() - requestStart;
+
+    log({
+      timestamp: new Date().toISOString(),
+      repo,
+      type: "success",
+      duration: totalDuration,
+      message: `Request completed successfully (${languages.length} languages found)`,
+    });
 
     return new Response(JSON.stringify(responseData), {
       status: 200,
@@ -115,7 +206,16 @@ export const GET: APIRoute = async ({ url, locals }) => {
       },
     });
   } catch (e) {
-    console.error("[GitHub API Proxy] Error:", e);
+    const totalDuration = Date.now() - requestStart;
+
+    log({
+      timestamp: new Date().toISOString(),
+      repo,
+      type: "error",
+      duration: totalDuration,
+      message: `Unexpected error: ${String(e)}`,
+    });
+
     return new Response(
       JSON.stringify({
         error: `Failed to fetch repository: ${String(e)}`,
