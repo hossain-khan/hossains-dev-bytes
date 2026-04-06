@@ -1,17 +1,26 @@
 import { defineConfig, envField, fontProviders } from "astro/config";
+
+// https://docs.astro.build/en/guides/integrations-guide/mdx/
 import mdx from "@astrojs/mdx";
 import tailwindcss from "@tailwindcss/vite";
+
+// https://docs.astro.build/en/guides/integrations-guide/sitemap/
 import sitemap from "@astrojs/sitemap";
+
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
+
+// https://shiki.style/
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
   transformerNotationWordHighlight,
 } from "@shikijs/transformers";
+
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import { SITE } from "./src/config";
 
+// https://docs.astro.build/en/guides/integrations-guide/cloudflare/
 import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
