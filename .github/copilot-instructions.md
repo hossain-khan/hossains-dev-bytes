@@ -149,10 +149,22 @@ pnpm run format && pnpm run lint --fix
 
 ## Deployment
 
-Deployment happens automatically via GitHub Actions when pushing to `main`:
-- Runs on Node 22.x and 24.x
-- Checks ESLint rules, Prettier formatting, builds successfully
-- All checks must pass
+**Build & Deploy**: Handled by Cloudflare Pages
+- Automatic deployment triggered on push to `main`
+- Cloudflare builds, optimizes, and deploys to Workers
+- Site available at: `https://hossain.dev` (custom domain)
+
+**Environment Variables** (Cloudflare):
+Set these in **Cloudflare Dashboard → Workers & Pages → hossains-dev-bytes → Settings → Environment variables**:
+- `GITHUB_TOKEN` - GitHub Personal Access Token (with `public_repo` scope) - used by GitHubEmbed component
+- Any other runtime secrets needed by the app
+
+**GitHub Actions** (Pre-deployment checks):
+Runs on Node 22.x and 24.x when pushing to `main`:
+- Checks ESLint rules
+- Validates Prettier formatting (currently commented out)
+- Runs full build to catch errors early
+- All checks must pass before merging
 
 ## Code Conventions
 
@@ -201,19 +213,41 @@ const greeting = "hello";
 | **Search not working** | Ensure `pnpm run build` completes; pagefind index must be generated |
 | **Imports fail** | Check alias paths in `tsconfig.json` match `astro.config.ts` |
 | **Formatting conflicts** | Delete `.prettierrc.mjs` and rebuild if corrupted |
+| **GitHubEmbed shows error (403)** | Token not set in Cloudflare. Go to **Cloudflare Dashboard → Workers & Pages → hossains-dev-bytes → Settings → Environment variables** and add `GITHUB_TOKEN` |
+| **GitHubEmbed component fails locally** | Create `.env` file from `.env.example` and add your GitHub Personal Access Token |
 
 ## CI/CD Pipeline
 
+**GitHub Actions** (Pre-deployment validation only)
 **Workflow file**: `.github/workflows/ci.yml`
 
 **On push/PR to main**:
-- Install dependencies with `pnpm install --frozen-lockfile`
-- Run `pnpm run lint` - ESLint checks
-- Run `pnpm run format:check` - Prettier validation
-- Run `pnpm run build` - Full build (Astro + pagefind)
-- **All must pass** before merging
+1. Install dependencies with `pnpm install --frozen-lockfile`
+2. Run `pnpm run lint` - ESLint code quality checks
+3. Run `pnpm run format:check` - Prettier formatting validation (currently disabled)
+4. Run `pnpm run build` - Full build test (Astro + pagefind)
 
-**Node versions tested**: 22.x, 24.x (matrix strategy)
+All checks must pass before merging to `main`. This acts as a safety gate before code reaches production.
+
+**Cloudflare Pages** (Build & Deploy)
+**Triggered**: Automatically when commits reach `main` branch
+
+**Build process**:
+1. Git clone on Cloudflare's build servers
+2. Install dependencies (`pnpm install --frozen-lockfile`)
+3. Run build command: `npm run build`
+4. Astro compiles all pages, components, and static assets
+5. Pagefind generates search index
+6. Deploy to Cloudflare Workers edge network
+7. Available at: `https://hossain.dev`
+
+**Environment variables** (Cloudflare build):
+- Set in **Cloudflare Dashboard → Workers & Pages → hossains-dev-bytes → Settings → Environment variables**
+- Example: `GITHUB_TOKEN` (used by GitHubEmbed component at build time)
+- These are passed to the build process and available as `process.env.*` in Astro components
+
+**Node versions tested**: 22.x, 24.x (GitHub Actions matrix)
+**Node version deployed**: Detected automatically by Cloudflare (currently 22.x)
 
 ## Git Conventions
 
@@ -243,5 +277,5 @@ docs: update README with gallery instructions
 
 ---
 
-**Last updated**: March 31, 2026
+**Last updated**: April 6, 2026
 **Maintainer**: Hossain Khan (@hossain-khan)
