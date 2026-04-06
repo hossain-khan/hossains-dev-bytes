@@ -37,7 +37,7 @@ try {
   };
   
   // Use GitHub token for authenticated requests (5000/hour instead of 60/hour)
-  const token = import.meta.env.GITHUB_TOKEN;
+  const token = process.env.GITHUB_TOKEN;
   if (token) {
     headers.Authorization = `token ${token}`;
     // eslint-disable-next-line no-console
@@ -97,7 +97,7 @@ const getLanguageColor = (language: string | null): string => {
 
 {error ? (
   <div class="not-prose my-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
-    <strong>GitHubEmbed Error:</strong> {error}
+    <strong>GitHubEmbed Error: </strong>{error}
   </div>
 ) : repoData ? (
   <a
