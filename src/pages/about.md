@@ -33,7 +33,7 @@ I've built and contributed to numerous projects including Android apps, Kotlin l
 
 ## Let's Connect
 
-Feel free to reach out through any of my social profiles or [drop me an email](mailto:amardeshbd@gmail.com). I'm always interested in discussing technology, open-source projects, or potential collaborations.
+Feel free to reach out through any of my social profiles or [drop me an email](mailto:blog@hossain.dev). I'm always interested in discussing technology, open-source projects, or potential collaborations.
 
 ---
 
