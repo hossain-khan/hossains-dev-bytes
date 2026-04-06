@@ -45,4 +45,6 @@ jobs:
       - name: Build
         run: pnpm run build
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # `EMBED_GITHUB_TOKEN` is a GitHub PAT with `public_repo` scope, stored as a secret for GitHub actions.
+          # Github doesn't allow using `GITHUB_` prefix, so we use `EMBED_GITHUB_TOKEN` and then set it as `GITHUB_TOKEN` for the build process
+          GITHUB_TOKEN: ${{ secrets.EMBED_GITHUB_TOKEN }}
