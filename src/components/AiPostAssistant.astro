@@ -177,6 +177,9 @@
 </div>
 
 <script>
+  import { marked, Renderer } from "marked";
+  import DOMPurify from "dompurify";
+
   (function () {
     const MAX_CONTENT_CHARS = 6000;
 
@@ -267,36 +270,49 @@
         .replace(/'/g, "&#039;");
     }
 
-    // Converts triple-backtick code blocks to <pre><code> and escapes everything else.
-    // Handles both closed (``` ... ```) and in-progress (unclosed) blocks during streaming.
+    // ── Markdown renderer (marked + DOMPurify) ────────────────────────────────
+    const renderer = new Renderer();
+    renderer.code = ({ text, lang }) => {
+      const langBadge = lang
+        ? `<span class="inline-block mb-1.5 rounded px-1.5 py-0.5 text-[10px] font-mono font-medium bg-accent/15 text-accent/80">${escapeHtml(lang)}</span><br>`
+        : "";
+      return (
+        `<pre class="my-2 overflow-x-auto rounded-lg border border-border/30 bg-muted/20 px-3.5 py-3 text-xs font-mono leading-relaxed">` +
+        langBadge +
+        `<code>${escapeHtml(text)}</code></pre>`
+      );
+    };
+    renderer.codespan = ({ text }) =>
+      `<code class="rounded px-1 py-0.5 text-[0.8em] font-mono bg-accent/10 text-accent/90 border border-border/20">${text}</code>`;
+    renderer.strong = ({ text }) =>
+      `<strong class="font-semibold text-foreground/90">${text}</strong>`;
+    renderer.em = ({ text }) =>
+      `<em class="italic text-foreground/80">${text}</em>`;
+    renderer.paragraph = ({ text }) =>
+      `<p class="mb-2 last:mb-0">${text}</p>`;
+    renderer.list = (token) => {
+      const tag = (token as { ordered?: boolean }).ordered ? "ol" : "ul";
+      const cls = (token as { ordered?: boolean }).ordered
+        ? "my-2 ml-4 list-decimal space-y-1"
+        : "my-2 ml-4 list-disc space-y-1";
+      const items = (token as { items?: { text: string }[] }).items ?? [];
+      const body = items.map(item => `<li class="leading-relaxed">${item.text}</li>`).join("");
+      return `<${tag} class="${cls}">${body}</${tag}>`;
+    };
+    renderer.listitem = ({ text }) =>
+      `<li class="leading-relaxed">${text}</li>`;
+    renderer.heading = ({ text, depth }) => {
+      const cls =
+        depth === 1 ? "text-base font-bold mt-3 mb-1" :
+        depth === 2 ? "text-sm font-semibold mt-2 mb-1" :
+        "text-sm font-medium mt-1 mb-0.5";
+      return `<h${depth} class="${cls}">${text}</h${depth}>`;
+    };
+    marked.use({ renderer, breaks: true });
+
     function renderMarkdown(text: string): string {
-      // Split on complete or unclosed code fences
-      const parts = text.split(/(```[\s\S]*?```|```[\s\S]*$)/g);
-      return parts
-        .map(part => {
-          if (part.startsWith("```")) {
-            const inner = part.replace(/^```|```$/g, "");
-            const newline = inner.indexOf("\n");
-            const lang = newline !== -1 ? inner.slice(0, newline).trim() : inner.trim();
-            const code = newline !== -1 ? inner.slice(newline + 1) : "";
-            const langBadge = lang
-              ? `<span class="inline-block mb-1.5 rounded px-1.5 py-0.5 text-[10px] font-mono font-medium bg-accent/15 text-accent/80">${escapeHtml(lang)}</span><br>`
-              : "";
-            return (
-              `<pre class="my-2 overflow-x-auto rounded-lg border border-border/30 bg-base-200/60 dark:bg-neutral/40 px-3.5 py-3 text-xs font-mono leading-relaxed">` +
-              langBadge +
-              `<code>${escapeHtml(code)}</code></pre>`
-            );
-          }
-          // Regular text — escape HTML, render inline code, and preserve newlines
-          const escaped = escapeHtml(part);
-          const withInlineCode = escaped.replace(
-            /`([^`]+)`/g,
-            `<code class="rounded px-1 py-0.5 text-[0.8em] font-mono bg-accent/10 text-accent/90 border border-border/20">$1</code>`
-          );
-          return `<span class="whitespace-pre-wrap">${withInlineCode}</span>`;
-        })
-        .join("");
+      const raw = marked.parse(text) as string;
+      return DOMPurify.sanitize(raw);
     }
 
     // ── SSE stream reader ──────────────────────────────────────────────────────
