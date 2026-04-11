@@ -112,6 +112,7 @@ Edit `src/config.ts` to customize:
 - **Styling:** Tailwind CSS
 - **Search:** Pagefind
 - **OG Images:** Satori
+- **AI:** Cloudflare Workers AI (`@cf/meta/llama-3.1-8b-instruct-fp8`) — per-post summarization and Q&A
 - **Deployment:** Cloudflare Workers
 - **Package Manager:** pnpm
 
