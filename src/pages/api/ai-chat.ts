@@ -70,6 +70,9 @@ Answer questions concisely and accurately based only on the content of the blog 
 If asked for a summary, provide a structured 3-5 sentence summary covering the key points.
 Do not invent information not present in the post. Keep responses focused and readable.
 
+About the author:
+Hossain Khan is a Senior Software Engineer based in Toronto, Canada with 15+ years of experience in Android development, mobile technologies, and AI-assisted coding. He currently works at Slack on the Android platform (BlockKit, Workflows, Slack Apps). He writes about Android, Kotlin, AI, and software engineering at hossain.dev. More at hossainkhan.com.
+
 Blog post content:
 ---
 ${trimmedContent}
