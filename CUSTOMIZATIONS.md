@@ -612,3 +612,94 @@ Rendered after the social links block in the hero, guarded by `SITE.introAudio.e
   </div>
 )}
 ```
+
+---
+
+## 20. AI Post Assistant — Per-Post Summarization and Q&A Chat
+
+**Files:**
+- `src/components/AiPostAssistant.astro` — client-side panel component
+- `src/pages/api/ai-chat.ts` — Cloudflare Workers AI API endpoint
+- `wrangler.jsonc` — AI binding and model configuration
+
+### Overview
+
+Every blog post page includes an AI-powered assistant panel. Readers can:
+1. **Summarize** — click "Summarize this post" to get a 3–5 sentence structured summary.
+2. **Q&A chat** — ask follow-up questions about the article. Answers are grounded in the post content.
+
+### Architecture
+
+```
+Browser (AiPostAssistant.astro)
+  └─ POST /api/ai-chat  (JSON: { content, messages })
+        └─ Cloudflare Workers AI  (env.AI.run)
+              └─ @cf/meta/llama-3.1-8b-instruct-fp8
+                    └─ SSE stream → browser
+```
+
+- **Binding:** The `AI` binding is declared in `wrangler.jsonc` under `"ai": { "binding": "AI" }`. This makes `env.AI` available inside any Worker/API route.
+- **Model:** Configured via the `AI_MODEL` environment variable in `wrangler.jsonc`. Change the model name there — no code change needed.
+- **Default model:** `@cf/meta/llama-3.1-8b-instruct-fp8`
+  - Context window: 32,000 tokens
+  - Pricing (Apr 2026): ~\$0.152 / M input tokens, ~\$0.287 / M output tokens
+  - See all available models: https://developers.cloudflare.com/workers-ai/models/
+
+### API Endpoint (`/api/ai-chat`)
+
+`src/pages/api/ai-chat.ts` (`prerender = false`)
+
+| Field | Type | Description |
+|---|---|---|
+| `content` | `string` | Raw post text, trimmed to `MAX_CONTENT_LENGTH` (8,000 chars) |
+| `messages` | `{role, content}[]` | Full conversation history (user + assistant turns) |
+
+The endpoint prepends a **system prompt** containing the post content so the model answers only from the article. It then calls `env.AI.run()` with `stream: true` and returns the raw `ReadableStream` as `text/event-stream` (SSE).
+
+**Token budget:** `MAX_CONTENT_LENGTH = 8_000` chars (~2,000 tokens). Covers most posts while keeping per-request cost low. Raise or lower this constant to tune the tradeoff.
+
+**`max_tokens: 1024`** caps the response length per request.
+
+### Component (`AiPostAssistant.astro`)
+
+Pure client-side component (`<script>` block only, no server rendering):
+
+- **Summarize flow:** Sends the post content + a "Please summarize this post" user message. Streams the response token-by-token into a `<div>` via SSE.
+- **Chat flow:** Each user question is appended to `conversationHistory` (full `messages[]` array) and sent along with the post content. Maintains multi-turn context within the page session.
+- **Streaming:** Reads `text/event-stream` response line-by-line. Each `data: {...}` line is parsed; `response` tokens are appended to the output element's `innerHTML` via `renderMarkdown()`.
+- **Markdown rendering:** Uses [`marked`](https://marked.js.org/) v18 with a custom `Renderer` that applies Tailwind CSS classes to all tokens. All output is sanitized by [`DOMPurify`](https://github.com/cure53/DOMPurify) v3 before being set as `innerHTML`.
+
+### Markdown Rendering Pipeline
+
+```
+AI token stream
+  └─ accumulated into raw text string
+        └─ marked.parse(text, { renderer })   ← CommonMark + custom Tailwind classes
+              └─ DOMPurify.sanitize(html)      ← XSS prevention
+                    └─ element.innerHTML = ...
+```
+
+Custom renderer tokens and their Tailwind classes:
+
+| Token | Output element | Key classes |
+|---|---|---|
+| ` ```lang ``` ` | `<pre><code>` | `rounded-lg bg-muted/30 font-cascadia-code text-sm` + language badge |
+| `` `inline` `` | `<code>` | `rounded bg-muted/40 px-1.5 py-0.5 font-cascadia-code text-sm` |
+| `**bold**` | `<strong>` | `font-semibold` |
+| `_italic_` | `<em>` | `italic` |
+| `- item` | `<ul>` | `my-2 ml-4 list-disc space-y-1` |
+| `1. item` | `<ol>` | `my-2 ml-4 list-decimal space-y-1` |
+| `## Heading` | `<h2>`–`<h6>` | `font-bold mt-3 mb-1` (size varies by depth) |
+| Paragraph | `<p>` | `mb-2` |
+
+### Integration in Post Layout
+
+`src/layouts/PostDetails.astro` renders the component after the post body:
+
+```astro
+import AiPostAssistant from "@/components/AiPostAssistant.astro";
+
+<AiPostAssistant content={rawContent} />
+```
+
+The `content` prop receives the post's raw Markdown text (extracted during SSR) and is embedded in a `data-content` attribute on the component's root element, where the client-side script picks it up.

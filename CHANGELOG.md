@@ -4,6 +4,21 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Apr 11, 2026** - `7570c5f`: feat: use marked + DOMPurify for full markdown rendering in AI response
+  > *Replaced the hand-rolled regex markdown parser in the AI assistant with [marked](https://marked.js.org/) v18 + [DOMPurify](https://github.com/cure53/DOMPurify) v3. All markdown tokens (bold, italic, lists, headings, code blocks, inline code) are rendered with Tailwind-styled custom renderers. DOMPurify sanitizes all AI-generated HTML before it is inserted into the DOM.*
+
+- **Apr 6, 2026** - `42a90a2`: feat: inline code rendering in AI responses (`backtick` → `<code>`)
+  > *Extended the AI response renderer to handle single-backtick inline code spans, wrapping them in styled `<code>` elements.*
+
+- **Apr 6, 2026**: feat: code block rendering in AI responses (triple backtick → `<pre><code>`)
+  > *AI responses containing fenced code blocks are now rendered as properly styled `<pre><code>` blocks with an optional language badge.*
+
+- **Apr 6, 2026**: feat: switch AI model to `@cf/meta/llama-3.1-8b-instruct-fp8`
+  > *Replaced the default Gemma model with LLaMA 3.1 8B (fp8 quantized) after encountering inference failures with the previous model. Model is now configurable via `AI_MODEL` env var in `wrangler.jsonc` — no code change required to swap models.*
+
+- **Apr 5, 2026**: feat: AI Post Assistant — per-post summarization and Q&A chat
+  > *Added `AiPostAssistant.astro` component, rendered on every blog post page via `PostDetails.astro`. Provides a "Summarize" button and a follow-up Q&A chat panel powered by Cloudflare Workers AI. Responses stream via Server-Sent Events. The full post content (up to 8,000 chars) is sent as a system prompt so answers are grounded in the article.*
+
 - **Feb 25, 2026** - `0dd2760`: style: Remove macOS window header from code blocks and simplify their styling
   > *Simplified the appearance of code blocks, removing macOS-style buttons and temporary borders that presented visual glitches.*
 - **Feb 25, 2026** - `cd76708`: feat(ui): premium tech redesign for post layouts and secondary navigation
