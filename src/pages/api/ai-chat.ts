@@ -79,13 +79,16 @@ ${trimmedContent}
   ];
 
   try {
-    // Model: @cf/meta/llama-3.1-8b-instruct-fp8
+    // Model is configurable via the AI_MODEL var in wrangler.jsonc (no code change needed to swap models).
+    // Default: @cf/meta/llama-3.1-8b-instruct-fp8
     // Pricing (as of Apr 2026): $0.152 per M input tokens, $0.287 per M output tokens
     //   = 13,778 neurons/M input tokens, 26,128 neurons/M output tokens
-    // Free tier: 10,000 neurons/day (~725 input tokens or ~383 output tokens at this model's rate)
+    // Free tier: 10,000 neurons/day (~270 summarizations/day at default model's rate)
     // Paid tier: $0.011 per 1,000 neurons above the free daily allocation
-    // See: https://developers.cloudflare.com/workers-ai/platform/pricing/
-    const stream = await env.AI.run("@cf/meta/llama-3.1-8b-instruct-fp8", {
+    // See available models: https://developers.cloudflare.com/workers-ai/models/
+    // See pricing: https://developers.cloudflare.com/workers-ai/platform/pricing/
+    const model = (env.AI_MODEL ?? "@cf/meta/llama-3.1-8b-instruct-fp8") as Parameters<typeof env.AI.run>[0];
+    const stream = await env.AI.run(model, {
       messages: allMessages,
       stream: true,
       max_tokens: 512,
