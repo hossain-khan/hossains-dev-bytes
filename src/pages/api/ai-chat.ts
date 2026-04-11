@@ -79,6 +79,12 @@ ${trimmedContent}
   ];
 
   try {
+    // Model: @cf/meta/llama-3.1-8b-instruct-fp8
+    // Pricing (as of Apr 2026): $0.152 per M input tokens, $0.287 per M output tokens
+    //   = 13,778 neurons/M input tokens, 26,128 neurons/M output tokens
+    // Free tier: 10,000 neurons/day (~725 input tokens or ~383 output tokens at this model's rate)
+    // Paid tier: $0.011 per 1,000 neurons above the free daily allocation
+    // See: https://developers.cloudflare.com/workers-ai/platform/pricing/
     const stream = await env.AI.run("@cf/meta/llama-3.1-8b-instruct-fp8", {
       messages: allMessages,
       stream: true,
