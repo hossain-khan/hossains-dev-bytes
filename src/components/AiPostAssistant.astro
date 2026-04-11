@@ -296,11 +296,15 @@
         ? "my-2 ml-4 list-decimal space-y-1"
         : "my-2 ml-4 list-disc space-y-1";
       const items = (token as { items?: { text: string }[] }).items ?? [];
-      const body = items.map(item => `<li class="leading-relaxed">${item.text}</li>`).join("");
+      // Use marked.parseInline to render bold/italic/code within each item's text
+      const body = items
+        .map(
+          item =>
+            `<li class="leading-relaxed">${marked.parseInline(item.text)}</li>`
+        )
+        .join("");
       return `<${tag} class="${cls}">${body}</${tag}>`;
     };
-    renderer.listitem = ({ text }) =>
-      `<li class="leading-relaxed">${text}</li>`;
     renderer.heading = ({ text, depth }) => {
       const cls =
         depth === 1 ? "text-base font-bold mt-3 mb-1" :
