@@ -4,6 +4,12 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Apr 11, 2026** - `f48cd39`: fix: call marked.parseInline() in all inline renderers so bold/italic/code actually render
+  > *Root cause: in marked v18, all renderer callbacks receive raw markdown as `text` — not pre-rendered HTML. `**bold**` inside paragraphs, headings, and `strong` wrappers was never processed. Fixed by calling `marked.parseInline(text)` in `strong`, `em`, `paragraph`, and `heading` renderers.*
+
+- **Apr 11, 2026** - `60bef2a`: fix: render inline markdown (bold, code) inside list items using marked.parseInline
+  > *List item `text` is raw markdown source. Replaced `item.text` with `marked.parseInline(item.text)` in the custom `list` renderer so bold, italic, and inline code inside list items are properly rendered.*
+
 - **Apr 11, 2026** - `7570c5f`: feat: use marked + DOMPurify for full markdown rendering in AI response
   > *Replaced the hand-rolled regex markdown parser in the AI assistant with [marked](https://marked.js.org/) v18 + [DOMPurify](https://github.com/cure53/DOMPurify) v3. All markdown tokens (bold, italic, lists, headings, code blocks, inline code) are rendered with Tailwind-styled custom renderers. DOMPurify sanitizes all AI-generated HTML before it is inserted into the DOM.*
 
