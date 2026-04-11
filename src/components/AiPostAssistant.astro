@@ -288,8 +288,13 @@
               `<code>${escapeHtml(code)}</code></pre>`
             );
           }
-          // Regular text — escape HTML and preserve newlines
-          return `<span class="whitespace-pre-wrap">${escapeHtml(part)}</span>`;
+          // Regular text — escape HTML, render inline code, and preserve newlines
+          const escaped = escapeHtml(part);
+          const withInlineCode = escaped.replace(
+            /`([^`]+)`/g,
+            `<code class="rounded px-1 py-0.5 text-[0.8em] font-mono bg-accent/10 text-accent/90 border border-border/20">$1</code>`
+          );
+          return `<span class="whitespace-pre-wrap">${withInlineCode}</span>`;
         })
         .join("");
     }
