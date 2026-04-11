@@ -252,7 +252,7 @@
       const bubble = document.createElement("div");
       bubble.className = "flex justify-start";
       bubble.innerHTML = `
-        <div class="ai-response-text max-w-[90%] rounded-xl rounded-tl-sm border border-border/20 bg-muted/10 px-3.5 py-2.5 text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap"></div>`;
+        <div class="ai-response-text max-w-[90%] rounded-xl rounded-tl-sm border border-border/20 bg-muted/10 px-3.5 py-2.5 text-sm text-foreground/80 leading-relaxed"></div>`;
       conversationEl.appendChild(bubble);
       bubble.scrollIntoView({ behavior: "smooth", block: "nearest" });
       return bubble.querySelector(".ai-response-text") as HTMLElement;
@@ -265,6 +265,33 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+    }
+
+    // Converts triple-backtick code blocks to <pre><code> and escapes everything else.
+    // Handles both closed (``` ... ```) and in-progress (unclosed) blocks during streaming.
+    function renderMarkdown(text: string): string {
+      // Split on complete or unclosed code fences
+      const parts = text.split(/(```[\s\S]*?```|```[\s\S]*$)/g);
+      return parts
+        .map(part => {
+          if (part.startsWith("```")) {
+            const inner = part.replace(/^```|```$/g, "");
+            const newline = inner.indexOf("\n");
+            const lang = newline !== -1 ? inner.slice(0, newline).trim() : inner.trim();
+            const code = newline !== -1 ? inner.slice(newline + 1) : "";
+            const langBadge = lang
+              ? `<span class="inline-block mb-1.5 rounded px-1.5 py-0.5 text-[10px] font-mono font-medium bg-accent/15 text-accent/80">${escapeHtml(lang)}</span><br>`
+              : "";
+            return (
+              `<pre class="my-2 overflow-x-auto rounded-lg border border-border/30 bg-base-200/60 dark:bg-neutral/40 px-3.5 py-3 text-xs font-mono leading-relaxed">` +
+              langBadge +
+              `<code>${escapeHtml(code)}</code></pre>`
+            );
+          }
+          // Regular text — escape HTML and preserve newlines
+          return `<span class="whitespace-pre-wrap">${escapeHtml(part)}</span>`;
+        })
+        .join("");
     }
 
     // ── SSE stream reader ──────────────────────────────────────────────────────
@@ -318,7 +345,7 @@
               const parsed = JSON.parse(data) as { response?: string };
               if (parsed.response) {
                 fullResponse += parsed.response;
-                responseEl.textContent = fullResponse;
+                responseEl.innerHTML = renderMarkdown(fullResponse);
                 responseEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
               }
             } catch {
