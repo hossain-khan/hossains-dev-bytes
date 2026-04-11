@@ -92,7 +92,7 @@ ${trimmedContent}
     const stream = await env.AI.run(model, {
       messages: allMessages,
       stream: true,
-      max_tokens: 512,
+      max_completion_tokens: 1024,
     });
 
     return new Response(stream as ReadableStream, {
