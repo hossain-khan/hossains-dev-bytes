@@ -9,6 +9,7 @@ import ShareLinks from "@/components/ShareLinks.astro";
 import BackButton from "@/components/BackButton.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
 import GalleryEmbed from "@/components/GalleryEmbed.astro";
+import AiPostAssistant from "@/components/AiPostAssistant.astro";
 import { getPath } from "@/utils/getPath";
 import { slugifyStr } from "@/utils/slugify";
 import { SITE } from "@/config";
@@ -201,6 +202,9 @@ const nextPost =
     </div>
 
     <EditPost class="mt-4 sm:hidden" {hideEditPost} {post} />
+
+    <!-- AI Post Assistant -->
+    <AiPostAssistant />
 
     <!-- Tags & Share row -->
     <div

@@ -134,5 +134,8 @@ export default defineConfig({
 
   adapter: cloudflare({
     prerenderEnvironment: "node",
+    // Disable remote bindings in CI — AI binding requires Wrangler auth which is unavailable there.
+    // Production deployments on Cloudflare Workers do not use this proxy, so AI still works in prod.
+    remoteBindings: process.env.CI !== "true",
   }),
 });

@@ -1,0 +1,365 @@
+---
+/**
+ * AiPostAssistant — On-demand AI summarizer and Q&A panel for blog posts.
+ *
+ * Placed at the bottom of each post. Collapsed by default.
+ * Reads article text from the DOM and streams responses from /api/ai-chat via SSE.
+ *
+ * Usage in PostDetails.astro (already wired in — no props needed):
+ *   <AiPostAssistant />
+ */
+---
+
+<div
+  id="ai-post-assistant"
+  data-pagefind-ignore
+  class="my-8"
+>
+  <!-- Collapsed trigger -->
+  <button
+    id="ai-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="ai-panel"
+    class:list={[
+      "group flex w-full items-center justify-between gap-3",
+      "rounded-xl border border-border/20 bg-muted/5 px-4 py-3",
+      "font-cartograph text-xs tracking-wider text-foreground/40 uppercase",
+      "transition-all duration-200",
+      "hover:border-accent/30 hover:bg-accent/5 hover:text-accent/70",
+      "focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent/70",
+    ]}
+  >
+    <div class="flex items-center gap-2.5">
+      <!-- Sparkle icon -->
+      <svg
+        class="size-4 text-accent/50 transition-colors group-hover:text-accent/80"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          d="M12 2l2.09 6.26L20 10l-5.91 1.74L12 18l-2.09-6.26L4 10l5.91-1.74L12 2z"
+        />
+      </svg>
+      <span>Ask AI about this post</span>
+    </div>
+    <!-- Chevron -->
+    <svg
+      id="ai-chevron"
+      class="size-3.5 text-foreground/30 transition-transform duration-300 group-hover:text-accent/60"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </button>
+
+  <!-- Expanded panel (hidden by default) -->
+  <div
+    id="ai-panel"
+    role="region"
+    aria-label="AI post assistant"
+    hidden
+    class:list={[
+      "mt-2 rounded-xl border border-border/20 bg-muted/5 p-5 backdrop-blur-md",
+    ]}
+  >
+    <!-- Header row -->
+    <div class="mb-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg
+          class="size-4 text-accent/70"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            d="M12 2l2.09 6.26L20 10l-5.91 1.74L12 18l-2.09-6.26L4 10l5.91-1.74L12 2z"
+          />
+        </svg>
+        <span class="font-cartograph text-[10px] tracking-widest text-accent/60 uppercase">AI Assistant</span>
+      </div>
+      <span class="font-cartograph text-[9px] tracking-wider text-foreground/25 uppercase">Powered by Cloudflare Workers AI</span>
+    </div>
+
+    <!-- Summarize button -->
+    <div class="mb-4">
+      <button
+        id="ai-summarize-btn"
+        type="button"
+        class:list={[
+          "inline-flex items-center gap-2 rounded-lg border border-accent/30",
+          "bg-accent/10 px-3.5 py-2 text-sm font-medium text-accent",
+          "transition-all duration-200 hover:bg-accent/20 hover:border-accent/50",
+          "disabled:cursor-not-allowed disabled:opacity-40",
+        ]}
+      >
+        <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="21" y1="10" x2="3" y2="10"></line>
+          <line x1="21" y1="6" x2="3" y2="6"></line>
+          <line x1="21" y1="14" x2="3" y2="14"></line>
+          <line x1="21" y1="18" x2="11" y2="18"></line>
+        </svg>
+        Summarize this post
+      </button>
+    </div>
+
+    <!-- Conversation history display -->
+    <div
+      id="ai-conversation"
+      class="mb-4 hidden space-y-3"
+      aria-live="polite"
+      aria-label="Conversation"
+    >
+    </div>
+
+    <!-- Loading indicator (hidden by default) -->
+    <div id="ai-loading" hidden class="mb-4 flex items-center gap-2 text-xs text-foreground/40">
+      <div class="flex gap-1">
+        <span class="size-1.5 animate-bounce rounded-full bg-accent/50 [animation-delay:0ms]"></span>
+        <span class="size-1.5 animate-bounce rounded-full bg-accent/50 [animation-delay:150ms]"></span>
+        <span class="size-1.5 animate-bounce rounded-full bg-accent/50 [animation-delay:300ms]"></span>
+      </div>
+      <span>Thinking…</span>
+    </div>
+
+    <!-- Error display -->
+    <div
+      id="ai-error"
+      hidden
+      role="alert"
+      class="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-400"
+    >
+    </div>
+
+    <!-- Chat input -->
+    <form id="ai-form" class="flex items-center gap-2" novalidate>
+      <label for="ai-input" class="sr-only">Ask a question about this post</label>
+      <input
+        id="ai-input"
+        type="text"
+        placeholder="Ask a question about this post…"
+        autocomplete="off"
+        maxlength="500"
+        class:list={[
+          "min-w-0 flex-1 rounded-lg border border-border/25 bg-muted/10 px-3.5 py-2",
+          "text-sm text-foreground placeholder:text-foreground/30",
+          "transition-all duration-200 outline-none",
+          "focus:border-accent/40 focus:ring-1 focus:ring-accent/20",
+          "disabled:cursor-not-allowed disabled:opacity-40",
+        ]}
+      />
+      <button
+        id="ai-ask-btn"
+        type="submit"
+        class:list={[
+          "flex-shrink-0 rounded-lg border border-accent/30 bg-accent/10",
+          "px-3.5 py-2 text-sm font-medium text-accent",
+          "transition-all duration-200 hover:bg-accent/20 hover:border-accent/50",
+          "disabled:cursor-not-allowed disabled:opacity-40",
+        ]}
+      >
+        Ask
+      </button>
+    </form>
+
+    <!-- Disclaimer -->
+    <p class="mt-3 font-cartograph text-[9px] tracking-wide text-foreground/20 uppercase">
+      AI responses may be inaccurate. Always verify important information.
+    </p>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const MAX_CONTENT_CHARS = 6000;
+
+    // ── DOM refs ──────────────────────────────────────────────────────────────
+    const toggle = document.getElementById("ai-toggle") as HTMLButtonElement | null;
+    const panel = document.getElementById("ai-panel") as HTMLDivElement | null;
+    const chevron = document.getElementById("ai-chevron") as SVGElement | null;
+    const summarizeBtn = document.getElementById("ai-summarize-btn") as HTMLButtonElement | null;
+    const form = document.getElementById("ai-form") as HTMLFormElement | null;
+    const input = document.getElementById("ai-input") as HTMLInputElement | null;
+    const askBtn = document.getElementById("ai-ask-btn") as HTMLButtonElement | null;
+    const conversationEl = document.getElementById("ai-conversation") as HTMLDivElement | null;
+    const loadingEl = document.getElementById("ai-loading") as HTMLDivElement | null;
+    const errorEl = document.getElementById("ai-error") as HTMLDivElement | null;
+
+    if (!toggle || !panel) return;
+
+    // Conversation history (system messages are added server-side)
+    const messages: { role: string; content: string }[] = [];
+
+    // ── Toggle open/close ──────────────────────────────────────────────────────
+    toggle.addEventListener("click", () => {
+      const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!isExpanded));
+      panel.hidden = isExpanded;
+      if (chevron) {
+        chevron.style.transform = isExpanded ? "" : "rotate(180deg)";
+      }
+    });
+
+    // ── Helpers ────────────────────────────────────────────────────────────────
+    function getArticleText(): string {
+      const article = document.getElementById("article");
+      if (!article) return "";
+      return (article.innerText ?? "").trim().slice(0, MAX_CONTENT_CHARS);
+    }
+
+    function setUIBusy(busy: boolean) {
+      if (summarizeBtn) summarizeBtn.disabled = busy;
+      if (input) input.disabled = busy;
+      if (askBtn) askBtn.disabled = busy;
+      if (loadingEl) loadingEl.hidden = !busy;
+    }
+
+    function showError(msg: string) {
+      if (!errorEl) return;
+      errorEl.textContent = msg;
+      errorEl.hidden = false;
+    }
+
+    function clearError() {
+      if (!errorEl) return;
+      errorEl.hidden = true;
+      errorEl.textContent = "";
+    }
+
+    function appendUserBubble(text: string) {
+      if (!conversationEl) return;
+      conversationEl.classList.remove("hidden");
+      const bubble = document.createElement("div");
+      bubble.className = "flex justify-end";
+      bubble.innerHTML = `
+        <div class="max-w-[85%] rounded-xl rounded-tr-sm border border-accent/20 bg-accent/10 px-3.5 py-2.5 text-sm text-foreground/80 leading-relaxed">
+          ${escapeHtml(text)}
+        </div>`;
+      conversationEl.appendChild(bubble);
+      bubble.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function appendAssistantBubble(): HTMLElement {
+      if (!conversationEl) return document.createElement("div");
+      conversationEl.classList.remove("hidden");
+      const bubble = document.createElement("div");
+      bubble.className = "flex justify-start";
+      bubble.innerHTML = `
+        <div class="ai-response-text max-w-[90%] rounded-xl rounded-tl-sm border border-border/20 bg-muted/10 px-3.5 py-2.5 text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap"></div>`;
+      conversationEl.appendChild(bubble);
+      bubble.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      return bubble.querySelector(".ai-response-text") as HTMLElement;
+    }
+
+    function escapeHtml(text: string): string {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // ── SSE stream reader ──────────────────────────────────────────────────────
+    async function streamAIResponse(userMessage: string) {
+      clearError();
+      setUIBusy(true);
+
+      const content = getArticleText();
+      if (!content) {
+        showError("Could not extract post content.");
+        setUIBusy(false);
+        return;
+      }
+
+      // Add user message to history
+      messages.push({ role: "user", content: userMessage });
+      const responseEl = appendAssistantBubble();
+      let fullResponse = "";
+
+      try {
+        const res = await fetch("/api/ai-chat", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ content, messages }),
+        });
+
+        if (!res.ok || !res.body) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error((errData as { error?: string }).error ?? `HTTP ${res.status}`);
+        }
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        setUIBusy(false); // hide loading dots once stream starts
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() ?? "";
+
+          for (const line of lines) {
+            if (!line.startsWith("data: ")) continue;
+            const data = line.slice(6).trim();
+            if (data === "[DONE]") break;
+            try {
+              const parsed = JSON.parse(data) as { response?: string };
+              if (parsed.response) {
+                fullResponse += parsed.response;
+                responseEl.textContent = fullResponse;
+                responseEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+              }
+            } catch {
+              // Non-JSON SSE data — skip
+            }
+          }
+        }
+      } catch (e) {
+        showError(`Error: ${e instanceof Error ? e.message : String(e)}`);
+        // Remove the empty bubble if stream failed before anything rendered
+        if (!fullResponse && responseEl.parentElement) {
+          responseEl.parentElement.remove();
+        }
+        messages.pop(); // remove the failed user message from history
+        setUIBusy(false);
+        return;
+      }
+
+      // Add assistant response to conversation history for multi-turn context
+      if (fullResponse) {
+        messages.push({ role: "assistant", content: fullResponse });
+      }
+
+      setUIBusy(false);
+    }
+
+    // ── Summarize button ──────────────────────────────────────────────────────
+    summarizeBtn?.addEventListener("click", () => {
+      appendUserBubble("Summarize this post");
+      streamAIResponse("Please provide a concise summary of this blog post.");
+    });
+
+    // ── Chat form ─────────────────────────────────────────────────────────────
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!input) return;
+      const question = input.value.trim();
+      if (!question) return;
+      input.value = "";
+      appendUserBubble(question);
+      streamAIResponse(question);
+    });
+  })();
+</script>

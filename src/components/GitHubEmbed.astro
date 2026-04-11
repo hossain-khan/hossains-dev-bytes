@@ -61,7 +61,7 @@ try {
       if (langResponse.ok) {
         const langData = await langResponse.json();
         // Sort languages by byte count (descending) and get top 2
-        languages = Object.entries(langData)
+        languages = Object.entries(langData as Record<string, number>)
           .sort(([, bytesA], [, bytesB]) => (bytesB as number) - (bytesA as number))
           .slice(0, 2)
           .map(([lang]) => lang);
