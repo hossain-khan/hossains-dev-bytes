@@ -3,11 +3,11 @@ import type { APIRoute } from "astro";
 
 export const prerender = false;
 
-// Maximum characters of post content to send (keeps us well within the 7968 token context window)
-// gemma-4-26b-a4b-it supports a 256K token context window (~1M chars).
-// 32,000 chars (~8,000 tokens) covers even the longest blog posts while keeping costs low.
+// Maximum characters of post content to send to stay within the model's 32K token context window.
+// llama-3.1-8b-instruct-fp8 has a 32,000 token context window (~128K chars).
+// 8,000 chars (~2,000 tokens) covers most blog posts while keeping costs low.
 // Raise this if posts are truncated, or lower it to reduce per-request token cost.
-const MAX_CONTENT_LENGTH = 32_000;
+const MAX_CONTENT_LENGTH = 8_000;
 
 export const POST: APIRoute = async ({ request }) => {
   // Only accept JSON
@@ -83,16 +83,16 @@ ${trimmedContent}
 
   try {
     // Model is configurable via the AI_MODEL var in wrangler.jsonc (no code change needed to swap models).
-    // Default: @cf/google/gemma-4-26b-a4b-it
-    //   - Context window: 256,000 tokens; supports reasoning, function calling, and vision
-    //   - Pricing (as of Apr 2026): $0.10 per M input tokens, $0.30 per M output tokens
+    // Default: @cf/meta/llama-3.1-8b-instruct-fp8
+    //   - Context window: 32,000 tokens
+    //   - Pricing (as of Apr 2026): $0.152 per M input tokens, $0.287 per M output tokens
     // See available models: https://developers.cloudflare.com/workers-ai/models/
     // See pricing: https://developers.cloudflare.com/workers-ai/platform/pricing/
-    const model = (env.AI_MODEL ?? "@cf/google/gemma-4-26b-a4b-it") as Parameters<typeof env.AI.run>[0];
+    const model = (env.AI_MODEL ?? "@cf/meta/llama-3.1-8b-instruct-fp8") as Parameters<typeof env.AI.run>[0];
     const stream = await env.AI.run(model, {
       messages: allMessages,
       stream: true,
-      max_completion_tokens: 1024,
+      max_tokens: 1024,
     });
 
     return new Response(stream as ReadableStream, {
