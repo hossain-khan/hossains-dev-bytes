@@ -164,7 +164,7 @@ export default async post => {
                           fontSize: tagFontSize,
                           fontFamily: "Jersey 10",
                           fontWeight: 400,
-                          color: "#2d2d2d",
+                          color: "#4a4a4a",
                           lineHeight: 1.2,
                           overflow: "hidden",
                           whiteSpace: "nowrap",
