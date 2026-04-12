@@ -108,4 +108,4 @@ If you find any issues please let me know I will try to help. Good luck 👍
 
 - Firebase App Distribution — [https://firebase.google.com/docs/app-distribution](https://firebase.google.com/docs/app-distribution)
 - GitHub Actions — [https://help.github.com/en/actions](https://help.github.com/en/actions)
-- Pull Request to support Firebase App Distribution — [https://github.com/hossain-khan/android-police-brutality-incidents/pull/117/files](https://github.com/hossain-khan/android-police-brutality-incidents/pull/117/files)
+- Pull Request to support Firebase App Distribution - [https://github.com/hossain-khan/android-police-brutality-incidents/pull/117/files](https://github.com/hossain-khan/android-police-brutality-incidents/pull/117/files)

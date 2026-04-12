@@ -17,7 +17,7 @@ I have a hobby of taking a lot of pictures, and some of the pictures do turn out
 
 As an Android engineer, I was aware of [**Muzei Live Wallpaper**](https://play.google.com/store/apps/details?id=net.nurik.roman.muzei) app created by [Roman Nurik](https://medium.com/u/90c74515fd18) back in 2014. Recently I’ve seen some updates from [Ian Lake](https://medium.com/u/51a4f24f5367) who took over the project a while ago, so I decided to make a plugin for Muzei to use my pictures as wallpaper on my Android phone.
 
-> ps. If you simply want to use the plugin, see [README](https://github.com/hossain-khan/android-hk-vision-muzei-plugin/blob/master/README.md) for instruction 🤗
+> ps. If you simply want to use the plugin, see [README](https://github.com/hossain-khan/android-hk-vision-muzei-plugin/blob/master/README.md) for instructions 🤗
 
 ---
 
@@ -34,7 +34,7 @@ You can use any library of your choice to do that, I’ve followed the [unsplash
 
 #### Expose Content Provider
 
-Based on `MuzeiArtProvider` [documentation](https://api.muzei.co/reference/com.google.android.apps.muzei.api.provider/-muzei-art-provider/index.html), I extended my `[HkVisionArtProvider](https://github.com/hossain-khan/android-hk-vision-muzei-plugin/blob/master/app/src/main/java/com/hossainkhan/vision/muzei/HkVisionArtProvider.kt)` from it and defined following provider specification in `AndroidManifest.xml`
+Based on `MuzeiArtProvider` [documentation](https://api.muzei.co/reference/com.google.android.apps.muzei.api.provider/-muzei-art-provider/index.html), I extended my [HkVisionArtProvider](https://github.com/hossain-khan/android-hk-vision-muzei-plugin/blob/master/app/src/main/java/com/hossainkhan/vision/muzei/HkVisionArtProvider.kt) from it and defined following provider specification in `AndroidManifest.xml`
 
 ---
 
