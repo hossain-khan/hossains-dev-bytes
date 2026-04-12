@@ -4,6 +4,9 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Apr 11, 2026** - `2a65811`: feat: route AI calls through AI Gateway for rate limiting and observability
+  > *Added Cloudflare AI Gateway as an intermediary for all Workers AI requests. The gateway (`hossains-dev-bytes`) provides native rate limiting (configurable in the Cloudflare dashboard), response caching, and a usage analytics dashboard — with no custom quota tracking code needed. The `AI_GATEWAY_ID` var in `wrangler.jsonc` controls which gateway is used. The API endpoint detects 429 responses from the gateway and returns a user-friendly "Daily AI usage limit reached" message.*
+
 - **Apr 11, 2026** - `f48cd39`: fix: call marked.parseInline() in all inline renderers so bold/italic/code actually render
   > *Root cause: in marked v18, all renderer callbacks receive raw markdown as `text` — not pre-rendered HTML. `**bold**` inside paragraphs, headings, and `strong` wrappers was never processed. Fixed by calling `marked.parseInline(text)` in `strong`, `em`, `paragraph`, and `heading` renderers.*
 
