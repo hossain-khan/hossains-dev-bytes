@@ -92,11 +92,22 @@ ${trimmedContent}
     // See available models: https://developers.cloudflare.com/workers-ai/models/
     // See pricing: https://developers.cloudflare.com/workers-ai/platform/pricing/
     const model = (env.AI_MODEL ?? "@cf/meta/llama-3.1-8b-instruct-fp8") as Parameters<typeof env.AI.run>[0];
-    const stream = await env.AI.run(model, {
-      messages: allMessages,
-      stream: true,
-      max_tokens: 1024,
-    });
+
+    // Route through AI Gateway for rate limiting, caching, and observability.
+    // Configure rate limits at: Cloudflare Dashboard > AI > AI Gateway > Settings > Rate Limiting
+    // See: https://developers.cloudflare.com/ai-gateway/providers/workersai/#workers-binding
+    const gatewayId = env.AI_GATEWAY_ID ?? "";
+    const gatewayOptions = gatewayId ? { gateway: { id: gatewayId } } : {};
+
+    const stream = await env.AI.run(
+      model,
+      {
+        messages: allMessages,
+        stream: true,
+        max_tokens: 1024,
+      },
+      gatewayOptions,
+    );
 
     return new Response(stream as ReadableStream, {
       headers: {
@@ -108,6 +119,19 @@ ${trimmedContent}
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error("[ai-chat] Workers AI error:", e);
+
+    // AI Gateway returns 429 when the rate limit is exceeded.
+    const errMsg = e instanceof Error ? e.message : String(e);
+    if (errMsg.includes("429") || errMsg.toLowerCase().includes("rate limit")) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "Daily AI usage limit reached. Please try again tomorrow.",
+        }),
+        { status: 429, headers: { "content-type": "application/json" } },
+      );
+    }
+
     return new Response(JSON.stringify({ error: "AI inference failed" }), {
       status: 500,
       headers: { "content-type": "application/json" },
