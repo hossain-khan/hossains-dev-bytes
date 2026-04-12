@@ -186,6 +186,8 @@ In the gateway settings, enable **Rate Limiting**. The dashboard only supports u
 
 6 requests/hour × 24 hours = 144 requests/day × ~60 neurons = ~8,640 neurons/day, which stays comfortably under the 10,000 free tier. When the limit is hit, the gateway returns a `429` response and stops forwarding requests.
 
+p.s. Even though you may want to strictly stay under the free tier, I recommend bumping the limit up a bit (e.g. 15 req/hour) just to avoid accidentally blocking real users if you hit the limit. The cost of a few extra requests is negligible, and it gives you some breathing room.
+
 ### Handling the 429
 
 When the gateway blocks a request, the Worker catches the error and returns something readable:
