@@ -2,7 +2,9 @@ Image File Name: open-graph-base-background.png
 PNG image data, 2752 x 1536, 8-bit/color RGB, non-interlaced
 
 
-Safe drawing area for blog title inside image.
+## Computer Monitor Display Area
+
+Safe drawing area for blog title inside image (using pixspy.com)
 
 - Top Left: 640, 90
 - Top Right: 2070, 90
@@ -12,6 +14,14 @@ Safe drawing area for blog title inside image.
 (Ignore these for now - use full rectangular area for safe drawing)
 Bottom-right last line safe end - top: 1780, 670
 Bottom-right last line safe end - bottom: 1780, 880
+
+
+## Sticky Note Display Area
+
+- Top Left: 200, 170
+- Top Right: 520, 170
+- Bottom Left: 200, 340
+- Bottom Right: 520, 340
 
 
 ---
