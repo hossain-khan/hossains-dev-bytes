@@ -1,226 +1,119 @@
 /**
  * Post Open Graph Image Generator
- * 
- * Generates dynamic 1200x630px OG images for blog posts using Satori + Resvg
- * 
- * Card Layout (1200x630):
- * 
- * ┌──────────────────────────────────────────────────────────────────────┐
- * │                                                                      │
- * │  ┌──────────────────┐                              ╱╲  (SVG         │
- * │  │ hossain.dev      │  (Header pill)              ╱  ╲ watermark    │
- * │  └──────────────────┘                            ╱    ╲ opacity 7%) │
- * │                                                 ╱      ╲             │
- * │                                                ╱        ╲            │
- * │      ╱╱╱ (Indigo-purple blur overlay)                    │
- * │  How to Deploy GitHub's Spark App to                     │
- * │  Cloudflare Workers                                      │
- * │  (Dynamic font: 48-72px based on title length)           │
- * │                                                           │
- * │  ┌─────────────┐  ┌─────────────┐                        │
- * │  │ cloudflare  │  │ github      │  (Tags: first 2)      │
- * │  └─────────────┘  └─────────────┘                        │
- * │                                                          │
- * └──────────────────────────────────────────────────────────────────────┘
- * 
- * Features:
- * - Responsive title sizing (72px → 60px → 48px based on length)
- * - Dynamic line clamping (3 lines → 2 lines for long titles)
- * - Gradient overlay behind title for depth
- * - SVG watermark (SourceCode icon) with 7% opacity
- * - Dark theme with Slate 900 background (#0f172a)
- * - Tag display (first 2 tags in dark pills)
- * - Domain pill badge at top
- * - Indigo-purple gradient blur decoration
+ *
+ * Generates dynamic 1200x630px OG images for blog posts using Satori + Resvg.
+ * Uses a custom background image with a defined safe drawing area for the title.
+ *
+ * Background image native size: 2752x1536
+ * Safe drawing area (native coords):
+ *   Top-Left:     (640,  90)
+ *   Bottom-Right: (2070, 880)
+ *
+ * Scaled to 1200x630 output (scale X=1200/2752~=0.436, scale Y=630/1536~=0.410):
+ *   x: 279  y: 37  width: 623  height: 324
+ *
+ * Font: Jersey 10 (Google Fonts) - dynamic size to fill safe area.
  */
 
 import satori from "satori";
-import { SITE } from "@/config";
 import loadGoogleFonts from "../loadGoogleFont";
+import fs from "node:fs";
+import path from "node:path";
+
+// Safe drawing area at 1200x630 output size
+// (scaled from native 2752x1536 coordinates: TL=640,90 BR=2070,880)
+const MARGIN = 8; // small margin to prevent text from touching edges
+const SAFE_X = Math.round(640 * (1200 / 2752)) + MARGIN;   // 281
+const SAFE_Y = Math.round(90 * (630 / 1536)) + MARGIN;     // 39
+const SAFE_W = Math.round((2070 - 640) * (1200 / 2752)) - MARGIN * 2; // 620
+const SAFE_H = Math.round((880 - 90) * (630 / 1536)) - MARGIN * 2;   // 320
+const LINE_HEIGHT = 1.15;
+
+/**
+ * Estimate appropriate font size so the title fits within the safe area.
+ * Uses Jersey 10 char-width heuristic: avg char ~= 0.55 x fontSize.
+ */
+function getTitleFontSize(title) {
+  const len = title.length;
+  for (const size of [80, 64, 52, 44, 36, 30]) {
+    const charsPerLine = Math.floor(SAFE_W / (size * 0.55));
+    const linesAvailable = Math.floor(SAFE_H / (size * LINE_HEIGHT));
+    if (Math.ceil(len / charsPerLine) <= linesAvailable) {
+      return size;
+    }
+  }
+  return 24; // fallback for very long titles
+}
 
 export default async post => {
+  const bgPath = path.join(
+    process.cwd(),
+    "src/assets/images/open-graph-base-background.png"
+  );
+  const bgBase64 = `data:image/png;base64,${fs.readFileSync(bgPath).toString("base64")}`;
+
+  const title = post.data.title;
+  const fontSize = getTitleFontSize(title);
+  const lineClamp = Math.floor(SAFE_H / (fontSize * LINE_HEIGHT));
+
   return satori(
     {
       type: "div",
       props: {
         style: {
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          justifyContent: "flex-start",
-          backgroundColor: "#0f172a", // Fondo oscuro (Slate 900)
-          color: "white",
-          padding: "80px",
           position: "relative",
-          gap: "80px",
+          width: "100%",
+          height: "100%",
+          display: "flex",
         },
         children: [
-          // 1. Decorative background element (Painted first = stays in background)
+          // Background image stretched to fill the full canvas
+          {
+            type: "img",
+            props: {
+              src: bgBase64,
+              style: {
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "1200px",
+                height: "630px",
+              },
+            },
+          },
+
+          // Title text positioned inside the safe drawing area
           {
             type: "div",
             props: {
               style: {
                 position: "absolute",
-                top: "-100px",
-                right: "-100px",
-                width: "600px",
-                height: "600px",
-                background: "linear-gradient(140deg, #6366f1, #a855f7)",
-                filter: "blur(100px)",
-                opacity: 0.4,
-                borderRadius: "100%",
-              },
-            },
-          },
-
-          // 2. Header: Site name (Painted on top of background)
-          {
-            type: "div",
-            props: {
-              style: {
+                left: `${SAFE_X}px`,
+                top: `${SAFE_Y}px`,
+                width: `${SAFE_W}px`,
+                height: `${SAFE_H}px`,
                 display: "flex",
-                alignItems: "center",
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
-                padding: "10px 24px",
-                borderRadius: "50px",
-                border: "1px solid rgba(255, 255, 255, 0.2)",
+                alignItems: "flex-start",
+                justifyContent: "flex-start",
+                overflow: "hidden",
               },
               children: {
                 type: "span",
                 props: {
                   style: {
-                    fontSize: 24,
-                    fontWeight: "bold",
-                    color: "#e2e8f0",
-                    letterSpacing: "2px",
-                    fontFamily: "Noto Sans",
-                  },
-                  children: SITE.website.replace("https://", "").replace(/\/$/, ""),
-                },
-              },
-            },
-          },
-
-          // 3. Gradient overlay behind title
-          {
-            type: "div",
-            props: {
-              style: {
-                position: "absolute",
-                top: "200px",
-                left: "0px",
-                width: "100%",
-                height: "300px",
-                background: "linear-gradient(90deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.1))",
-                filter: "blur(60px)",
-                pointerEvents: "none",
-              },
-            },
-          },
-
-          // 4. Watermark: Code icon on right edge as SVG
-          {
-            type: "svg",
-            props: {
-              style: {
-                position: "absolute",
-                right: "0px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                width: "500px",
-                height: "500px",
-                opacity: 0.07,
-                overflow: "visible",
-                pointerEvents: "none",
-              },
-              viewBox: "0 0 24 24",
-              xmlns: "http://www.w3.org/2000/svg",
-              children: [
-                {
-                  type: "path",
-                  props: {
-                    d: "m8.50226 5.38707c.30789-.2771.33284-.75131.05575-1.0592-.27709-.30788-.75131-.33284-1.05919-.05574l-1.73749 1.56374c-.73634.66266-1.34715 1.21235-1.76656 1.71092-.44103.52425-.75454 1.08751-.75454 1.78281s.31351 1.2586.75454 1.7828c.41941.4986 1.03021 1.0483 1.76655 1.7109l1.7375 1.5638c.30788.2771.7821.2521 1.05919-.0558s.25214-.7821-.05575-1.0592l-1.69647-1.5268c-.78787-.7091-1.31907-1.1895-1.66317-1.5985-.33025-.3926-.40239-.62178-.40239-.8172 0-.19543.07214-.42461.40239-.81719.3441-.40903.8753-.88943 1.66317-1.59852z",
-                    fill: "#cbd5e1",
-                  },
-                },
-                {
-                  type: "path",
-                  props: {
-                    d: "m15.443 10.4983c.2771-.3079.7513-.3329 1.0592-.0558l1.7375 1.5638c.7363.6626 1.3471 1.2123 1.7666 1.7109.441.5243.7545 1.0875.7545 1.7828s-.3135 1.2586-.7545 1.7828c-.4195.4986-1.0303 1.0483-1.7666 1.7109l-1.7375 1.5638c-.3079.2771-.7821.2521-1.0592-.0558s-.2521-.7821.0558-1.0592l1.6964-1.5268c.7879-.7091 1.3191-1.1895 1.6632-1.5985.3303-.3926.4024-.6218.4024-.8172s-.0721-.4246-.4024-.8172c-.3441-.409-.8753-.8894-1.6632-1.5985l-1.6964-1.5268c-.3079-.2771-.3329-.7513-.0558-1.0592z",
-                    fill: "#cbd5e1",
-                  },
-                },
-                {
-                  type: "path",
-                  props: {
-                    d: "m14.1797 4.27511c.4003.1064.6385.51717.5321.91748l-3.9868 15.00001c-.1064.4003-.5172.6386-.91747.5322-.40031-.1064-.63858-.5172-.53218-.9175l3.98685-15.00001c.1064-.40032.5171-.63858.9175-.53218z",
-                    fill: "#cbd5e1",
-                    opacity: 0.5,
-                  },
-                },
-              ],
-            },
-          },
-
-          // 5. Main content: Post title
-          {
-            type: "div",
-            props: {
-              style: {
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-                gap: "32px",
-              },
-              children: {
-                type: "h1",
-                props: {
-                  style: {
-                    fontSize: post.data.title.length > 100 ? 48 : post.data.title.length > 80 ? 60 : 72,
-                    fontWeight: 900,
-                    lineHeight: 1.15,
-                    margin: 0,
+                    fontSize,
+                    fontFamily: "Jersey 10",
+                    fontWeight: 400,
                     color: "#ffffff",
-                    textShadow: "0 2px 10px rgba(0,0,0,0.3)",
+                    lineHeight: LINE_HEIGHT,
                     overflow: "hidden",
                     display: "-webkit-box",
-                    lineClamp: post.data.title.length > 80 ? 2 : 3,
+                    lineClamp,
                     boxOrient: "vertical",
-                    fontFamily: "Boogaloo",
                   },
-                  children: post.data.title,
+                  children: title,
                 },
               },
-            },
-          },
-
-          // 6. Footer: Tags
-          {
-            type: "div",
-            props: {
-              style: {
-                display: "flex",
-                gap: "12px",
-                alignItems: "center",
-              },
-              children: (post.data.tags || []).slice(0, 2).map(tag => ({
-                type: "div",
-                props: {
-                  style: {
-                    backgroundColor: "#1e293b",
-                    color: "#cbd5e1",
-                    padding: "8px 16px",
-                    borderRadius: "20px",
-                    fontSize: 20,
-                    fontWeight: 600,
-                    letterSpacing: "0.5px",
-                    fontFamily: "Noto Sans",
-                  },
-                  children: tag,
-                },
-              })),
             },
           },
         ],
@@ -230,9 +123,7 @@ export default async post => {
       width: 1200,
       height: 630,
       embedFont: true,
-      fonts: await loadGoogleFonts(
-        post.data.title + (post.data.tags || []).slice(0, 2).join(" ") + SITE.website.replace("https://", "").replace(/\/$/, "")
-      ),
+      fonts: await loadGoogleFonts(title),
     }
   );
 };
