@@ -9,6 +9,7 @@ Safe drawing area for blog title inside image.
 - Bottom Left: 640, 880
 - Bottom Right: 2070, 880
 
+(Ignore these for now - use full rectangular area for safe drawing)
 Bottom-right last line safe end - top: 1780, 670
 Bottom-right last line safe end - bottom: 1780, 880
 

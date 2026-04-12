@@ -21,11 +21,12 @@ import fs from "node:fs";
 import path from "node:path";
 
 // Safe drawing area at 1200x630 output size
-// (scaled from native 2752x1536 coordinates)
-const SAFE_X = 279;
-const SAFE_Y = 37;
-const SAFE_W = 623;
-const SAFE_H = 324;
+// (scaled from native 2752x1536 coordinates: TL=640,90 BR=2070,880)
+const MARGIN = 8; // small margin to prevent text from touching edges
+const SAFE_X = Math.round(640 * (1200 / 2752)) + MARGIN;   // 281
+const SAFE_Y = Math.round(90 * (630 / 1536)) + MARGIN;     // 39
+const SAFE_W = Math.round((2070 - 640) * (1200 / 2752)) - MARGIN * 2; // 620
+const SAFE_H = Math.round((880 - 90) * (630 / 1536)) - MARGIN * 2;   // 320
 const LINE_HEIGHT = 1.15;
 
 /**
