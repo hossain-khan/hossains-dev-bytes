@@ -1,0 +1,254 @@
+---
+title: "Adding a Free AI Assistant to Your Blog with Cloudflare Workers AI"
+pubDatetime: 2026-04-11T12:00:00Z
+description: "How I added an AI post summarizer and Q&A assistant to my blog using Cloudflare Workers AI — and used AI Gateway to keep it completely free."
+tags: ["cloudflare", "ai", "astro", "workers-ai", "ai-gateway"]
+featured: true
+draft: true
+---
+
+import GitHubEmbed from "@/components/GitHubEmbed.astro";
+
+My blog runs on [Astro](https://astro.build/) deployed to [Cloudflare Workers](https://workers.cloudflare.com/). Once the site was up, I started thinking about what I could build on top of the Cloudflare platform. One idea stood out immediately: _what if readers could ask questions about a post without leaving the page?_
+
+This post walks through how I built an AI summarizer and Q&A assistant directly into each blog post — powered by **Cloudflare Workers AI** — and how I used **AI Gateway** to keep the whole feature free.
+
+## What the Feature Does
+
+At the bottom of every post, there's a collapsible panel labelled "Ask AI about this post". Readers can:
+
+1. **One-click summarize** — get a structured 3–5 sentence summary of the post
+2. **Ask follow-up questions** — clarify concepts, ask for more detail, or explore related ideas
+
+The assistant only answers based on the post content, so it stays on-topic and doesn't hallucinate outside the article.
+
+## The Architecture
+
+The feature has two parts: a client-side UI component and a server-side API route.
+
+```
+Browser
+  └── AiPostAssistant.astro  (Astro component — UI + fetch logic)
+        │  POST /api/ai-chat
+        ▼
+Cloudflare Worker
+  └── src/pages/api/ai-chat.ts  (API route)
+        │  env.AI.run() with gateway option
+        ▼
+AI Gateway  (rate limiting, caching, observability)
+        │
+        ▼
+Workers AI  (@cf/meta/llama-3.1-8b-instruct-fp8)
+```
+
+The response is streamed back as **Server-Sent Events (SSE)** so the text appears token-by-token — just like ChatGPT.
+
+## Building the API Endpoint
+
+The Worker API route is a standard Astro SSR endpoint. Because it runs on Cloudflare Workers, it has direct access to the `env.AI` binding — no API keys, no HTTP calls to manage.
+
+```typescript
+// src/pages/api/ai-chat.ts
+import { env } from "cloudflare:workers";
+
+export const POST: APIRoute = async ({ request }) => {
+  const { content, messages } = await request.json();
+
+  const systemMessage = {
+    role: "system",
+    content: `You are a helpful assistant for a tech blog.
+Answer questions based only on the blog post content below.
+If asked for a summary, provide a structured 3–5 sentence summary.
+
+Blog post content:
+---
+${content.slice(0, 8_000)}
+---`,
+  };
+
+  const stream = await env.AI.run(
+    "@cf/meta/llama-3.1-8b-instruct-fp8",
+    { messages: [systemMessage, ...messages], stream: true, max_tokens: 1024 }
+  );
+
+  return new Response(stream, {
+    headers: {
+      "content-type": "text/event-stream",
+      "cache-control": "no-cache",
+    },
+  });
+};
+```
+
+A few key decisions here:
+
+- **Content is trimmed to 8,000 characters** — the model has a 32,000-token context window but most blog posts are well under 8K chars (~2,000 tokens), keeping per-request cost minimal.
+- **Streaming** — `stream: true` returns a `ReadableStream` the browser can consume via `EventSource` / `fetch` reader, giving instant feedback.
+- **System prompt scoping** — the assistant is told to answer only from the post, preventing off-topic replies.
+
+## Building the UI Component
+
+The Astro component lives at the bottom of every post. It's collapsed by default (so it doesn't intrude on the reading experience) and expands on click.
+
+```javascript
+// Excerpt from AiPostAssistant.astro <script>
+
+// Grab the full post text from the DOM
+const articleEl = document.querySelector("article");
+const postContent = articleEl?.innerText ?? "";
+
+async function sendMessage(userMessage) {
+  const res = await fetch("/api/ai-chat", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      content: postContent,
+      messages: conversationHistory,
+    }),
+  });
+
+  // Stream the SSE response token-by-token
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    const chunk = decoder.decode(value);
+    // Parse SSE data lines and append tokens to the UI
+    appendTokenToUI(chunk);
+  }
+}
+```
+
+The post content is read *directly from the rendered DOM* — no extra Astro props or data passing needed. This keeps the component self-contained.
+
+## The Real Trick: Staying Free with AI Gateway
+
+Workers AI has a **10,000 neuron free tier per day**. One typical request to the llama model costs roughly 60 neurons (~13,778 input + 26,128 output neurons per million tokens). That's about 166 free requests a day — plenty for a personal blog.
+
+But what happens if a post goes viral and gets 500 visitors, each clicking "summarize"? You'd blow past the free tier and start paying.
+
+The solution: **Cloudflare AI Gateway**.
+
+### What is AI Gateway?
+
+AI Gateway sits between your Worker and any AI provider. For Workers AI requests it provides:
+
+- **Rate limiting** — cap requests per time window (native, no code needed)
+- **Response caching** — identical prompts return cached responses for free
+- **Observability** — dashboard with request counts, token counts, latency, and cost
+
+The best part: the integration is a single additional argument to `env.AI.run()`.
+
+### Enabling AI Gateway
+
+**Step 1 — Create the gateway**
+
+In the Cloudflare Dashboard, go to **AI → AI Gateway → Create Gateway**. Give it a name (e.g. `my-blog`).
+
+**Step 2 — Add the gateway ID to wrangler.jsonc**
+
+```jsonc
+// wrangler.jsonc
+{
+  "vars": {
+    "AI_MODEL": "@cf/meta/llama-3.1-8b-instruct-fp8",
+    "AI_GATEWAY_ID": "my-blog"
+  }
+}
+```
+
+**Step 3 — Pass the gateway option to `env.AI.run()`**
+
+```typescript
+// src/pages/api/ai-chat.ts  — the only code change needed
+const gatewayId = env.AI_GATEWAY_ID ?? "";
+const gatewayOptions = gatewayId ? { gateway: { id: gatewayId } } : {};
+
+const stream = await env.AI.run(
+  model,
+  { messages: allMessages, stream: true, max_tokens: 1024 },
+  gatewayOptions,  // [!code highlight]
+);
+```
+
+That's it. The request now flows through the gateway. No API token, no HTTP URL swap — the Workers AI binding handles authentication automatically.
+
+This pattern is documented in the [Cloudflare AI Gateway — Workers Binding docs](https://developers.cloudflare.com/ai-gateway/usage/providers/workersai/#workers-binding).
+
+**Step 4 — Set a rate limit in the dashboard**
+
+In the gateway settings, enable **Rate Limiting**:
+
+| Setting | Value |
+|---------|-------|
+| Requests | 150 |
+| Window | 1 day |
+| Type | Fixed window |
+
+150 requests × ~60 neurons = ~9,000 neurons/day — comfortably under the 10,000 free tier. When the limit is hit, the gateway returns a `429` response.
+
+### Handling the 429 Gracefully
+
+```typescript
+// In the catch block of the API route
+const errMsg = e instanceof Error ? e.message : String(e);
+if (errMsg.includes("429") || errMsg.toLowerCase().includes("rate limit")) {
+  return new Response(
+    JSON.stringify({ error: "Daily AI usage limit reached. Please try again tomorrow." }),
+    { status: 429 }
+  );
+}
+```
+
+The frontend checks the status and surfaces a clean message — no stack traces, no cryptic errors.
+
+### Bonus: Free Caching
+
+AI Gateway also caches responses. If multiple visitors ask the same question ("summarize this post") on the same day, only the first request hits Workers AI — everyone else gets the cached response instantly and for free.
+
+## What It Costs
+
+| Scenario | Neurons used | Cost |
+|----------|-------------|------|
+| 150 requests/day × 60 neurons | ~9,000 | **$0.00** (under free tier) |
+| Cache hit (repeated question) | 0 | **$0.00** |
+| Over limit (rate-limited by gateway) | 0 | **$0.00** |
+
+The feature is effectively free as long as you stay under 150 requests/day. For a personal blog, that's more than enough.
+
+## The Observable Proof
+
+Once deployed, the AI Gateway dashboard shows real-time data:
+
+- Request count per hour/day
+- Token breakdown (input vs output)
+- Cost per request and totals
+- Cache hit rate
+- Error rate (including 429s)
+
+This was the first time I had transparency into exactly what an AI feature costs me — per post, per day.
+
+## Source Code
+
+The full implementation is open source in the blog's repository:
+
+<GitHubEmbed repo="hossain-khan/hossains-dev-bytes" />
+
+Key files to look at:
+- `src/pages/api/ai-chat.ts` — the Worker API endpoint
+- `src/components/AiPostAssistant.astro` — the UI component
+- `wrangler.jsonc` — gateway configuration via env vars
+
+## Summary
+
+Building an AI assistant into a blog post turns out to be surprisingly straightforward on Cloudflare:
+
+1. Use the **`env.AI` binding** for zero-config Workers AI access
+2. Stream with **SSE** for a responsive feel
+3. Scope the system prompt to the post content to stay on-topic
+4. Add **AI Gateway** as a one-argument addition to `env.AI.run()` for rate limiting, caching, and observability
+5. Set a **150 req/day rate limit** in the dashboard to stay in the free tier
+
+The result: a genuinely useful AI feature with full cost control, no third-party API keys, and a real-time dashboard to prove it's running free.
