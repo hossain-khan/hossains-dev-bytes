@@ -1,0 +1,31 @@
+Image File Name: open-graph-base-background.png
+PNG image data, 2752 x 1536, 8-bit/color RGB, non-interlaced
+
+
+Safe drawing area for blog title inside image.
+
+- Top Left: 640, 90
+- Top Right: 2070, 90
+- Bottom Left: 640, 880
+- Bottom Right: 2070, 880
+
+Bottom last line safe end: 1780, 880
+
+
+---
+
+Blog title font: https://fonts.google.com/specimen/Jersey+10?preview.script=Latn
+
+```
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+```
+
+```
+.jersey-10-regular {
+  font-family: "Jersey 10", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+```
