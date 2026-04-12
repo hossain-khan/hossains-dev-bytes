@@ -138,6 +138,9 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
+# npm lock file (project uses pnpm)
+package-lock.json
+
 
 # build output
 dist/

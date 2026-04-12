@@ -610,6 +610,31 @@ const response = await fetch(`https://api.github.com/repos/${repo}`, { headers }
    - If not authenticated: `[GitHubEmbed] No GITHUB_TOKEN found, using unauthenticated request ...`
 
 
+## Real Example: GooglePlayEmbed
+
+The `GooglePlayEmbed` component fetches app details at build time from the
+[PlayBadges API](https://github.com/pavi2410/PlayBadges) and renders a card
+linking to the Google Play Store.
+
+**Usage**:
+
+```mdx
+import GooglePlayEmbed from "@/components/GooglePlayEmbed.astro";
+
+<GooglePlayEmbed packageId="dev.hossain.weatheralert" />
+```
+
+**Displayed fields**: app icon, app name, developer name, summary, rating,
+downloads, and version (when available).
+
+**Prop**:
+
+| Prop        | Type     | Required | Description                                   |
+| ----------- | -------- | -------- | --------------------------------------------- |
+| `packageId` | `string` | ✅        | The app's package name (e.g. `com.example.app`) |
+
+**Data source**: `https://playbadges.pavi2410.com/app/details?id=<packageId>`
+
 ## File Organization
 
 Your embed components belong in `src/components/`:
@@ -617,6 +642,7 @@ Your embed components belong in `src/components/`:
 ```
 src/components/
 ├── GitHubEmbed.astro      # GitHub repo card
+├── GooglePlayEmbed.astro  # Google Play app card
 ├── VideoEmbed.astro       # YouTube/video embed
 ├── QuoteEmbed.astro       # Pull quotes
 ├── CodepenEmbed.astro     # Codepen projects

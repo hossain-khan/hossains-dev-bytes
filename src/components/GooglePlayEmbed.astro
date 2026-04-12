@@ -1,0 +1,245 @@
+---
+/**
+ * GooglePlayEmbed — Display a Google Play app card inline in MDX posts.
+ *
+ * Uses the PlayBadges API (https://github.com/pavi2410/PlayBadges) to fetch
+ * app details at build time and render a rich card linking to the Play Store.
+ *
+ * Usage in .mdx files:
+ *   import GooglePlayEmbed from '@/components/GooglePlayEmbed.astro';
+ *   <GooglePlayEmbed packageId="dev.hossain.weatheralert" />
+ */
+
+type Props = {
+  packageId: string;
+};
+
+interface PlayAppDetails {
+  title: string;
+  summary: string | null;
+  description: string | null;
+  icon: string | null;
+  score: number | null;
+  scoreText: string | null;
+  installs: string | null;
+  minInstalls: number | null;
+  version: string | null;
+  developer: string | null;
+  url: string | null;
+  appId: string;
+}
+
+const { packageId } = Astro.props;
+
+if (!packageId || packageId.trim() === "") {
+  throw new Error(`GooglePlayEmbed: "packageId" prop is required.`);
+}
+
+const playStoreUrl = `https://play.google.com/store/apps/details?id=${packageId}`;
+
+let appData: PlayAppDetails | null = null;
+let error: string | null = null;
+
+try {
+  // eslint-disable-next-line no-console
+  console.log(`[GooglePlayEmbed] Fetching app details for ${packageId}`);
+  const response = await fetch(
+    `https://playbadges.pavi2410.com/app/details?id=${encodeURIComponent(packageId)}`
+  );
+
+  if (!response.ok) {
+    error = `App not found (${response.status})`;
+  } else {
+    appData = (await response.json()) as PlayAppDetails;
+  }
+} catch (e) {
+  error = `Failed to fetch app details: ${String(e)}`;
+}
+
+// Format install count for display (e.g. "1,000,000+" → "1M+", "10,000+" → "10K+")
+const formatInstalls = (installs: string | null): string | null => {
+  if (!installs) return null;
+  // Extract numeric value from strings like "1,000,000+"
+  const numericMatch = installs.replace(/,/g, "").match(/(\d+)/);
+  if (!numericMatch) return installs;
+  const num = parseInt(numericMatch[1], 10);
+  const suffix = installs.includes("+") ? "+" : "";
+  if (num >= 1_000_000_000)
+    return `${(num / 1_000_000_000).toFixed(1).replace(/\.0$/, "")}B${suffix}`;
+  if (num >= 1_000_000)
+    return `${(num / 1_000_000).toFixed(1).replace(/\.0$/, "")}M${suffix}`;
+  if (num >= 1_000)
+    return `${(num / 1_000).toFixed(1).replace(/\.0$/, "")}K${suffix}`;
+  return installs;
+};
+
+---
+
+{
+  error ? (
+    <div class="not-prose my-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
+      <strong>GooglePlayEmbed Error: </strong>
+      {error}
+    </div>
+  ) : appData ? (
+    <a
+      href={appData.url ?? playStoreUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class:list={[
+        "google-play-embed not-prose block my-6 rounded-xl p-5",
+        "border border-slate-200/60 bg-gradient-to-br from-slate-50 to-slate-100/50",
+        "transition-all duration-300 ease-out",
+        "hover:border-green-400/70 hover:shadow-lg hover:shadow-green-500/15",
+        "hover:from-slate-100 hover:to-slate-200/70",
+        "dark:border-slate-700/60 dark:bg-gradient-to-br dark:from-slate-900/60 dark:to-slate-800/40",
+        "dark:hover:border-green-400/50 dark:hover:shadow-xl dark:hover:shadow-green-500/20",
+        "dark:hover:from-slate-800 dark:hover:to-slate-700/60",
+        "group",
+      ]}
+    >
+      <div class="flex items-start justify-between gap-4">
+        {/* Left: App Info */}
+        <div class="flex flex-1 min-w-0 gap-4">
+          {/* App Icon */}
+          {appData.icon && (
+            <img
+              src={appData.icon}
+              alt={`${appData.title} icon`}
+              width="56"
+              height="56"
+              class="flex-shrink-0 rounded-xl w-14 h-14 object-cover shadow-sm"
+            />
+          )}
+
+          <div class="flex-1 min-w-0">
+            {/* App Name */}
+            <h3 class="text-base font-bold text-slate-900 dark:text-white truncate m-0 mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
+              {appData.title}
+            </h3>
+
+            {/* Developer */}
+            {appData.developer && (
+              <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">
+                {appData.developer}
+              </p>
+            )}
+
+            {/* Summary */}
+            {appData.summary && (
+              <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2 mb-3 leading-relaxed">
+                {appData.summary}
+              </p>
+            )}
+
+            {/* Metadata: Rating, Downloads, Version */}
+            <div class="flex flex-wrap items-center gap-3 text-xs font-medium">
+              {/* Rating */}
+              {appData.score !== null && appData.score !== undefined && (
+                <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100/60 dark:bg-amber-900/30">
+                  <svg
+                    class="w-3.5 h-3.5 text-amber-500 dark:text-amber-400"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2l-2.81 6.63L2 9.24l5.46 4.73L5.82 21z" />
+                  </svg>
+                  <span class="text-amber-800 dark:text-amber-300">
+                    {appData.scoreText ?? appData.score.toFixed(1)}
+                  </span>
+                </div>
+              )}
+
+              {/* Downloads */}
+              {appData.installs && (
+                <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-100/60 dark:bg-green-900/30">
+                  <svg
+                    class="w-3.5 h-3.5 text-green-600 dark:text-green-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                    />
+                  </svg>
+                  <span class="text-green-800 dark:text-green-300">
+                    {formatInstalls(appData.installs)}
+                  </span>
+                </div>
+              )}
+
+              {/* Version */}
+              {appData.version && appData.version !== "Varies with device" && (
+                <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-200/60 dark:bg-slate-700/40">
+                  <svg
+                    class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 8V5a2 2 0 012-2h2z"
+                    />
+                  </svg>
+                  <span class="text-slate-700 dark:text-slate-300">
+                    v{appData.version}
+                  </span>
+                </div>
+              )}
+
+              {/* Google Play badge */}
+              <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-100/40 dark:bg-blue-900/20">
+                <svg
+                  class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M3.18 23.76c.4.22.85.24 1.27.07l12.5-7.02-2.69-2.7-11.08 9.65zM.54 1.03C.2 1.4 0 1.96 0 2.67v18.67c0 .71.2 1.27.54 1.63l.09.08 10.46-10.46v-.25L.63.95l-.09.08zM20.37 10.28l-2.83-1.59-3.02 3.02 3.02 3.02 2.84-1.6c.81-.46.81-1.2-.01-1.85zM4.45.17L16.95 7.2l-2.69 2.7L4.18.24c.09-.07.18-.1.27-.07z" />
+                </svg>
+                <span class="text-blue-700 dark:text-blue-300">
+                  Google Play
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Arrow Icon */}
+        <svg
+          class="w-5 h-5 flex-shrink-0 mt-1 text-slate-400 dark:text-slate-500 transition-all duration-300 group-hover:text-green-500 dark:group-hover:text-green-400 group-hover:translate-x-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+          />
+        </svg>
+      </div>
+    </a>
+  ) : (
+    <div class="not-prose my-6 rounded-xl border border-slate-200/60 bg-gradient-to-br from-slate-50 to-slate-100/50 p-5 text-sm text-slate-600 dark:border-slate-700/60 dark:bg-gradient-to-br dark:from-slate-900/60 dark:to-slate-800/40 dark:text-slate-400">
+      <div class="flex items-center gap-2">
+        <div class="w-4 h-4 rounded-full border-2 border-slate-300 border-t-green-500 dark:border-slate-600 dark:border-t-green-400 animate-spin" />
+        Loading app data...
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .google-play-embed {
+    --color-text: #e2e8f0;
+    --color-border: #475569;
+  }
+</style>
