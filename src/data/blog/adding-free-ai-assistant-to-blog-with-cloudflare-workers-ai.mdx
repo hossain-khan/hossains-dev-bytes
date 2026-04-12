@@ -176,15 +176,15 @@ That's really it. No API token, no changing the request URL — the Workers AI b
 
 **Step 4 - Set a rate limit in the dashboard**
 
-In the gateway settings, enable **Rate Limiting**:
+In the gateway settings, enable **Rate Limiting**. The dashboard only supports up to a 1-hour window (no daily option), so set it per hour and keep the daily math in mind:
 
 | Setting | Value |
 |---------|-------|
-| Requests | 150 |
-| Window | 1 day |
-| Type | Fixed window |
+| Requests | 6 |
+| Window | 1 Hour |
+| Type | Fixed |
 
-150 requests × ~60 neurons = ~9,000 neurons per day, which stays comfortably under the 10,000 free tier. When the limit is hit, the gateway returns a `429` response and stops forwarding requests.
+6 requests/hour × 24 hours = 144 requests/day × ~60 neurons = ~8,640 neurons/day, which stays comfortably under the 10,000 free tier. When the limit is hit, the gateway returns a `429` response and stops forwarding requests.
 
 ### Handling the 429
 
@@ -211,7 +211,7 @@ AI Gateway also caches responses by default. If 10 different visitors all ask "s
 
 | Scenario | Neurons used | Cost |
 |----------|-------------|------|
-| 150 requests/day × 60 neurons | ~9,000 | **$0.00** (under free tier) |
+| 144 requests/day × 60 neurons (6/hr × 24hr) | ~8,640 | **$0.00** (under free tier) |
 | Cache hit (repeated question) | 0 | **$0.00** |
 | Over limit (rate-limited by gateway) | 0 | **$0.00** |
 
