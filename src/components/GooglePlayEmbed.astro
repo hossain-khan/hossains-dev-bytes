@@ -56,9 +56,20 @@ try {
   error = `Failed to fetch app details: ${String(e)}`;
 }
 
-// Format install count for display (e.g. "1,000,000+" → "1M+")
+// Format install count for display (e.g. "1,000,000+" → "1M+", "10,000+" → "10K+")
 const formatInstalls = (installs: string | null): string | null => {
   if (!installs) return null;
+  // Extract numeric value from strings like "1,000,000+"
+  const numericMatch = installs.replace(/,/g, "").match(/(\d+)/);
+  if (!numericMatch) return installs;
+  const num = parseInt(numericMatch[1], 10);
+  const suffix = installs.includes("+") ? "+" : "";
+  if (num >= 1_000_000_000)
+    return `${(num / 1_000_000_000).toFixed(1).replace(/\.0$/, "")}B${suffix}`;
+  if (num >= 1_000_000)
+    return `${(num / 1_000_000).toFixed(1).replace(/\.0$/, "")}M${suffix}`;
+  if (num >= 1_000)
+    return `${(num / 1_000).toFixed(1).replace(/\.0$/, "")}K${suffix}`;
   return installs;
 };
 
@@ -109,7 +120,7 @@ const formatInstalls = (installs: string | null): string | null => {
 
             {/* Developer */}
             {appData.developer && (
-              <p class="text-xs text-slate-500 dark:text-slate-500 mb-2">
+              <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">
                 {appData.developer}
               </p>
             )}
