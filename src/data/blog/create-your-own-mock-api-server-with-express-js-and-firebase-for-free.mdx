@@ -7,6 +7,8 @@ featured: false
 draft: false
 ---
 
+import GitHubEmbed from "@/components/GitHubEmbed.astro";
+
 Recently I had to prepare a complete mocked server for an app I worked in the past. The reason mocking was required so that app’s different functionality can be showcased with a variation of mocked response which triggers different UI and functionality.
 
 There may be different solutions available in the market, however, since Firebase has a free tier and the Node.js-based [Express](https://expressjs.com/) web framework makes things much easier to customize based on need.
@@ -79,7 +81,7 @@ First, update **rewrites** rule of `/firebase.json` to forward all requests to F
 ]
 ```
 
-See [github-sample](https://github.com/amardeshbd/firebase-mock-api-server/blob/master/firebase.json#L17) for reference.
+See [github-sample](https://github.com/hossain-khan/firebase-mock-api-server/blob/master/firebase.json#L17) for reference.
 
 Now, update `/functions/package.json` file to include express and cors under `"dependencies"`.
 
@@ -91,7 +93,7 @@ Now, update `/functions/package.json` file to include express and cors under `"d
 }
 ```
 
-See [github-sample](https://github.com/amardeshbd/firebase-mock-api-server/blob/master/functions/package.json#L14) for reference.
+See [github-sample](https://github.com/hossain-khan/firebase-mock-api-server/blob/master/functions/package.json#L14) for reference.
 
 Once this is done, you need to update `npm` modules so that Express can be used. Use the following commands to update it.
 
@@ -107,13 +109,13 @@ Now that `app` is an Express instance, you can start defining APIs using [routin
 
 NOTE: All the APIs must be added before “exports.api = …” line.
 
-See [GitHub example](https://github.com/amardeshbd/firebase-mock-api-server/blob/master/functions/index.js) with HTTP ‘`get`’ & ‘`post`’ API with a dynamic response based on request data. The example also shows how you can load large data from JSON file, which keeps the “index.js” file clean from hard-coded data.
+See [GitHub example](https://github.com/hossain-khan/firebase-mock-api-server/blob/master/functions/index.js) with HTTP ‘`get`’ & ‘`post`’ API with a dynamic response based on request data. The example also shows how you can load large data from JSON file, which keeps the “index.js” file clean from hard-coded data.
 
 Once you are done adding APIs, you can run `**firebase deploy**` from root of the project to deploy your APIs.
 
 > NOTE: If you are getting HTTP 500 error — Your client does not have permission, then see troubleshooting section at the end of this article.
 
-Here are some example APIs that are available from the [example](https://github.com/amardeshbd/firebase-mock-api-server) GitHub project.
+Here are some example APIs that are available from the [example](https://github.com/hossain-khan/firebase-mock-api-server) GitHub project.
 
 - [https://mock-apis-server.firebaseapp.com/say/hello?name=Ryan](https://mock-apis-server.firebaseapp.com/say/hello?name=Ryan)
 - [https://mock-apis-server.firebaseapp.com/photos/29647](https://mock-apis-server.firebaseapp.com/photos/29647)
@@ -136,9 +138,7 @@ Happy mocking 😃!
 
 ---
 
-See [https://github.com/amardeshbd/firebase-mock-api-server](https://github.com/amardeshbd/firebase-mock-api-server) for more detailed example and sample APIs you can test from the browser.
-
-[**amardeshbd/firebase-mock-api-server** — _A simple mock API server using expressjs that is hosted on firebase. - amardeshbd/firebase-mock-api-server_](https://github.com/amardeshbd/firebase-mock-api-server)
+<GitHubEmbed repo="hossain-khan/firebase-mock-api-server" />
 
 ---
 

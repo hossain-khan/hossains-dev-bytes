@@ -21,7 +21,7 @@ I have a love and [hate](https://twitter.com/hossainkhan/status/1264173083885273
 
 Recently Medium has launched “**MOMENTUM** — *A Medium blog about the fight against anti-Black racism*” — a great initiative by them ✊. An interesting thing to note is the site supports dark mode. In fact, it only is in dark-mode which goes with the theme of the topic.
 
-_ps. I also built an_ [_Android app_](https://github.com/amardeshbd/android-police-brutality-incidents) _to support_ `*#BlackLivesMatter*` _cause. Currently waiting for Google to approve the app._
+_ps. I also built an_ [_Android app_](https://github.com/hossain-khan/android-police-brutality-incidents) _to support_ `*#BlackLivesMatter*` _cause. Currently waiting for Google to approve the app._
 
 If having a completely dark theme for MOMENTUM is possible, then supporting site-wide dark-mode (aka. Night Mode) should also be possible. I am hopeful that sometime soon they may publish user settings to turn on dark-mode like few other major sites (eg. YouTube, Reddit, Slack and so on).
 

@@ -23,7 +23,7 @@ The concept is simple, you set up a node environment on CI machine, install requ
 
 > NOTE: Use node package manager portal at [npmjs.com](https://www.npmjs.com/) to find your node-module to run on GitHub Actions CI job.
 
-Use case #1: Use XML Validator module to validate XML. See [workflow file](https://github.com/amardeshbd/android-hk-vision-muzei-plugin/blob/master/.github/workflows/android.yml).
+Use case #1: Use XML Validator module to validate XML. See [workflow file](https://github.com/hossain-khan/android-hk-vision-muzei-plugin/blob/master/.github/workflows/android.yml).
 
 ```yaml
 - name: Setup NodeJS
