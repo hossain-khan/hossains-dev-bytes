@@ -159,6 +159,10 @@ Set these in **Cloudflare Dashboard → Workers & Pages → hossains-dev-bytes �
 - `GITHUB_TOKEN` - GitHub Personal Access Token (with `public_repo` scope) - used by GitHubEmbed component
 - Any other runtime secrets needed by the app
 
+**Wrangler Variables** (`wrangler.jsonc` `vars` section — committed to source):
+- `AI_MODEL` - Workers AI model ID (default: `@cf/meta/llama-3.1-8b-instruct-fp8`). Change here to swap models with no code change.
+- `AI_GATEWAY_ID` - AI Gateway name (default: `hossains-dev-bytes`). Routes all AI requests through the gateway for rate limiting, caching, and observability. Configure the gateway at: **Cloudflare Dashboard → AI → AI Gateway**.
+
 **GitHub Actions** (Pre-deployment checks):
 Runs on Node 22.x and 24.x when pushing to `main`:
 - Checks ESLint rules
@@ -215,6 +219,8 @@ const greeting = "hello";
 | **Formatting conflicts** | Delete `.prettierrc.mjs` and rebuild if corrupted |
 | **GitHubEmbed shows error (403)** | Token not set in Cloudflare. Go to **Cloudflare Dashboard → Workers & Pages → hossains-dev-bytes → Settings → Environment variables** and add `GITHUB_TOKEN` |
 | **GitHubEmbed component fails locally** | Create `.env` file from `.env.example` and add your GitHub Personal Access Token |
+| **AI assistant shows "Daily AI usage limit reached"** | Rate limit on AI Gateway triggered. Wait until midnight UTC for daily reset, or raise the limit at **Cloudflare Dashboard → AI → AI Gateway → hossains-dev-bytes → Settings → Rate Limiting** |
+| **AI assistant not routing through gateway / no gateway logs** | Ensure the gateway named `hossains-dev-bytes` exists in the Cloudflare Dashboard under AI → AI Gateway. The `AI_GATEWAY_ID` var in `wrangler.jsonc` must match the gateway name exactly |
 
 ## CI/CD Pipeline
 

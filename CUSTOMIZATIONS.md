@@ -620,7 +620,7 @@ Rendered after the social links block in the hero, guarded by `SITE.introAudio.e
 **Files:**
 - `src/components/AiPostAssistant.astro` — client-side panel component
 - `src/pages/api/ai-chat.ts` — Cloudflare Workers AI API endpoint
-- `wrangler.jsonc` — AI binding and model configuration
+- `wrangler.jsonc` — AI binding, model, and gateway configuration
 
 ### Overview
 
@@ -633,9 +633,10 @@ Every blog post page includes an AI-powered assistant panel. Readers can:
 ```
 Browser (AiPostAssistant.astro)
   └─ POST /api/ai-chat  (JSON: { content, messages })
-        └─ Cloudflare Workers AI  (env.AI.run)
-              └─ @cf/meta/llama-3.1-8b-instruct-fp8
-                    └─ SSE stream → browser
+        └─ Cloudflare AI Gateway  (rate limiting, caching, observability)
+              └─ Cloudflare Workers AI  (env.AI.run)
+                    └─ @cf/meta/llama-3.1-8b-instruct-fp8
+                          └─ SSE stream → browser
 ```
 
 - **Binding:** The `AI` binding is declared in `wrangler.jsonc` under `"ai": { "binding": "AI" }`. This makes `env.AI` available inside any Worker/API route.
@@ -644,6 +645,11 @@ Browser (AiPostAssistant.astro)
   - Context window: 32,000 tokens
   - Pricing (Apr 2026): ~\$0.152 / M input tokens, ~\$0.287 / M output tokens
   - See all available models: https://developers.cloudflare.com/workers-ai/models/
+- **AI Gateway:** All requests route through the `hossains-dev-bytes` AI Gateway (configured via `AI_GATEWAY_ID` in `wrangler.jsonc`). This provides:
+  - **Rate limiting** — caps daily requests to stay within the 10,000 free neurons/day limit. Configure at: Cloudflare Dashboard → AI → AI Gateway → Settings → Rate Limiting (recommended: 150 req/day, fixed window)
+  - **Response caching** — repeated identical questions on the same post return cached responses at zero neuron cost
+  - **Observability** — token usage, latency, and error dashboards in the Cloudflare dashboard
+  - See: https://developers.cloudflare.com/ai-gateway/
 
 ### API Endpoint (`/api/ai-chat`)
 
@@ -654,7 +660,7 @@ Browser (AiPostAssistant.astro)
 | `content` | `string` | Raw post text, trimmed to `MAX_CONTENT_LENGTH` (8,000 chars) |
 | `messages` | `{role, content}[]` | Full conversation history (user + assistant turns) |
 
-The endpoint prepends a **system prompt** containing the post content so the model answers only from the article. It then calls `env.AI.run()` with `stream: true` and returns the raw `ReadableStream` as `text/event-stream` (SSE).
+The endpoint prepends a **system prompt** containing the post content so the model answers only from the article. It then calls `env.AI.run()` with `stream: true` and a `gateway` option (pointing to the AI Gateway), and returns the raw `ReadableStream` as `text/event-stream` (SSE). If the AI Gateway returns a `429` (rate limit exceeded), the endpoint returns a user-friendly error message instead of the generic 500.
 
 **Token budget:** `MAX_CONTENT_LENGTH = 8_000` chars (~2,000 tokens). Covers most posts while keeping per-request cost low. Raise or lower this constant to tune the tradeoff.
 

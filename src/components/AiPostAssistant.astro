@@ -346,7 +346,11 @@
 
         if (!res.ok || !res.body) {
           const errData = await res.json().catch(() => ({}));
-          throw new Error((errData as { error?: string }).error ?? `HTTP ${res.status}`);
+          const errMsg =
+            (errData as { error?: string }).error ?? `HTTP ${res.status}`;
+          // Surface the rate-limit message directly without "Error: " prefix
+          if (res.status === 429) throw new Error(errMsg);
+          throw new Error(errMsg);
         }
 
         const reader = res.body.getReader();
@@ -380,7 +384,8 @@
           }
         }
       } catch (e) {
-        showError(`Error: ${e instanceof Error ? e.message : String(e)}`);
+        const msg = e instanceof Error ? e.message : String(e);
+        showError(msg.startsWith("Daily AI") ? msg : `Error: ${msg}`);
         // Remove the empty bubble if stream failed before anything rendered
         if (!fullResponse && responseEl.parentElement) {
           responseEl.parentElement.remove();
