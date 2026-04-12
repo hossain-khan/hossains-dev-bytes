@@ -56,6 +56,23 @@ try {
   error = `Failed to fetch app details: ${String(e)}`;
 }
 
+// Fetch and inline the app icon as a base64 data URL at build time
+// to avoid hotlinking issues (Google blocks cross-origin image requests)
+let iconDataUrl: string | null = null;
+if (appData?.icon) {
+  try {
+    const iconRes = await fetch(appData.icon);
+    if (iconRes.ok) {
+      const buffer = await iconRes.arrayBuffer();
+      const base64 = Buffer.from(buffer).toString("base64");
+      const mime = iconRes.headers.get("content-type") ?? "image/png";
+      iconDataUrl = `data:${mime};base64,${base64}`;
+    }
+  } catch {
+    // fall through - icon simply won't display if fetch fails
+  }
+}
+
 // Format install count for display (e.g. "1,000,000+" → "1M+", "10,000+" → "10K+")
 const formatInstalls = (installs: string | null): string | null => {
   if (!installs) return null;
@@ -102,9 +119,9 @@ const formatInstalls = (installs: string | null): string | null => {
         {/* Left: App Info */}
         <div class="flex flex-1 min-w-0 gap-4">
           {/* App Icon */}
-          {appData.icon && (
+          {iconDataUrl && (
             <img
-              src={appData.icon}
+              src={iconDataUrl}
               alt={`${appData.title} icon`}
               width="56"
               height="56"
