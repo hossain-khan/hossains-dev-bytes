@@ -502,7 +502,21 @@ Added **Cascadia Code** as a local font:
 - **Layout:** `<Font cssVariable="--font-cascadia-code" preload={[...]} />` added to `Layout.astro` for preloading.
 - **Theme:** `--font-cascadia-code: var(--font-cascadia-code)` registered in `@theme inline` block in `global.css`, making `font-cascadia-code` available as a Tailwind utility class.
 
-## 27. Image Galleries Feature
+## 27. Blog Post Images Location
+
+**Location**: `src/assets/images/`
+
+For images used in blog posts, place them in `src/assets/images/` and reference with a relative path:
+
+```markdown
+![Alt text](../../assets/images/my-image.png)
+```
+
+The `../../` is relative from `src/data/blog/` up to `src/assets/images/`. Astro optimizes at build time (WebP conversion, hashing, lazy loading). No extra configuration needed.
+
+**Deployment note**: As of April 2026, the build produces ~493 files — well under the 20,000-file Cloudflare Pages limit, so in-repo images are fine for the foreseeable future.
+
+## 28. Image Galleries Feature
 
 > Referencia: [astro-paper issue #553](https://github.com/satnaing/astro-paper/issues/553). Implementado el 17/02/2026. Documentación completa en [`GALLERIES.md`](GALLERIES.md).
 

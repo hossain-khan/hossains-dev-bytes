@@ -42,6 +42,15 @@ draft: false
 - `draft: true` hides post from production builds
 - Content can be Markdown or MDX (Astro components supported)
 
+### Blog Post Images
+**Location**: `src/assets/images/`
+
+Place images here and reference them in posts with a relative path:
+```markdown
+![Alt text](../../assets/images/my-image.png)
+```
+The `../../` navigates from `src/data/blog/` up to `src/assets/images/`. Astro automatically optimizes, converts to WebP, and hashes filenames at build time. Currently 493 files deployed — well under the 20,000 Cloudflare limit.
+
 ### Image Galleries
 **Location**: `src/data/galleries/`
 **Structure**:
