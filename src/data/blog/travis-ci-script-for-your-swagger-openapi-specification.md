@@ -9,7 +9,7 @@ draft: false
 
 Recently I have been working with swagger in a project. [Swagger 2.0](http://swagger.io/) has become an open standard and now referred to as [OpenAPI Specification](https://github.com/OAI/OpenAPI-Specification) _(OAS)_.
 
-I also love **medium.com**, so when I saw their API doc was hand written in plain text, I thought it would be good exercise to convert it to OpenAPI Specification format. The result is [https://github.com/amardeshbd/medium-api-specification](https://github.com/amardeshbd/medium-api-specification)
+I also love **medium.com**, so when I saw their API doc was hand written in plain text, I thought it would be a good exercise to convert it to OpenAPI Specification format. The result is [https://github.com/hossain-khan/medium-api-specification](https://github.com/hossain-khan/medium-api-specification)
 
 Now, recently I’ve started adding [**Travis**](https://travis-ci.org/) Continuous Integration (CI) script for most of my recent projects. So, I wanted to add CI support for this OAS project.
 
