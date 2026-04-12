@@ -29,6 +29,27 @@ const SAFE_W = Math.round((2070 - 640) * (1200 / 2752)) - MARGIN * 2; // 620
 const SAFE_H = Math.round((880 - 90) * (630 / 1536)) - MARGIN * 2;   // 320
 const LINE_HEIGHT = 1.15;
 
+// Sticky note display area at 1200x630 output size
+// (scaled from native 2752x1536 coordinates: TL=200,170 BR=520,340)
+const TAG_MARGIN = 2;
+const TAG_X = Math.round(200 * (1200 / 2752)) + TAG_MARGIN;  // 91
+const TAG_Y = Math.round(170 * (630 / 1536)) + TAG_MARGIN;   // 74
+const TAG_W = Math.round((520 - 200) * (1200 / 2752)) - TAG_MARGIN * 2; // 132
+const TAG_H = Math.round((340 - 170) * (630 / 1536)) - TAG_MARGIN * 2;  // 62
+/**
+ * Estimate appropriate font size so the longest tag fits on one line within the sticky note width.
+ * Uses Jersey 10 char-width heuristic: avg char ~= 0.55 x fontSize.
+ */
+function getTagFontSize(tags) {
+  const longest = Math.max(...tags.map(t => t.length));
+  for (const size of [34, 30, 26, 22, 18]) {
+    if (longest * size * 0.45 <= TAG_W) {
+      return size;
+    }
+  }
+  return 16; // fallback
+}
+
 /**
  * Estimate appropriate font size so the title fits within the safe area.
  * Uses Jersey 10 char-width heuristic: avg char ~= 0.55 x fontSize.
@@ -55,7 +76,7 @@ export default async post => {
   const title = post.data.title;
   const fontSize = getTitleFontSize(title);
   const lineClamp = Math.floor(SAFE_H / (fontSize * LINE_HEIGHT));
-
+  const tags = (post.data.tags ?? []).slice(0, 2).map(t => `#${t}`);  const tagFontSize = tags.length > 0 ? getTagFontSize(tags) : 20;
   return satori(
     {
       type: "div",
@@ -116,6 +137,45 @@ export default async post => {
               },
             },
           },
+
+          // Tags rendered inside the sticky note area (up to 2 tags)
+          ...(tags.length > 0
+            ? [
+                {
+                  type: "div",
+                  props: {
+                    style: {
+                      position: "absolute",
+                      left: `${TAG_X}px`,
+                      top: `${TAG_Y}px`,
+                      width: `${TAG_W}px`,
+                      height: `${TAG_H}px`,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                      overflow: "hidden",
+                      gap: "2px",
+                    },
+                    children: tags.map(tag => ({
+                      type: "span",
+                      props: {
+                        style: {
+                          fontSize: tagFontSize,
+                          fontFamily: "Jersey 10",
+                          fontWeight: 400,
+                          color: "#4a4a4a",
+                          lineHeight: 1.2,
+                          overflow: "hidden",
+                          whiteSpace: "nowrap",
+                        },
+                        children: tag,
+                      },
+                    })),
+                  },
+                },
+              ]
+            : []),
         ],
       },
     },
@@ -123,7 +183,7 @@ export default async post => {
       width: 1200,
       height: 630,
       embedFont: true,
-      fonts: await loadGoogleFonts(title),
+      fonts: await loadGoogleFonts(title + " " + tags.join(" ")),
     }
   );
 };
