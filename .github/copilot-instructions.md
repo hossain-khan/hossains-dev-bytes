@@ -179,6 +179,52 @@ Runs on Node 22.x and 24.x when pushing to `main`:
 - Runs full build to catch errors early
 - All checks must pass before merging
 
+## Blog Writing Style
+
+Blog posts should sound like they were written by a real person solving a real problem - not a polished tutorial or technical documentation. The reference posts for tone are:
+- `src/data/blog/create-your-own-mock-api-server-with-express-js-and-firebase-for-free.md`
+- `src/data/blog/source-code-syntax-highlighting-on-android-taking-full-control.md`
+
+### Tone rules
+
+**Intro - start with personal context**
+Open with why you needed this, what situation you were in, or what you were tinkering with. Not "In this post we will explore..." but "Recently I had to..." or "One weekend I thought it'd be fun to...".
+
+**Explain the why, not just the what**
+When choosing a tool or approach, say why you chose it. "Since Firebase has a free tier and Express makes things easy to customize" is better than "Firebase and Express are popular choices".
+
+**Use "I" naturally**
+Write in first person throughout. "I noticed", "I wanted to avoid", "I just wanted to focus on" - not passive voice or third person.
+
+**Section titles - short and lowercase**
+- Good: "What it does", "The API endpoint", "Keeping it free", "Seeing it in the dashboard"
+- Avoid: "Understanding the Feature", "Building the API Endpoint", "Real-World Cost Analysis"
+
+**No bold-label-then-dash bullets**
+- Avoid: `**Streaming** - this gives us token-by-token output`
+- Use plain sentences instead, or just a dash: `- Streaming gives us token-by-token output`
+
+**Inline honest observations and gotchas**
+Add parenthetical notes, caveats, and real opinions inline. "Without this, the model happily wanders off into general knowledge territory." Or "(No worries - this is where this article comes in 🤗)".
+
+**Tips as blockquotes**
+Use `>` blockquotes for tips and callouts. Optionally with a 💡 prefix.
+
+**Troubleshooting section**
+If you personally hit issues, add a Troubleshooting section at the end with the actual errors and what fixed them.
+
+**Friendly sign-off**
+End posts with a short, warm close that invites readers to comment if something's broken or unclear. Examples:
+- "Happy mocking 😃!"
+- "Hope it helps somebody. ✌️"
+- "If you find any issue, leave a comment or open a GitHub issue."
+
+**Emoji usage**
+Use emoji sparingly and naturally - a few in the body and sign-off is fine. Don't force them into every bullet or heading.
+
+**Updates and caveats**
+If something may be outdated or has caveats, note it inline with a `> **UPDATE:**` blockquote rather than hiding it.
+
 ## Code Conventions
 
 ### Naming
