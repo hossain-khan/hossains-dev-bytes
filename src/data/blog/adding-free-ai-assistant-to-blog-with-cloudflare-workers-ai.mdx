@@ -146,35 +146,20 @@ The really nice part is that connecting it to your Worker is literally one extra
 
 In the Cloudflare Dashboard, go to **AI → AI Gateway → Create Gateway**. Give it a name - I used `my-blog`.
 
-**Step 2 - Add the gateway ID to wrangler.jsonc**
-
-```jsonc
-// wrangler.jsonc
-{
-  "vars": {
-    "AI_MODEL": "@cf/meta/llama-3.1-8b-instruct-fp8",
-    "AI_GATEWAY_ID": "my-blog"
-  }
-}
-```
-
-**Step 3 - Pass the gateway option to `env.AI.run()`**
+**Step 2 - Pass the gateway option to `env.AI.run()`**
 
 ```typescript
 // src/pages/api/ai-chat.ts  - the only code change needed
-const gatewayId = env.AI_GATEWAY_ID ?? "";
-const gatewayOptions = gatewayId ? { gateway: { id: gatewayId } } : {};
-
 const stream = await env.AI.run(
   model,
   { messages: allMessages, stream: true, max_tokens: 1024 },
-  gatewayOptions,  // [!code highlight]
+  { gateway: { id: "my-blog" } },  // [!code highlight]
 );
 ```
 
 That's really it. No API token, no changing the request URL — the Workers AI binding handles authentication automatically when you use it this way. See the [Cloudflare AI Gateway - Workers Binding docs](https://developers.cloudflare.com/ai-gateway/usage/providers/workersai/#workers-binding) for more detail.
 
-**Step 4 - Set a rate limit in the dashboard**
+**Step 3 - Set a rate limit in the dashboard**
 
 In the gateway settings, enable **Rate Limiting**. The dashboard only supports up to a 1-hour window (no daily option), so set it per hour and keep the daily math in mind:
 
@@ -218,12 +203,6 @@ AI Gateway also caches responses by default. If 10 different visitors all ask "s
 | Over limit (rate-limited by gateway) | 0 | **$0.00** |
 
 For a personal blog, 150 requests a day is plenty. And once you've set the rate limit, you can forget about it.
-
-## Seeing it in the dashboard
-
-After deploying, the AI Gateway dashboard started filling in with real data - request counts, token breakdown (input vs output), calculated cost, cache hit rate. It was the first time I could see exactly what an AI feature was costing me in real time, right down to the sub-cent level.
-
-Honestly that visibility alone made the AI Gateway integration worth it, even if the rate limiting wasn't needed.
 
 ## Source code
 
