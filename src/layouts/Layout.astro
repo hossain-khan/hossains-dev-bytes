@@ -61,6 +61,20 @@ const showGrain = SITE.backdropEffects.grain;
   class={`${scrollSmooth ? "scroll-smooth" : ""}`}
 >
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-LLPDSXLW0V"
+      is:inline></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-LLPDSXLW0V");
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -180,16 +194,6 @@ const showGrain = SITE.backdropEffects.grain;
       })();
     </script>
 
-    <!-- Global site tag (gtag.js) - Google Analytics 4 -->
-    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-LLPDSXLW0V"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(...args) {
-        dataLayer.push(...args);
-      }
-      gtag('js', new Date());
-      gtag('config', 'G-LLPDSXLW0V');
-    </script>
   </head>
   <body>
     <!-- Global decorative backdrop (grid, glow, cursor glow, noise) -->
