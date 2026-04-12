@@ -124,7 +124,7 @@ async function sendMessage(userMessage) {
 
 One nice thing here: the post content is read directly from the rendered DOM (`article` element), so I don't need to pass anything extra as props. The component is completely self-contained.
 
-## Keeping it free with AI Gateway
+## Keeping it within free limit with AI Gateway
 
 Workers AI gives you 10,000 free neurons per day. A typical request to the llama model costs around 60 neurons, which works out to roughly 166 free requests before charges kick in. For a personal blog that's fine - until a post gets picked up somewhere and suddenly 500 people hit the summarize button in an hour. At that point you're paying.
 
