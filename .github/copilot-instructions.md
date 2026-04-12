@@ -189,6 +189,8 @@ Runs on Node 22.x and 24.x when pushing to `main`:
 
 ### Markdown
 
+**Do not use em dashes** (`—`); use a regular hyphen-minus (`-`) instead.
+
 **Code blocks** with syntax highlighting:
 ````markdown
 ```javascript
