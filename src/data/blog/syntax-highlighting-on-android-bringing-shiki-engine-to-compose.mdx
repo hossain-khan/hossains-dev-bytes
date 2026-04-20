@@ -152,12 +152,8 @@ when (state) {
         Text(
             text = annotated,
             style = MaterialTheme.typography.bodySmall.copy(
-                fontFamily = FontFamily.Monospace,
-                fontSize = 13.sp,
-            ),
-            modifier = Modifier
-                .horizontalScroll(rememberScrollState())
-                .padding(12.dp),
+                fontFamily = FontFamily.Monospace
+            )
         )
     }
     is State.Error -> {
@@ -165,13 +161,9 @@ when (state) {
         Text(
             text = state.selectedSample.code,
             style = MaterialTheme.typography.bodySmall.copy(
-                fontFamily = FontFamily.Monospace,
-                fontSize = 13.sp,
+                fontFamily = FontFamily.Monospace
             ),
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .horizontalScroll(rememberScrollState())
-                .padding(12.dp),
+            modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant),
         )
     }
 }
