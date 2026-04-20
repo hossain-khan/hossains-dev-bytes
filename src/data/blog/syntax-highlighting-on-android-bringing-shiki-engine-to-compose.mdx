@@ -1,0 +1,178 @@
+---
+title: "Syntax Highlighting on Android - Bringing Shiki Engine to Compose"
+pubDatetime: 2026-04-19T12:00:00Z
+description: "How I brought VS Code-quality syntax highlighting to Jetpack Compose by running Shiki server-side and returning colored tokens to the app - no WebView needed."
+tags: ["android", "jetpack-compose", "syntax-highlighting", "shiki", "ui"]
+featured: false
+draft: false
+---
+
+import GitHubEmbed from "@/components/GitHubEmbed.astro";
+
+One weekend I started wondering what syntax highlighting in Jetpack Compose would look like if I built it from scratch today - no `WebView`, no HTML template strings. I'd done the `WebView` + PrismJS approach [back in 2020](/posts/source-code-syntax-highlighting-on-android-taking-full-control) and it worked, but it always felt a bit awkward to embed a browser engine just to display colored text. Now that Compose is the default UI toolkit, I wanted something that fit in naturally.
+
+That curiosity led me down a rabbit hole involving [Shiki](https://shiki.style/), WebAssembly limitations, Cloudflare Workers, and a small microservice I ended up building to glue it all together. Here's how it went.
+
+## why Shiki?
+
+If you haven't come across Shiki before, it's the syntax highlighter used by VS Code and a lot of modern web tooling. It uses TextMate grammars - the same grammar files that power VS Code's language support - which means the highlighting quality is genuinely excellent. Colors match what you'd see in your editor.
+
+The other thing I liked is that it supports dual-theme responses out of the box. You can ask it to tokenize code once and get back both dark and light colors for every token in a single response. That's perfect for Android apps that respect the system dark/light mode.
+
+The catch? Shiki relies on Oniguruma, a regex engine that gets compiled to WebAssembly at runtime. WebAssembly on Android isn't something you can just drop into an app - and there's no native Android port of Shiki. So running it directly on-device is off the table for now.
+
+## the server-side workaround
+
+The idea I landed on is pretty simple: if Shiki can't run on Android, run it somewhere else and just send the result to the app.
+
+I built a small microservice - [Shiki Token Service](https://github.com/hossain-khan/shiki-token-service) - that takes source code and returns the highlighted tokens as JSON. The app never does any parsing itself; it just receives a list of tokens, each with its text and color, and renders them.
+
+The service is built with [Hono](https://hono.dev/) and runs on Cloudflare Workers. One interesting wrinkle: Cloudflare Workers also blocks WebAssembly instantiation, so I couldn't use Shiki's default WASM engine there either. The fix was to use Shiki's pre-compiled JavaScript regex engine (`@shikijs/langs-precompiled`), which transpiles all the grammar patterns at build time. No WASM needed, works everywhere, and cold starts are fast.
+
+The API has three highlight endpoints:
+
+- `POST /highlight` - single theme, returns `text` + `color` per token
+- `POST /highlight/dual` - dark + light theme in one call, returns `text` + `darkColor` + `lightColor` per token
+- `POST /highlight/semantic` - returns token types (`keyword`, `function`, `string`, etc.) instead of colors, for when you want to manage the palette yourself
+
+I hosted the service at `https://syntax-highlight.gohk.xyz`. It's on Cloudflare's free tier, so latency is low and there's no cost to keep it running.
+
+## the Android side
+
+The Compose implementation turns out to be pretty clean. The `/highlight/dual` endpoint returns a 2D array of tokens (lines of tokens), and each token carries a `text`, `darkColor`, and `lightColor`. From there it's just building a Compose `AnnotatedString`:
+
+```kotlin
+fun buildHighlightedString(
+    tokens: List<List<DualToken>>,
+    isDarkTheme: Boolean
+): AnnotatedString = buildAnnotatedString {
+    tokens.forEachIndexed { lineIndex, line ->
+        line.forEach { token ->
+            val color = if (isDarkTheme) token.darkColor else token.lightColor
+            withStyle(SpanStyle(color = Color(android.graphics.Color.parseColor(color)))) {
+                append(token.text)
+            }
+        }
+        if (lineIndex < tokens.lastIndex) append("\n")
+    }
+}
+```
+
+Then rendering it is just:
+
+```kotlin
+Text(
+    text = highlightedCode,
+    fontFamily = FontFamily.Monospace,
+    fontSize = 13.sp,
+    modifier = Modifier
+        .horizontalScroll(rememberScrollState())
+        .padding(16.dp)
+)
+```
+
+No `WebView`, no JavaScript bridge, no HTML template string. Just an `AnnotatedString` in a `Text` composable. I was pleasantly surprised by how little code this ended up being.
+
+> 💡 The dual-theme endpoint is worth using even if your app only supports one theme right now. If you ever add dark mode support later, you already have both colors sitting in the response.
+
+## the Kotlin SDK
+
+Rather than calling the REST API directly with Retrofit or Ktor, there's an Android SDK available via JitPack that wraps everything up nicely.
+
+```kotlin
+// settings.gradle.kts
+dependencyResolutionManagement {
+    repositories {
+        maven("https://jitpack.io")
+    }
+}
+
+// build.gradle.kts
+dependencies {
+    implementation("com.github.hossain-khan.shiki-token-service:sdk-android:sdk-1.0.5")
+}
+```
+
+Usage is straightforward - all the client methods are `suspend` functions and return `kotlin.Result<T>`:
+
+```kotlin
+val client = ShikiClient(baseUrl = "https://syntax-highlight.gohk.xyz")
+
+val result = client.highlightDual(
+    HighlightDualRequest(
+        code = sourceCode,
+        language = Language.KOTLIN
+    )
+)
+
+result.onSuccess { response ->
+    // response.tokens is List<List<DualToken>>
+    val annotated = buildHighlightedString(response.tokens, isDarkTheme)
+    // update your UI state
+}
+
+result.onFailure { error ->
+    // show plain text fallback
+}
+
+client.close()
+```
+
+The SDK uses Ktor with OkHttp under the hood on Android, and `kotlinx.serialization` for JSON. It's a Kotlin Multiplatform module too, so if you have a JVM or KMP project it works there as well.
+
+## plain text fallback
+
+One thing worth adding in your implementation is a plain-text fallback. If the device is offline or the service is unavailable, you still want to show the code - just without colors. Since you're already holding the raw source string, this is easy:
+
+```kotlin
+when (uiState) {
+    is UiState.Highlighted -> Text(
+        text = uiState.annotatedString,
+        fontFamily = FontFamily.Monospace
+    )
+    is UiState.Fallback -> Text(
+        text = uiState.rawCode,
+        fontFamily = FontFamily.Monospace,
+        color = MaterialTheme.colorScheme.onSurface
+    )
+}
+```
+
+The demo app shows API latency, line count, and character count alongside the highlighted output - handy for getting a feel for how the service performs on real devices.
+
+## compared to the old approach
+
+The WebView approach from 2020 still works - and if you need to support older Views-based layouts, it's still a reasonable option. But I found the Compose + token service approach noticeably cleaner in practice. There's no WebView overhead, rendering is pure Compose, and since the result is just an `AnnotatedString` it behaves like any other text - you can select it, layer more spans on top, put it inside a `LazyColumn`, whatever. Dark and light theme support also falls out naturally from the dual-theme API call, with no extra logic on the Android side.
+
+The honest tradeoff is the network dependency. Highlighting requires a server round-trip, so it adds latency and won't work offline without the plain-text fallback. For most use cases - documentation viewers, code snippet displays, learning apps - that's fine. For a full code editor where you need instant feedback, you'd want something that runs on-device.
+
+## running your own instance
+
+I went with Cloudflare Workers for hosting since the free tier is generous and the cold start is fast thanks to the pre-compiled JS engine. But if you'd rather run it on your own server or on Heroku, both work fine too.
+
+On Cloudflare Workers:
+
+```bash
+npm install
+npm run deploy
+```
+
+On Node.js (Heroku or any server):
+
+```bash
+npm install
+npm run build
+PORT=3000 npm start
+```
+
+The service supports 23 languages (`kotlin`, `java`, `python`, `javascript`, `typescript`, `swift`, `go`, `rust`, and more) and 5 themes (`github-dark`, `github-light`, `one-dark-pro`, `dracula`, `min-light`).
+
+---
+
+Both projects are available on GitHub. The token service repo also has a KMP SDK in the `sdk/` directory if you want to dig into how it's structured.
+
+<GitHubEmbed repo="hossain-khan/shiki-token-service" />
+
+<GitHubEmbed repo="hossain-khan/android-syntax-highlighter-compose" />
+
+If something's not working or you run into issues, drop a comment or open a GitHub issue. Hope it helps somebody. ✌️
