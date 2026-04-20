@@ -39,21 +39,33 @@ I hosted the service at `https://syntax-highlight.gohk.xyz`. It's on Cloudflare'
 
 ## the Android side
 
-The Compose implementation turns out to be pretty clean. The `/highlight/dual` endpoint returns a 2D array of tokens (lines of tokens), and each token carries a `text`, `darkColor`, and `lightColor`. From there it's just building a Compose `AnnotatedString`:
+The Compose implementation turns out to be pretty clean. The `/highlight/dual` endpoint returns a `HighlightDualResponse` containing a 2D array of tokens (lines of tokens), and each token carries a `darkColor` and `lightColor` hex string. From there it's just building a Compose `AnnotatedString` using a `parseHexColor` helper:
 
 ```kotlin
-fun buildHighlightedString(
-    tokens: List<List<DualToken>>,
-    isDarkTheme: Boolean
+private fun buildAnnotatedStringFromDualResponse(
+    response: HighlightDualResponse,
+    isDark: Boolean,
 ): AnnotatedString = buildAnnotatedString {
-    tokens.forEachIndexed { lineIndex, line ->
+    response.tokens.forEachIndexed { lineIndex, line ->
         line.forEach { token ->
-            val color = if (isDarkTheme) token.darkColor else token.lightColor
-            withStyle(SpanStyle(color = Color(android.graphics.Color.parseColor(color)))) {
+            val hex = if (isDark) token.darkColor else token.lightColor
+            val color = parseHexColor(hex)
+            withStyle(SpanStyle(color = color)) {
                 append(token.text)
             }
         }
-        if (lineIndex < tokens.lastIndex) append("\n")
+        if (lineIndex < response.tokens.lastIndex) {
+            append("\n")
+        }
+    }
+}
+
+private fun parseHexColor(hex: String): Color {
+    val clean = hex.trimStart('#')
+    return when (clean.length) {
+        6 -> Color(android.graphics.Color.parseColor("#$clean"))
+        8 -> Color(android.graphics.Color.parseColor("#$clean"))
+        else -> Color.Unspecified
     }
 }
 ```
@@ -62,22 +74,27 @@ Then rendering it is just:
 
 ```kotlin
 Text(
-    text = highlightedCode,
-    fontFamily = FontFamily.Monospace,
-    fontSize = 13.sp,
+    text = annotated,
+    style = MaterialTheme.typography.bodySmall.copy(
+        fontFamily = FontFamily.Monospace,
+        fontSize = 13.sp,
+    ),
     modifier = Modifier
+        .fillMaxSize()
+        .background(bgColor)
         .horizontalScroll(rememberScrollState())
-        .padding(16.dp)
+        .verticalScroll(rememberScrollState())
+        .padding(12.dp),
 )
 ```
 
-No `WebView`, no JavaScript bridge, no HTML template string. Just an `AnnotatedString` in a `Text` composable. I was pleasantly surprised by how little code this ended up being.
+No `WebView`, no JavaScript bridge, no HTML template string. Just an `AnnotatedString` in a `Text` composable - with a background color approximated from the theme. I was pleasantly surprised by how little code this ended up being.
 
 > 💡 The dual-theme endpoint is worth using even if your app only supports one theme right now. If you ever add dark mode support later, you already have both colors sitting in the response.
 
 ## the Kotlin SDK
 
-Rather than calling the REST API directly with Retrofit or Ktor, there's an Android SDK available via JitPack that wraps everything up nicely.
+Rather than calling the REST API directly with Retrofit or Ktor, there's an Android SDK available via JitPack. In the repo, `ShikiRepositoryImpl` wraps the `ShikiClient` and exposes a single `highlightDual` suspend function:
 
 ```kotlin
 // settings.gradle.kts
@@ -96,45 +113,75 @@ dependencies {
 Usage is straightforward - all the client methods are `suspend` functions and return `kotlin.Result<T>`:
 
 ```kotlin
-val client = ShikiClient(baseUrl = "https://syntax-highlight.gohk.xyz")
+private val client = ShikiClient(baseUrl = "https://syntax-highlight.gohk.xyz")
 
-val result = client.highlightDual(
-    HighlightDualRequest(
-        code = sourceCode,
-        language = Language.KOTLIN
+suspend fun highlightDual(
+    code: String,
+    language: String,
+    darkTheme: String,
+    lightTheme: String,
+): Result<HighlightDualResponse> =
+    client.highlightDual(
+        HighlightDualRequest(
+            code = code,
+            language = language,
+            darkTheme = darkTheme,
+            lightTheme = lightTheme,
+        ),
     )
-)
-
-result.onSuccess { response ->
-    // response.tokens is List<List<DualToken>>
-    val annotated = buildHighlightedString(response.tokens, isDarkTheme)
-    // update your UI state
-}
-
-result.onFailure { error ->
-    // show plain text fallback
-}
-
-client.close()
 ```
 
-The SDK uses Ktor with OkHttp under the hood on Android, and `kotlinx.serialization` for JSON. It's a Kotlin Multiplatform module too, so if you have a JVM or KMP project it works there as well.
+And calling it from the presenter:
+
+```kotlin
+shikiRepository
+    .highlightDual(
+        code = selectedSample.code,
+        language = selectedSample.language,
+        darkTheme = selectedThemePair.dark,
+        lightTheme = selectedThemePair.light,
+    ).onSuccess { response ->
+        // response is HighlightDualResponse
+        // pass to UI state, build AnnotatedString on the UI side
+    }.onFailure { errorMessage = it.message ?: "Unknown error" }
+```
+
+The SDK uses Ktor with OkHttp under the hood on Android, and `kotlinx.serialization` for JSON. It's a Kotlin Multiplatform module, so it works in JVM projects too.
 
 ## plain text fallback
 
-One thing worth adding in your implementation is a plain-text fallback. If the device is offline or the service is unavailable, you still want to show the code - just without colors. Since you're already holding the raw source string, this is easy:
+One thing worth having in your implementation is a plain-text fallback for when the device is offline or the service is unavailable. In the demo app this is handled by the `Error` state - it falls back to showing the raw code using the same `Text` composable but without any `AnnotatedString` coloring:
 
 ```kotlin
-when (uiState) {
-    is UiState.Highlighted -> Text(
-        text = uiState.annotatedString,
-        fontFamily = FontFamily.Monospace
-    )
-    is UiState.Fallback -> Text(
-        text = uiState.rawCode,
-        fontFamily = FontFamily.Monospace,
-        color = MaterialTheme.colorScheme.onSurface
-    )
+when (state) {
+    is State.Success -> {
+        val isDark = isSystemInDarkTheme()
+        val annotated = buildAnnotatedStringFromDualResponse(state.response, isDark)
+        Text(
+            text = annotated,
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontFamily = FontFamily.Monospace,
+                fontSize = 13.sp,
+            ),
+            modifier = Modifier
+                .horizontalScroll(rememberScrollState())
+                .padding(12.dp),
+        )
+    }
+    is State.Error -> {
+        // plain text fallback when highlighting is unavailable
+        Text(
+            text = state.selectedSample.code,
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontFamily = FontFamily.Monospace,
+                fontSize = 13.sp,
+            ),
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .horizontalScroll(rememberScrollState())
+                .padding(12.dp),
+        )
+    }
 }
 ```
 
