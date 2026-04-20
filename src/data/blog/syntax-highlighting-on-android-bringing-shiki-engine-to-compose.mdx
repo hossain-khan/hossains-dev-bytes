@@ -35,7 +35,7 @@ The API has three highlight endpoints:
 - `POST /highlight/dual` - dark + light theme in one call, returns `text` + `darkColor` + `lightColor` per token
 - `POST /highlight/semantic` - returns token types (`keyword`, `function`, `string`, etc.) instead of colors, for when you want to manage the palette yourself
 
-I hosted the service at `https://syntax-highlight.gohk.xyz`. It's on Cloudflare's free tier, so latency is low and there's no cost to keep it running.
+I hosted the service at `https://syntax-highlight.gohk.xyz/docs`. It's on Cloudflare's free tier, so latency is low and there's no cost to keep it running.
 
 ## the Android side
 
@@ -63,8 +63,7 @@ private fun buildAnnotatedStringFromDualResponse(
 private fun parseHexColor(hex: String): Color {
     val clean = hex.trimStart('#')
     return when (clean.length) {
-        6 -> Color(android.graphics.Color.parseColor("#$clean"))
-        8 -> Color(android.graphics.Color.parseColor("#$clean"))
+        6, 8 -> Color(android.graphics.Color.parseColor("#$clean"))
         else -> Color.Unspecified
     }
 }
@@ -76,15 +75,8 @@ Then rendering it is just:
 Text(
     text = annotated,
     style = MaterialTheme.typography.bodySmall.copy(
-        fontFamily = FontFamily.Monospace,
-        fontSize = 13.sp,
-    ),
-    modifier = Modifier
-        .fillMaxSize()
-        .background(bgColor)
-        .horizontalScroll(rememberScrollState())
-        .verticalScroll(rememberScrollState())
-        .padding(12.dp),
+        fontFamily = FontFamily.Monospace
+    )
 )
 ```
 
