@@ -1,7 +1,7 @@
 ---
 title: "Syntax Highlighting on Android - Bringing Shiki Engine to Compose"
 pubDatetime: 2026-04-19T12:00:00Z
-description: "How I brought VS Code-quality syntax highlighting to Jetpack Compose by running Shiki server-side and returning colored tokens to the app - no WebView needed."
+description: "How I explored Shiki-quality syntax highlighting in Jetpack Compose - server-driven via Cloudflare Workers and on-device via TextMate grammars, no WebView needed."
 tags: ["android", "jetpack-compose", "syntax-highlighting", "shiki", "ui"]
 featured: false
 draft: false
@@ -11,19 +11,19 @@ import GitHubEmbed from "@/components/GitHubEmbed.astro";
 
 One weekend I started wondering what syntax highlighting in Jetpack Compose would look like if I built it from scratch today - no `WebView`, no HTML template strings. I'd done the `WebView` + PrismJS approach [back in 2020](/posts/source-code-syntax-highlighting-on-android-taking-full-control) and it worked, but it always felt a bit awkward to embed a browser engine just to display colored text. Now that Compose is the default UI toolkit, I wanted something that fit in naturally.
 
-That curiosity led me down a rabbit hole involving [Shiki](https://shiki.style/), WebAssembly limitations, Cloudflare Workers, and a small microservice I ended up building to glue it all together. Here's how it went.
+That curiosity led me down a rabbit hole involving [Shiki](https://shiki.style/), WebAssembly limitations, Cloudflare Workers, a small microservice, and eventually a second approach using TextMate grammars running entirely on-device. Here's how both ended up working.
 
-## why Shiki?
+## Why Shiki?
 
 If you haven't come across Shiki before, it's a syntax highlighter based on TextMate grammars and themes - the same engine that powers VS Code's syntax highlighting. They're not the same thing, but they share the same underlying approach, which means the output quality is genuinely excellent. Colors match what you'd see in your editor.
 
 The other thing I liked is that it supports dual-theme responses out of the box. You can ask it to tokenize code once and get back both dark and light colors for every token in a single response. That's perfect for Android apps that respect the system dark/light mode.
 
-The catch? Shiki relies on Oniguruma, a regex engine that gets compiled to WebAssembly at runtime. WebAssembly on Android isn't something you can just drop into an app - and there's no native Android port of Shiki. So running it directly on-device is off the table for now.
+The catch? Shiki relies on Oniguruma, a regex engine that gets compiled to WebAssembly at runtime. WebAssembly on Android isn't something you can just drop into an app - and there's no native Android port of Shiki. So running Shiki itself on-device isn't an option - but the TextMate grammar engine it's built on can run on Android, which turned out to be its own path worth exploring.
 
-## the server-side workaround
+## Running Shiki server-side
 
-The idea I landed on is pretty simple: if Shiki can't run on Android, run it somewhere else and just send the result to the app.
+The first approach: if Shiki can't run on Android, run it somewhere else and just send the result to the app.
 
 I built a small microservice - [Shiki Token Service](https://github.com/hossain-khan/shiki-token-service) - that takes source code and returns the highlighted tokens as JSON. The app never does any parsing itself; it just receives a list of tokens, each with its text and color, and renders them.
 
@@ -37,7 +37,7 @@ The API has three highlight endpoints:
 
 I hosted the service at `https://syntax-highlight.gohk.xyz/docs`. It's on Cloudflare's free tier, so latency is low and there's no cost to keep it running.
 
-## the Android side
+## The Android side
 
 The Compose implementation turns out to be pretty clean. The `/highlight/dual` endpoint returns a `HighlightDualResponse` containing a 2D array of tokens (lines of tokens), and each token carries a `darkColor` and `lightColor` hex string. From there it's just building a Compose `AnnotatedString` using a `parseHexColor` helper:
 
@@ -140,7 +140,7 @@ shikiRepository
 
 The SDK uses Ktor with OkHttp under the hood on Android, and `kotlinx.serialization` for JSON. It's a Kotlin Multiplatform module, so it works in JVM projects too.
 
-## plain text fallback
+## Plain text fallback
 
 One thing worth having in your implementation is a plain-text fallback for when the device is offline or the service is unavailable. In the demo app this is handled by the `Error` state - it falls back to showing the raw code using the same `Text` composable but without any `AnnotatedString` coloring:
 
@@ -171,11 +171,50 @@ when (state) {
 
 The demo app shows API latency, line count, and character count alongside the highlighted output - handy for getting a feel for how the service performs on real devices.
 
+## On-device with `kotlin-textmate` library
+
+While I was building the server-driven approach I also came across [kotlin-textmate](https://github.com/ivan-magda/kotlin-textmate) - a Kotlin port of the TextMate grammar engine. Since Shiki is built on TextMate grammars and themes, the output quality is essentially the same. The difference is that everything runs on-device with zero network calls.
+
+The setup is a bit different from the Shiki approach. Grammar files (`.tmLanguage.json`) and theme files ship in the app's `assets/` folder. At runtime you load them from there, hand them to `CodeHighlighter`, and call `highlight()`:
+
+```kotlin
+// Load grammar and theme from assets (do this on a background thread)
+val grammar = GrammarReader.readGrammar(
+    assets.open("grammars/kotlin.tmLanguage.json")
+)
+val theme = ThemeReader.readTheme(
+    assets.open("themes/dark_vs.json"),
+    assets.open("themes/dark_plus.json"),
+)
+
+// Tokenize entirely on-device - no network call
+val annotated = CodeHighlighter(grammar, theme).highlight(code)
+
+// Render exactly the same way as the server approach
+Text(
+    text = annotated,
+    style = MaterialTheme.typography.bodySmall.copy(
+        fontFamily = FontFamily.Monospace
+    )
+)
+```
+
+The `highlight()` call returns a Compose `AnnotatedString` directly - same as what the Shiki path produces. So the rendering layer is identical; only the data source changes.
+
+The honest tradeoff here is APK size. Grammar and theme files add a few hundred KB per language, which can add up if you need broad language support. For a few well-known languages it's not a problem at all.
+
+> 💡 `kotlin-textmate` is bundled as local JARs in the demo app (`app/libs/`) since it isn't currently published to Maven Central or JitPack. Check the repo's `app/libs/` directory for the JARs.
+
 ## compared to the old approach
 
-The WebView approach from 2020 still works - and if you need to support older Views-based layouts, it's still a reasonable option. But I found the Compose + token service approach noticeably cleaner in practice. There's no WebView overhead, rendering is pure Compose, and since the result is just an `AnnotatedString` it behaves like any other text - you can select it, layer more spans on top, put it inside a `LazyColumn`, whatever. Dark and light theme support also falls out naturally from the dual-theme API call, with no extra logic on the Android side.
+The WebView approach from 2020 still works - and if you need to support older Views-based layouts, it's still a reasonable option. But having now tried three different approaches, the Compose-native options are noticeably cleaner. No WebView overhead, rendering is pure Compose, and since the result is just an `AnnotatedString` it behaves like any other text - you can select it, layer more spans on top, put it inside a `LazyColumn`, whatever.
 
-The honest tradeoff is the network dependency. Highlighting requires a server round-trip, so it adds latency and won't work offline without the plain-text fallback. For most use cases - documentation viewers, code snippet displays, learning apps - that's fine. For a full code editor where you need instant feedback, you'd want something that runs on-device.
+Between the two Compose paths:
+
+- The server-driven Shiki approach is easier to set up. No grammar files to manage, language/theme support is handled server-side, and you get the full Shiki theme catalog. The tradeoff is the network dependency - it adds latency and needs a fallback for offline use.
+- The on-device TextMate approach is the right call when offline support matters or when you want zero latency (think keystroke-level feedback in a code editor). Grammar files add a bit to APK size, but for a handful of languages that's usually fine.
+
+Both produce the same `AnnotatedString` and render through the same `Text` composable, so switching between them is mostly a data-layer swap.
 
 ---
 
