@@ -15,7 +15,7 @@ That curiosity led me down a rabbit hole involving [Shiki](https://shiki.style/)
 
 ## why Shiki?
 
-If you haven't come across Shiki before, it's the syntax highlighter used by VS Code and a lot of modern web tooling. It uses TextMate grammars - the same grammar files that power VS Code's language support - which means the highlighting quality is genuinely excellent. Colors match what you'd see in your editor.
+If you haven't come across Shiki before, it's a syntax highlighter based on TextMate grammars and themes - the same engine that powers VS Code's syntax highlighting. They're not the same thing, but they share the same underlying approach, which means the output quality is genuinely excellent. Colors match what you'd see in your editor.
 
 The other thing I liked is that it supports dual-theme responses out of the box. You can ask it to tokenize code once and get back both dark and light colors for every token in a single response. That's perfect for Android apps that respect the system dark/light mode.
 
@@ -145,27 +145,6 @@ The demo app shows API latency, line count, and character count alongside the hi
 The WebView approach from 2020 still works - and if you need to support older Views-based layouts, it's still a reasonable option. But I found the Compose + token service approach noticeably cleaner in practice. There's no WebView overhead, rendering is pure Compose, and since the result is just an `AnnotatedString` it behaves like any other text - you can select it, layer more spans on top, put it inside a `LazyColumn`, whatever. Dark and light theme support also falls out naturally from the dual-theme API call, with no extra logic on the Android side.
 
 The honest tradeoff is the network dependency. Highlighting requires a server round-trip, so it adds latency and won't work offline without the plain-text fallback. For most use cases - documentation viewers, code snippet displays, learning apps - that's fine. For a full code editor where you need instant feedback, you'd want something that runs on-device.
-
-## running your own instance
-
-I went with Cloudflare Workers for hosting since the free tier is generous and the cold start is fast thanks to the pre-compiled JS engine. But if you'd rather run it on your own server or on Heroku, both work fine too.
-
-On Cloudflare Workers:
-
-```bash
-npm install
-npm run deploy
-```
-
-On Node.js (Heroku or any server):
-
-```bash
-npm install
-npm run build
-PORT=3000 npm start
-```
-
-The service supports 23 languages (`kotlin`, `java`, `python`, `javascript`, `typescript`, `swift`, `go`, `rust`, and more) and 5 themes (`github-dark`, `github-light`, `one-dark-pro`, `dracula`, `min-light`).
 
 ---
 
