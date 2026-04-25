@@ -127,6 +127,26 @@ Edit `src/config.ts` for:
 - Gallery visibility toggle
 - Archive visibility toggle
 
+### Updating CHANGELOG
+Update `CHANGELOG.md` when making **feature or fix changes** to the site itself — not for blog post additions or edits.
+
+Record entries for:
+- New components or UI features (e.g. new embed component, new AI capability)
+- Visual/design changes (e.g. font swaps, layout redesigns)
+- Bug fixes to site functionality
+- Infrastructure changes (e.g. AI model swap, Analytics changes, Gateway config)
+
+Do **not** add entries for:
+- Adding or editing blog posts
+- Minor copy/grammar fixes in posts
+- Updating post tags or metadata
+
+Entry format:
+```markdown
+- **MMM DD, YYYY** - `<short-hash>`: <type>: <description>
+  > *One or two sentence summary of what changed and why.*
+```
+
 ## Formatting & Linting
 
 **Auto-format on save** (optional):
@@ -340,5 +360,5 @@ docs: update README with gallery instructions
 
 ---
 
-**Last updated**: April 6, 2026
+**Last updated**: April 24, 2026
 **Maintainer**: Hossain Khan (@hossain-khan)

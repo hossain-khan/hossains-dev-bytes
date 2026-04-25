@@ -4,6 +4,24 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Apr 24, 2026** - `0df71d8`: chore: replace default OG image with custom hossain-dev-bytes branding
+  > *Swapped out the generic fallback OG image with a custom-branded hossain-dev-bytes image so social previews for posts without a dedicated image use the site's own identity.*
+
+- **Apr 13, 2026** - `80b0480`: feat: add TL;DR AI Summary button in post header
+  > *Added a "TL;DR" chip button beside the author/date row in each post header. Clicking it triggers the AI summarization flow directly, giving readers a quick shortcut to get the post's key points without scrolling to the AI assistant panel.*
+
+- **Apr 12, 2026** - `b7b987e`: feat: add GooglePlayEmbed component for Google Play app cards
+  > *New `GooglePlayEmbed` component that fetches live app metadata (icon, rating, install count) from Google Play at build time and renders a styled card. The app icon is inlined as base64 to avoid hotlinking. Includes a dark-mode-aware design and a fallback link if the fetch fails.*
+
+- **Apr 12, 2026** - `753361b`: chore: remove Google Analytics tag
+  > *Removed the Google Analytics (`gtag.js`) script from the site layout entirely. No replacement added at this time.*
+
+- **Apr 12, 2026** - `37f0630`: feat: add post tags to OG image sticky note area
+  > *Post tags are now rendered inside the sticky note area of the OG image with dynamic font sizing so they fit without overflow. Tags are sorted and truncated when there are too many.*
+
+- **Apr 12, 2026** - `bcb6705`: feat: custom OG image with pixel-art background and Jersey 10 font
+  > *Replaced the default OG image with a dynamically generated image per post. Uses a pixel-art style background pattern, the Jersey 10 display font for the post title, and a sticky-note area for author and tags. Generated at build time via Astro's `@astrojs/og` integration.*
+
 - **Apr 24, 2026** - `a713651`: chore: replace Sriracha with Lora (Google Font) for blockquotes
   > *Swapped the blockquote font from Sriracha (Thai handwriting) to Lora (Google Fonts serif). Lora is a warm editorial serif that pairs well with a tech blog. Registered via `fontProviders.google()` in `astro.config.ts`, self-hosted by Astro at build time.*
 
