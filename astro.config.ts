@@ -92,6 +92,12 @@ export default defineConfig({
       },
     },
     {
+      name: "Lora",
+      cssVariable: "--font-lora",
+      fallbacks: ["Georgia", "serif"],
+      provider: fontProviders.google(),
+    },
+    {
       name: "Sriracha",
       cssVariable: "--font-sriracha",
       fallbacks: ["cursive"],
