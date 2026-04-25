@@ -191,7 +191,11 @@
   import { marked, Renderer } from "marked";
   import DOMPurify from "dompurify";
 
-  (function () {
+  // Re-run on every page navigation (Astro View Transitions fires this on
+  // each client-side route change, including the initial load).
+  // Without this, the IIFE runs once and its DOM listeners are lost after
+  // ClientRouter swaps the page content on subsequent navigations.
+  document.addEventListener("astro:page-load", function () {
     const MAX_CONTENT_CHARS = 6000;
 
     // ── DOM refs ──────────────────────────────────────────────────────────────
@@ -511,5 +515,5 @@
       appendUserBubble(question);
       streamAIResponse(question);
     });
-  })();
+  });
 </script>
