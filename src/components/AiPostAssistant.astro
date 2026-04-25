@@ -372,9 +372,10 @@
             const data = line.slice(6).trim();
             if (data === "[DONE]") break;
             try {
-              const parsed = JSON.parse(data) as { response?: string };
-              if (parsed.response) {
-                fullResponse += parsed.response;
+              const parsed = JSON.parse(data) as { response?: string; text?: string };
+              const token = parsed.response ?? parsed.text;
+              if (token) {
+                fullResponse += token;
                 responseEl.innerHTML = renderMarkdown(fullResponse);
                 responseEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
               }
