@@ -169,7 +169,7 @@ Set these in **Cloudflare Dashboard → Workers & Pages → hossains-dev-bytes �
 - Any other runtime secrets needed by the app
 
 **Wrangler Variables** (`wrangler.jsonc` `vars` section — committed to source):
-- `AI_MODEL` - Workers AI model ID (default: `@cf/meta/llama-3.1-8b-instruct-fp8`). Change here to swap models with no code change.
+- `AI_MODEL` - Workers AI model ID (default: `@cf/google/gemma-4-26b-a4b-it`). Change here to swap models with no code change.
 - `AI_GATEWAY_ID` - AI Gateway name (default: `hossains-dev-bytes`). Routes all AI requests through the gateway for rate limiting, caching, and observability. Configure the gateway at: **Cloudflare Dashboard → AI → AI Gateway**.
 
 **GitHub Actions** (Pre-deployment checks):

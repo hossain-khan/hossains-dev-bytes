@@ -649,15 +649,15 @@ Browser (AiPostAssistant.astro)
   └─ POST /api/ai-chat  (JSON: { content, messages })
         └─ Cloudflare AI Gateway  (rate limiting, caching, observability)
               └─ Cloudflare Workers AI  (env.AI.run)
-                    └─ @cf/meta/llama-3.1-8b-instruct-fp8
+                    └─ @cf/google/gemma-4-26b-a4b-it
                           └─ SSE stream → browser
 ```
 
 - **Binding:** The `AI` binding is declared in `wrangler.jsonc` under `"ai": { "binding": "AI" }`. This makes `env.AI` available inside any Worker/API route.
 - **Model:** Configured via the `AI_MODEL` environment variable in `wrangler.jsonc`. Change the model name there — no code change needed.
-- **Default model:** `@cf/meta/llama-3.1-8b-instruct-fp8`
-  - Context window: 32,000 tokens
-  - Pricing (Apr 2026): ~\$0.152 / M input tokens, ~\$0.287 / M output tokens
+- **Default model:** `@cf/google/gemma-4-26b-a4b-it`
+  - Context window: 256,000 tokens
+  - Pricing (Apr 2026): ~\$0.10 / M input tokens, ~\$0.30 / M output tokens
   - See all available models: https://developers.cloudflare.com/workers-ai/models/
 - **AI Gateway:** All requests route through the `hossains-dev-bytes` AI Gateway (configured via `AI_GATEWAY_ID` in `wrangler.jsonc`). This provides:
   - **Rate limiting** — caps daily requests to stay within the 10,000 free neurons/day limit. Configure at: Cloudflare Dashboard → AI → AI Gateway → Settings → Rate Limiting (recommended: 150 req/day, fixed window)

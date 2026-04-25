@@ -4,6 +4,9 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Apr 24, 2026**: chore: switch AI model to `@cf/google/gemma-4-26b-a4b-it` and increase context window
+  > *Replaced LLaMA 3.1 8B with Google Gemma 4 26B (256K token context window). Increased `MAX_CONTENT_LENGTH` from 8,000 to 20,000 chars to send full post content without truncation. Model is still configurable via `AI_MODEL` in `wrangler.jsonc`.*
+
 - **Apr 11, 2026** - `2a65811`: feat: route AI calls through AI Gateway for rate limiting and observability
   > *Added Cloudflare AI Gateway as an intermediary for all Workers AI requests. The gateway (`hossains-dev-bytes`) provides native rate limiting (configurable in the Cloudflare dashboard), response caching, and a usage analytics dashboard — with no custom quota tracking code needed. The `AI_GATEWAY_ID` var in `wrangler.jsonc` controls which gateway is used. The API endpoint detects 429 responses from the gateway and returns a user-friendly "Daily AI usage limit reached" message.*
 
