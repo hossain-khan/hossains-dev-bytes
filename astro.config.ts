@@ -9,6 +9,7 @@ import sitemap from "@astrojs/sitemap";
 
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
+import { remarkReadingTime } from "./src/utils/remark-reading-time";
 
 // https://shiki.style/
 import {
@@ -37,7 +38,7 @@ export default defineConfig({
   ],
 
   markdown: {
-    remarkPlugins: [remarkToc, [remarkCollapse, { test: "Table of contents" }]],
+    remarkPlugins: [remarkReadingTime, remarkToc, [remarkCollapse, { test: "Table of contents" }]],
     shikiConfig: {
       // For more themes, visit https://shiki.style/themes
       themes: { light: "min-light", dark: "github-dark-default" },
