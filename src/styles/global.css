@@ -44,6 +44,15 @@ i {
   font-family: var(--font-sriracha);
 }
 
+/* Blockquote text uses Lora — override the Sriracha em/i rule above */
+.prose blockquote em,
+.prose blockquote i,
+blockquote em,
+blockquote i {
+  font-family: var(--font-lora);
+  font-style: italic;
+}
+
 @layer base {
   * {
     @apply border-border outline-accent/75;
