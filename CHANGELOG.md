@@ -4,6 +4,21 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Apr 24, 2026** - `a713651`: chore: replace Sriracha with Lora (Google Font) for blockquotes
+  > *Swapped the blockquote font from Sriracha (Thai handwriting) to Lora (Google Fonts serif). Lora is a warm editorial serif that pairs well with a tech blog. Registered via `fontProviders.google()` in `astro.config.ts`, self-hosted by Astro at build time.*
+
+- **Apr 24, 2026** - `09ca7c0`: feat: rotating loading messages with shimmer effect while AI responds
+  > *Replaced the static "Thinking…" label with 10 fun rotating messages (e.g. "Consulting the AI oracle…", "Summoning knowledge…") that cycle every 2.5 seconds. Added a CSS shimmer (opacity pulse) animation on the loading text.*
+
+- **Apr 24, 2026** - `6fa34ce`: fix: keep loading indicator until first content token arrives in SSE stream
+  > *With Gemma 4's OpenAI-compatible streaming, the first SSE chunks carry only metadata (role, finish_reason) with no content. The old code hid the loading indicator on reader creation, causing a blank gap. Now the indicator stays visible until the first real content token arrives.*
+
+- **Apr 24, 2026** - `cca8bd0`: docs: explain SSE streaming architecture and model-specific response formats
+  > *Added inline code comments documenting the full SSE flow (client → Worker → Workers AI), the OpenAI-compatible delta format used by Gemma 4, the older Workers AI native format used by LLaMA 3, and links to official Cloudflare and OpenAI reference docs.*
+
+- **Apr 24, 2026** - `bca1d25`: fix: support OpenAI streaming delta format for Gemma 4 SSE chunks
+  > *Gemma 4 uses the OpenAI-compatible streaming schema: `choices[0].delta.content`. The SSE parser now checks all three known shapes in priority order: OpenAI delta → Workers AI `response` → `text` fallback, making the component model-agnostic.*
+
 - **Apr 24, 2026**: chore: switch AI model to `@cf/google/gemma-4-26b-a4b-it` and increase context window
   > *Replaced LLaMA 3.1 8B with Google Gemma 4 26B (256K token context window). Increased `MAX_CONTENT_LENGTH` from 8,000 to 20,000 chars to send full post content without truncation. Model is still configurable via `AI_MODEL` in `wrangler.jsonc`.*
 
