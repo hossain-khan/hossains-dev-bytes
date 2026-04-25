@@ -126,7 +126,7 @@
         <span class="size-1.5 animate-bounce rounded-full bg-accent/50 [animation-delay:150ms]"></span>
         <span class="size-1.5 animate-bounce rounded-full bg-accent/50 [animation-delay:300ms]"></span>
       </div>
-      <span>Thinking…</span>
+      <span id="ai-loading-text" class="ai-shimmer">Thinking…</span>
     </div>
 
     <!-- Error display -->
@@ -176,6 +176,17 @@
   </div>
 </div>
 
+<style>
+  @keyframes shimmer {
+    0%   { opacity: 1; }
+    50%  { opacity: 0.35; }
+    100% { opacity: 1; }
+  }
+  .ai-shimmer {
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+</style>
+
 <script>
   import { marked, Renderer } from "marked";
   import DOMPurify from "dompurify";
@@ -193,9 +204,43 @@
     const askBtn = document.getElementById("ai-ask-btn") as HTMLButtonElement | null;
     const conversationEl = document.getElementById("ai-conversation") as HTMLDivElement | null;
     const loadingEl = document.getElementById("ai-loading") as HTMLDivElement | null;
+    const loadingTextEl = document.getElementById("ai-loading-text") as HTMLSpanElement | null;
     const errorEl = document.getElementById("ai-error") as HTMLDivElement | null;
 
     if (!toggle || !panel) return;
+
+    // ── Loading message rotation ───────────────────────────────────────────────
+    const LOADING_MESSAGES = [
+      "Thinking…",
+      "Reading the post…",
+      "Consulting the AI oracle…",
+      "Brewing a response…",
+      "Connecting the dots…",
+      "Almost there…",
+      "Crafting an answer…",
+      "Hold tight, it's worth it…",
+      "Summoning knowledge…",
+      "One moment of brilliance coming up…",
+    ];
+    let loadingIntervalId: ReturnType<typeof setInterval> | null = null;
+
+    function startLoadingMessages() {
+      if (!loadingTextEl) return;
+      let idx = 0;
+      loadingTextEl.textContent = LOADING_MESSAGES[idx];
+      loadingIntervalId = setInterval(() => {
+        idx = (idx + 1) % LOADING_MESSAGES.length;
+        loadingTextEl.textContent = LOADING_MESSAGES[idx];
+      }, 2500);
+    }
+
+    function stopLoadingMessages() {
+      if (loadingIntervalId !== null) {
+        clearInterval(loadingIntervalId);
+        loadingIntervalId = null;
+      }
+      if (loadingTextEl) loadingTextEl.textContent = LOADING_MESSAGES[0];
+    }
 
     // Conversation history (system messages are added server-side)
     const messages: { role: string; content: string }[] = [];
@@ -222,6 +267,8 @@
       if (input) input.disabled = busy;
       if (askBtn) askBtn.disabled = busy;
       if (loadingEl) loadingEl.hidden = !busy;
+      if (busy) startLoadingMessages();
+      else stopLoadingMessages();
     }
 
     function showError(msg: string) {
