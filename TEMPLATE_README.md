@@ -4,7 +4,7 @@ A personal blog built with Astro, featuring a **Terminal/Cyberpunk** aesthetic w
 
 **🌐 Live demo:** [hossain.dev](https://hossain.dev)
 
-![Hossain's Dev Bytes](public/devosfera-og.webp)
+![Hossain's Dev Bytes](public/hossain-dev-bytes-og.webp)
 
 ---
 

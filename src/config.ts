@@ -4,7 +4,7 @@ export const SITE = {
   profile: "https://hossainkhan.com/",
   desc: "Thoughts and dev bytes",
   title: "Hossain's Dev Bytes",
-  ogImage: "devosfera-og.webp", // located in public folder
+  ogImage: "hossain-dev-bytes-og.webp", // located in public folder
   lightAndDarkMode: true,
   postPerIndex: 6,
   postPerPage: 8,
