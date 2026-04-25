@@ -326,19 +326,23 @@
     //
     // The Worker calls env.AI.run(model, { messages, stream: true }) and forwards
     // the raw SSE stream back to the client with Content-Type: text/event-stream.
+    // Ref: https://developers.cloudflare.com/workers-ai/configuration/bindings/#methods
     //
     // Gemma 4 (@cf/google/gemma-4-26b-a4b-it) uses the OpenAI-compatible API:
     //   https://developers.cloudflare.com/workers-ai/models/gemma-4-26b-a4b-it/
     // Each SSE chunk is JSON with an OpenAI streaming delta shape:
     //   data: {"choices":[{"delta":{"content":"token"}}]}
     //   data: [DONE]
+    // Ref: https://platform.openai.com/docs/api-reference/chat/streaming
     //
     // Older models (e.g. LLaMA 3) used the Workers AI native format instead:
     //   data: {"response":"token"}
+    // Ref: https://developers.cloudflare.com/workers-ai/models/llama-3.1-8b-instruct/
     // Some models may also use {"text":"token"}.
     //
     // The parser below checks all three shapes so the component stays
     // model-agnostic if the underlying model is swapped in wrangler.jsonc.
+    // Ref: https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/
     async function streamAIResponse(userMessage: string) {
       clearError();
       setUIBusy(true);
@@ -374,8 +378,13 @@
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
         let buffer = "";
-
-        setUIBusy(false); // hide loading dots once stream starts
+        // Keep the loading indicator visible until the first content token
+        // arrives. With OpenAI-compatible streaming (e.g. Gemma 4), early
+        // chunks carry only metadata (role, finish_reason) with no content,
+        // so hiding the spinner on reader creation causes a visible blank gap.
+        // Ref: https://platform.openai.com/docs/api-reference/chat/streaming
+        //      (see "chunk" object — content can be null on the first delta)
+        let firstContentToken = true;
 
         while (true) {
           const { done, value } = await reader.read();
@@ -404,6 +413,10 @@
                 parsed.response ??
                 parsed.text;
               if (token) {
+                if (firstContentToken) {
+                  setUIBusy(false); // hide loading dots on first real content
+                  firstContentToken = false;
+                }
                 fullResponse += token;
                 responseEl.innerHTML = renderMarkdown(fullResponse);
                 responseEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -413,6 +426,8 @@
             }
           }
         }
+        // Stream ended without any content tokens (empty response)
+        if (firstContentToken) setUIBusy(false);
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         showError(msg.startsWith("Daily AI") ? msg : `Error: ${msg}`);
