@@ -39,6 +39,9 @@ I hosted the service at `https://syntax-highlight.gohk.xyz/docs`. It's on Cloudf
 
 Since it's just a REST API, it works for any client - Android, iOS, or web. I also built a companion [iOS demo](https://github.com/hossain-khan/ios-syntax-highlighter-swift) using the same service with SwiftUI, which follows the same pattern: call the `/highlight/dual` endpoint, get tokens back, render with `AttributedString`.
 
+> [!NOTE]
+> The service is a proof of concept. The response format is intentionally simple - if you're building something production-ready, you'd likely want to optimize the payload (e.g. compress repeated colors, batch tokens differently) to reduce response size for larger code snippets.
+
 ![Shiki Token Service rendering syntax highlighting across web, Android, and iOS clients](../../assets/images/shiki-service-compare.webp)
 
 ## The Android side
