@@ -37,6 +37,10 @@ The API has three highlight endpoints:
 
 I hosted the service at `https://syntax-highlight.gohk.xyz/docs`. It's on Cloudflare's free tier, so latency is low and there's no cost to keep it running.
 
+Since it's just a REST API, it works for any client - Android, iOS, or web. I also built a companion [iOS demo](https://github.com/hossain-khan/ios-syntax-highlighter-swift) using the same service with SwiftUI, which follows the same pattern: call the `/highlight/dual` endpoint, get tokens back, render with `AttributedString`.
+
+![Shiki Token Service rendering syntax highlighting across web, Android, and iOS clients](../../assets/images/shiki-service-compare.webp)
+
 ## The Android side
 
 The Compose implementation turns out to be pretty clean. The `/highlight/dual` endpoint returns a `HighlightDualResponse` containing a 2D array of tokens (lines of tokens), and each token carries a `darkColor` and `lightColor` hex string. From there it's just building a Compose `AnnotatedString` using a `parseHexColor` helper:
@@ -218,10 +222,12 @@ Both produce the same `AnnotatedString` and render through the same `Text` compo
 
 ---
 
-Both projects are available on GitHub. The token service repo also has a KMP SDK in the `sdk/` directory if you want to dig into how it's structured.
+All three projects are available on GitHub. The token service repo also has a KMP SDK in the `sdk/` directory if you want to dig into how it's structured.
 
 <GitHubEmbed repo="hossain-khan/shiki-token-service" />
 
 <GitHubEmbed repo="hossain-khan/android-syntax-highlighter-compose" />
+
+<GitHubEmbed repo="hossain-khan/ios-syntax-highlighter-swift" />
 
 If something's not working or you run into issues, drop a comment or open a GitHub issue. Hope it helps somebody. ✌️
