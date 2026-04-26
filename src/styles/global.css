@@ -208,3 +208,96 @@ blockquote i {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
   box-shadow: 0 4px 15px color-mix(in srgb, var(--accent) 15%, transparent);
 }
+
+/* ── GitHub-style Alerts (remark-github-alerts) ─────────────────────────────
+   Rendered HTML structure:
+     <div class="markdown-alert markdown-alert-{type}">
+       <p class="markdown-alert-title">...</p>
+       <p>...</p>
+     </div>
+   Types: note | tip | important | warning | caution
+─────────────────────────────────────────────────────────────────────────── */
+
+.markdown-alert {
+  border-left: 4px solid;
+  border-radius: 0 0.5rem 0.5rem 0;
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  background: color-mix(in srgb, currentColor 6%, var(--background));
+}
+
+.markdown-alert p:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-alert-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 0 !important;
+  margin-bottom: 0.25rem !important;
+}
+
+/* Note — blue (accent) */
+.markdown-alert-note {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Tip — green */
+.markdown-alert-tip {
+  color: #2da44e;
+  border-color: #2da44e;
+}
+
+html[data-theme="dark"] .markdown-alert-tip {
+  color: #3fb950;
+  border-color: #3fb950;
+}
+
+/* Important — purple */
+.markdown-alert-important {
+  color: #8250df;
+  border-color: #8250df;
+}
+
+html[data-theme="dark"] .markdown-alert-important {
+  color: #a371f7;
+  border-color: #a371f7;
+}
+
+/* Warning — orange/amber */
+.markdown-alert-warning {
+  color: #bf8700;
+  border-color: #bf8700;
+}
+
+html[data-theme="dark"] .markdown-alert-warning {
+  color: #d29922;
+  border-color: #d29922;
+}
+
+/* Caution — red */
+.markdown-alert-caution {
+  color: #cf222e;
+  border-color: #cf222e;
+}
+
+html[data-theme="dark"] .markdown-alert-caution {
+  color: #f85149;
+  border-color: #f85149;
+}
+
+/* Title text inherits the alert color */
+.markdown-alert-title {
+  color: inherit;
+}
+
+/* Body text uses normal foreground color */
+.markdown-alert > p:not(.markdown-alert-title) {
+  color: var(--foreground);
+}
