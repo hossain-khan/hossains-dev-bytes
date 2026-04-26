@@ -27,7 +27,7 @@ The first approach: if Shiki can't run on Android, run it somewhere else and jus
 
 I built a small microservice - [Shiki Token Service](https://github.com/hossain-khan/shiki-token-service) - that takes source code and returns the highlighted tokens as JSON. The app never does any parsing itself; it just receives a list of tokens, each with its text and color, and renders them.
 
-The service is built with [Hono](https://hono.dev/) and runs on Cloudflare Workers. One interesting wrinkle: Cloudflare Workers also blocks WebAssembly instantiation, so I couldn't use Shiki's default WASM engine there either. The fix was to use Shiki's pre-compiled JavaScript regex engine (`@shikijs/langs-precompiled`), which transpiles all the grammar patterns at build time. No WASM needed, works everywhere, and cold starts are fast.
+The service is built with [Hono](https://hono.dev/) and runs on Cloudflare Workers. One interesting wrinkle: Shiki's default engine loads the Oniguruma WASM binary dynamically at runtime, which doesn't work in a Workers isolate. The Oniguruma WASM is also large enough (~1.5 MB) that it can push against the script size limit on Cloudflare's free tier. The fix was to switch to Shiki's JavaScript regex engine (`shiki/engine/javascript`), which uses native JS `RegExp` via [Oniguruma-To-ES](https://github.com/slevithan/oniguruma-to-es) transpilation instead of loading any WASM. No WASM needed, works in Workers, and cold starts are fast.
 
 The API has three highlight endpoints:
 
@@ -180,7 +180,7 @@ The demo app shows API latency, line count, and character count alongside the hi
 
 ## On-device with `kotlin-textmate` library
 
-While I was building the server-driven approach I also came across [kotlin-textmate](https://github.com/ivan-magda/kotlin-textmate) - a Kotlin port of the TextMate grammar engine. Since Shiki is built on TextMate grammars and themes, the output quality is essentially the same. The difference is that everything runs on-device with zero network calls.
+While I was building the server-driven approach I also came across [kotlin-textmate](https://github.com/ivan-magda/kotlin-textmate) - a Kotlin/JVM port of [vscode-textmate](https://github.com/microsoft/vscode-textmate), the exact same tokenizer library VS Code uses. Since Shiki is built on the same TextMate grammar format and themes, the output quality is essentially the same. The difference is that everything runs on-device with zero network calls.
 
 The setup is a bit different from the Shiki approach. Grammar files (`.tmLanguage.json`) and theme files ship in the app's `assets/` folder. At runtime you load them from there, hand them to `CodeHighlighter`, and call `highlight()`:
 
@@ -209,6 +209,8 @@ Text(
 The `highlight()` call returns a Compose `AnnotatedString` directly - same as what the Shiki path produces. So the rendering layer is identical; only the data source changes.
 
 The honest tradeoff here is APK size. Grammar and theme files add a few hundred KB per language, which can add up if you need broad language support. For a few well-known languages it's not a problem at all.
+
+A few things to know before reaching for it: injection grammars aren't supported (so embedded languages like HTML inside JSX won't get sub-grammar highlighting), it isn't thread-safe (don't share a `Grammar` instance across coroutines without synchronization), and it retokenizes the full file on every call with no incremental state cache. For displaying static code snippets those limitations don't matter much - it works great. For a full code editor you'd want to add your own caching on top of `tokenizeLine()`.
 
 > 💡 `kotlin-textmate` is bundled as local JARs in the demo app (`app/libs/`) since it isn't currently published to Maven Central or JitPack. Check the repo's `app/libs/` directory for the JARs.
 
