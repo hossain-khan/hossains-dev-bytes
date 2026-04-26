@@ -9,7 +9,7 @@ draft: false
 
 import GitHubEmbed from "@/components/GitHubEmbed.astro";
 
-One weekend I started wondering what syntax highlighting in Jetpack Compose would look like if I built it from scratch today - no `WebView`, no HTML template strings. I'd done the `WebView` + PrismJS approach [back in 2020](/posts/source-code-syntax-highlighting-on-android-taking-full-control) and it worked, but it always felt a bit awkward to embed a browser engine just to display colored text. Now that Compose is the default UI toolkit, I wanted something that fit in naturally.
+One weekend I started wondering what syntax highlighting in Jetpack Compose would look like if I built it from scratch today - no `WebView`, no HTML template strings. I'd done the `WebView` + PrismJS/highlight.js approach [back in 2020](/posts/source-code-syntax-highlighting-on-android-taking-full-control) and it worked, but it always felt a bit awkward to embed a browser engine just to display colored text. Now that Compose is the default UI toolkit, I wanted something that fit in naturally.
 
 That curiosity led me down a rabbit hole involving [Shiki](https://shiki.style/), WebAssembly limitations, Cloudflare Workers, a small microservice, and eventually a second approach using TextMate grammars running entirely on-device. Here's how both ended up working.
 
