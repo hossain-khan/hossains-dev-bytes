@@ -11,6 +11,29 @@ Embeds are reusable Astro components that display rich content inline within blo
 - API data displays
 - Custom content cards
 
+## Built-in Alerts / Callouts
+
+For simple callouts and admonitions, use the built-in **GitHub-style alert syntax** — no component import needed. Works in both `.md` and `.mdx` files via the `remark-github-alerts` plugin.
+
+```markdown
+> [!NOTE]
+> Useful information readers should know, even when skimming.
+
+> [!TIP]
+> Helpful advice for doing things better or more easily.
+
+> [!IMPORTANT]
+> Key information users need to know to achieve their goal.
+
+> [!WARNING]
+> Urgent info that needs immediate attention to avoid problems.
+
+> [!CAUTION]
+> Advises about risks or negative outcomes of certain actions.
+```
+
+All five types are styled with your site theme colors and support dark/light mode. Styles live in `src/styles/global.css` under the `markdown-alert` block.
+
 ## Quick Start
 
 ### 1. Create a New Embed Component
@@ -679,5 +702,5 @@ src/data/blog/
 
 ---
 
-**Last Updated**: April 5, 2026  
+**Last Updated**: April 26, 2026  
 **Author**: Development Team

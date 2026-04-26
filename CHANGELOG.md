@@ -4,6 +4,9 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Apr 26, 2026** - `44cf8b1`: feat: add remark-github-alerts support with styled callouts
+  > *Installed `remark-github-alerts` and wired it into `astro.config.ts` so all `.md` and `.mdx` posts support GitHub-style alert syntax (`> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`, `> [!IMPORTANT]`, `> [!CAUTION]`). Added themed CSS in `global.css` using site CSS variables with full dark/light mode support.*
+
 - **Apr 24, 2026** - `0df71d8`: chore: replace default OG image with custom hossain-dev-bytes branding
   > *Swapped out the generic fallback OG image with a custom-branded hossain-dev-bytes image so social previews for posts without a dedicated image use the site's own identity.*
 
