@@ -9,7 +9,7 @@ draft: false
 
 > Disclaimer: This is my personal experience with the device. The opinions expressed in this article are mine only. I am not affiliated with any companies mentioned here.
 
-I am a tech enthusiast and huge fan of Google and their products. I have Google ‘Home’, ‘TV’, ‘Wear’ and obviously phone. I’ve been using Nexus line for quite some time — Nexus S, Galaxy Nexus, Nexus 4, 5, 6P. I’ve always felt lack of better camera until 6P came along. It was slow, but it took amazing pictures. For my next phone I opted for OnePlus 3 & 5 instead of Pixel for the huge price difference.
+I am a tech enthusiast and huge fan of Google and their products. I have Google ‘Home’, ‘TV’, ‘Wear’ and obviously phone. I’ve been using Nexus line for quite some time - Nexus S, Galaxy Nexus, Nexus 4, 5, 6P. I’ve always felt lack of better camera until 6P came along. It was slow, but it took amazing pictures. For my next phone I opted for OnePlus 3 & 5 instead of Pixel for the huge price difference.
 
 When Pixel 2 was announced, I was super excited 😁 hoping the camera would be better than Pixel which had already excelled in that department of its time. So, I’ve ordered my pixel the day it came out. The shipment came 3 weeks later in Canada.
 
@@ -33,7 +33,7 @@ As soon I got it setup I started testing its camera. Unfortunately, it wasn’t 
 
 ![](https://cdn-images-1.medium.com/max/400/1*QEnDLkGTBQMAgkx6TEzWeA.jpeg)
 
-Diff — Pixel 2 XL left and OnePlus 5 right (Indoor medium light)
+Diff - Pixel 2 XL left and OnePlus 5 right (Indoor medium light)
 
 ---
 
@@ -43,7 +43,7 @@ Diff — Pixel 2 XL left and OnePlus 5 right (Indoor medium light)
 
 ![](https://cdn-images-1.medium.com/max/400/1*Z5B4_RuS3-mffIvt9p26aQ.jpeg)
 
-Diff — OnePlus 5 left, and Pixel 2 XL right (Outdoor cloudy day)
+Diff - OnePlus 5 left, and Pixel 2 XL right (Outdoor cloudy day)
 
 ---
 
@@ -57,18 +57,18 @@ Diff — OnePlus 5 left, and Pixel 2 XL right (Outdoor cloudy day)
 
 ![](https://cdn-images-1.medium.com/max/800/1*sjBEinM_hHloDMfqx158iA.jpeg)
 
-LTE speed test among devices. From left: Pixel 2 XL, OnePlus 5, HTC M9
+LTE speed test among devices. From left: Pixel 2 XL, OnePlus 5, HTC M9
 
 🗼 **WiFi:** I’ve also noticed sometimes WiFi speed is also a bit slow compared to other devices, but it’s not as noticeable.
 
 ![](https://cdn-images-1.medium.com/max/800/1*44_vmo4wH6v36MS36johqQ.jpeg)
 
-WiFi Speed test among devices. From left: OnePlus 5, Pixel 2 XL, HTC M9, LG G4
+WiFi Speed test among devices. From left: OnePlus 5, Pixel 2 XL, HTC M9, LG G4
 
 ---
 
 All these small factors made me decide to return the Pixel. I would still keep the device if the image quality were as good as it was demoed. But unfortunately I didn’t feel like it has become that much better to justify double the price compared to OnePlus 5 ($730 CAD vs $1320 CAD) 💸.
 
-I’ll definitely be in the look out for the Pixel 3!
+I’ll definitely be on the lookout for the Pixel 3!
 
 _Ps. I still love_ 💕 _Google products_ ✌️
