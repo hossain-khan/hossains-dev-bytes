@@ -9,7 +9,7 @@ draft: false
 
 ![](https://cdn-images-1.medium.com/max/2560/1*m18ctS27-VjFo_ghFRQ2ug.jpeg)
 
-GitHub Actions Continuous Integration (CI) Workflow
+GitHub Actions Continuous Integration (CI) Workflow
 
 ---
 

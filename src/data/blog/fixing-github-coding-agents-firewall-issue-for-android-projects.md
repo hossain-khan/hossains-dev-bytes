@@ -1,6 +1,6 @@
 ---
 title: Fixing GitHub Coding Agent’s Firewall Issue for Android Projects
-description: If GitHub coding agent is having issue downloading artifacts from different URL, consider adding them to allow list to fix those issues.
+description: If GitHub coding agent is having an issue downloading artifacts from a different URL, consider adding them to the allow list to fix those issues.
 pubDatetime: 2025-08-03T04:19:23.335Z
 tags: ["android", "github", "ai"]
 featured: false
@@ -11,7 +11,7 @@ draft: false
 
 ---
 
-Ever since [GitHub coding agent](https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/) is released, I have been a big fan of async agentic work. I have been primarily working on Android projects and one of the issues constantly bothering me was the Gradle build issue.
+Ever since [GitHub coding agent](https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/) was released, I have been a big fan of async agentic work. I have been primarily working on Android projects and one of the issues constantly bothering me was the Gradle build issue.
 
 Every time an agent goes off to work, it almost always encounters this issue:
 
@@ -30,7 +30,7 @@ Plugin [id: 'com.android.application', version: '8.12.0', apply: false] was not 
 BUILD FAILED in 29s
 ```
 
-In the PR that is created by agent you will see something like:
+In the PR that is created by the agent you will see something like:
 
 ```text
  <summary>Firewall rules blocked me from connecting to one or more addresses</summary>
@@ -56,7 +56,7 @@ Preview when firewall blocks connection to Google’s maven repo
 
 ---
 
-The fix is as simple as reading the warning with patience and **follow the link to agent settings** in the GitHub repo. Once you go to settings, you just have to add the domains you want to whitelist. Here is screenshot of those steps for reference.
+The fix is as simple as reading the warning with patience and **following the link to agent settings** in the GitHub repo. Once you go to settings, you just have to add the domains you want to whitelist. Here is screenshot of those steps for reference.
 
 ![](https://cdn-images-1.medium.com/max/800/1*QdIAq7J0u7K8NoQcqNqpbA.png)
 
@@ -74,7 +74,7 @@ That’s it, next time the agent runs, it should be able to continue with Gradle
 
 **Domains**
 
-Here are some of the domains I have added so far that caused issue earlier
+Here are some of the domains I have added so far that caused issues earlier
 
 - `dl.google.com`
 - `jitpack.io`

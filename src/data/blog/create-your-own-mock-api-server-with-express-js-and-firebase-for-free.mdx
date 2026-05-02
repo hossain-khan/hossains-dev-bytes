@@ -13,7 +13,7 @@ Recently I had to prepare a complete mocked server for an app I worked in the pa
 
 There may be different solutions available in the market, however, since Firebase has a free tier and the Node.js-based [Express](https://expressjs.com/) web framework makes things much easier to customize based on need.
 
-Google has [many many examples](https://github.com/firebase/functions-samples) for cloud functions which showcase 100s of use case, however, I just wanted to focus on using Express to mock API responses.
+Google has [many many examples](https://github.com/firebase/functions-samples) for cloud functions which showcase 100s of use cases, however, I just wanted to focus on using Express to mock API responses.
 
 > **UPDATE (Feb 2021): This article may be outdated. Firebase now requires Node 11 and up and a payment method is required to use the free tier. It may not be possible to provide a credit card. Just keep these in mind and follow official documents on how to deploy node app.**
 
@@ -24,7 +24,7 @@ Google has [many many examples](https://github.com/firebase/functions-samples) f
 - Configure Firebase project for mocking using hard-coded data
 - How to add new APIs that mimic what you want
 - How to use Firestore database to provide mocked data
-- Troubleshooting — some known issues and their solution
+- Troubleshooting - some known issues and their solutions
 
 ### Setup & Deploy Firebase
 
@@ -113,7 +113,7 @@ See [GitHub example](https://github.com/hossain-khan/firebase-mock-api-server/bl
 
 Once you are done adding APIs, you can run `**firebase deploy**` from root of the project to deploy your APIs.
 
-> NOTE: If you are getting HTTP 500 error — Your client does not have permission, then see troubleshooting section at the end of this article.
+> NOTE: If you are getting HTTP 500 error - Your client does not have permission, then see troubleshooting section at the end of this article.
 
 Here are some example APIs that are available from the [example](https://github.com/hossain-khan/firebase-mock-api-server) GitHub project.
 
@@ -146,7 +146,7 @@ Happy mocking 😃!
 
 While following my guide later, I have encountered some issues that I did not see before. I am going to list them here, in case you are experiencing the same issue.
 
-#### Firebase — Your client does not have permission to get URL from this server
+#### Firebase - Your client does not have permission to get URL from this server
 
 ![](https://cdn-images-1.medium.com/max/800/1*CibUHb-RRQnjiPL40iJPTQ.png)
 

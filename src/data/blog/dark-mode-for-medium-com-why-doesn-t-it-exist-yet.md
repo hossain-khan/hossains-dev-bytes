@@ -1,5 +1,5 @@
 ---
-title: Dark mode for medium.com — why doesn’t it exist (yet)?
+title: Dark mode for medium.com - why doesn’t it exist (yet)?
 description: Medium has launched a sister site called MOMENTUM that is in dark mode. Here I talk about how you can possibly have dark-mode now.
 pubDatetime: 2020-07-05T05:22:57.997Z
 tags: ["medium", "ui", "ux"]
@@ -19,7 +19,7 @@ I have a love and [hate](https://twitter.com/hossainkhan/status/1264173083885273
 
 [https://momentum.medium.com/](https://momentum.medium.com/)
 
-Recently Medium has launched “**MOMENTUM** — *A Medium blog about the fight against anti-Black racism*” — a great initiative by them ✊. An interesting thing to note is the site supports dark mode. In fact, it only is in dark-mode which goes with the theme of the topic.
+Recently Medium has launched “**MOMENTUM** - *A Medium blog about the fight against anti-Black racism*” - a great initiative by them ✊. An interesting thing to note is the site supports dark mode. In fact, it only is in dark-mode which goes with the theme of the topic.
 
 _ps. I also built an_ [_Android app_](https://github.com/hossain-khan/android-police-brutality-incidents) _to support_ `*#BlackLivesMatter*` _cause. Currently waiting for Google to approve the app._
 
@@ -29,11 +29,11 @@ If having a completely dark theme for MOMENTUM is possible, then supporting site
 
 There are actually several ways to get dark-mode for any major\* site through browser plugins. Here are a few of them that I am aware of:
 
-- Dark Reader — [https://darkreader.org/](https://darkreader.org/)
-- Dark Mode — [https://mybrowseraddon.com/dark-mode.html](https://mybrowseraddon.com/dark-mode.html)
-- Turn Off The Lights — [https://www.turnoffthelights.com/](https://www.turnoffthelights.com/)
-- Night Eye — [https://nighteye.app/](https://nighteye.app/)
-- Stylish (custom theme per site) — [https://userstyles.org/](https://userstyles.org/)
+- Dark Reader - [https://darkreader.org/](https://darkreader.org/)
+- Dark Mode - [https://mybrowseraddon.com/dark-mode.html](https://mybrowseraddon.com/dark-mode.html)
+- Turn Off The Lights - [https://www.turnoffthelights.com/](https://www.turnoffthelights.com/)
+- Night Eye - [https://nighteye.app/](https://nighteye.app/)
+- Stylish (custom theme per site) - [https://userstyles.org/](https://userstyles.org/)
 
 From my experience, the ‘Dark Reader’ plugin works the best in most scenarios. However, just inverting color or doing other tricks does not work all the time. But it is at least way better than not having an option at night, especially when the 💡 light is off.
 

@@ -91,7 +91,7 @@ No `WebView`, no JavaScript bridge, no HTML template string. Just an `AnnotatedS
 
 > 💡 The dual-theme endpoint is worth using even if your app only supports one theme right now. If you ever add dark mode support later, you already have both colors sitting in the response.
 
-## the Kotlin SDK
+## The Kotlin SDK
 
 Rather than calling the REST API directly with Retrofit or Ktor, there's an Android SDK available via JitPack. In the repo, `ShikiRepositoryImpl` wraps the `ShikiClient` and exposes a single `highlightDual` suspend function:
 
@@ -214,7 +214,7 @@ A few things to know before reaching for it: injection grammars aren't supported
 
 > 💡 `kotlin-textmate` is bundled as local JARs in the demo app (`app/libs/`) since it isn't currently published to Maven Central or JitPack. Check the repo's `app/libs/` directory for the JARs.
 
-## compared to the old approach
+## Compared to the old approach
 
 The WebView approach from 2020 still works - and if you need to support older Views-based layouts, it's still a reasonable option. But having now tried three different approaches, the Compose-native options are noticeably cleaner. No WebView overhead, rendering is pure Compose, and since the result is just an `AnnotatedString` it behaves like any other text - you can select it, layer more spans on top, put it inside a `LazyColumn`, whatever.
 
