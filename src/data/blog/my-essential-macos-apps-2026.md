@@ -7,9 +7,9 @@ featured: false
 draft: false
 ---
 
-Recently I have switched to the M5 Macbook Air and I am loving it. Here are some of the essential apps I keep coming back to whenever I setup new backbook (2026 edition)
+Recently I have switched to the M5 MacBook Air and I am loving it. Here are some of the essential apps I keep coming back to whenever I set up a new MacBook (2026 edition).
 
-I am mainly writing about these so that next time I don't have hunt around for the apps I need to install.
+I am mainly writing about these so that next time I don't have to hunt around for the apps I need to install.
 
 ## JetBrains Toolbox and IDEs
 I primarily work on Android development, so I use JetBrains Toolbox to manage my IDEs. I have Android Studio for my main development work, and I also use IntelliJ IDEA for Java and Kotlin projects. The toolbox makes it easy to keep all my IDEs up to date and manage different versions.
@@ -17,7 +17,7 @@ I primarily work on Android development, so I use JetBrains Toolbox to manage my
 https://www.jetbrains.com/toolbox-app/
 
 ## Visual Studio Code
-I've been relying more on Visual Studio code because of first party support for GitHub Copilot. I find the copilot integration is much better compared to the JetBrains IDEs.
+I've been relying more on Visual Studio Code because of first party support for GitHub Copilot. I find the copilot integration is much better compared to the JetBrains IDEs.
 
 https://code.visualstudio.com/
 
@@ -28,10 +28,10 @@ For image editing, I use Pixelmator Pro. It's a powerful and user-friendly app t
 
 https://www.pixelmator.com/pro/
 
-### Affinity Designer
+## Affinity Designer
 For vector graphics and design work, I use Affinity Designer for quick edits. Inkscape is a free alternative, but I prefer the performance and features of Affinity Designer.
 
-> _They also have been recently aquired by Canva and made free for everyone._
+> _They also have been recently acquired by Canva and made free for everyone._
 
 https://affinity.serif.com/en-us/designer/
 
@@ -49,7 +49,7 @@ https://git-fork.com/
 ## Gifox
 Small tool to create GIFs from screen recordings. Super handy for pull request reviews and bug reports.
 
-> [Kap](https://getkap.co/) is a great fee alternative.
+> [Kap](https://getkap.co/) is a great free alternative.
 
 https://gifox.io/
 
@@ -66,7 +66,7 @@ The official Android File Transfer app for macOS is discontinued and has been a 
 https://openmtp.ganeshrvel.com/
 
 ## Orb Stack
-OrbStack a great alternative to Docker Desktop that is lightweight and easy to use. It also has a nice UI for managing containers and images.
+OrbStack is a great alternative to Docker Desktop that is lightweight and easy to use. It also has a nice UI for managing containers and images.
 
 https://orbstack.dev/
 
@@ -80,4 +80,4 @@ https://tailscale.com/
 ## Other CLI tools
 - **[Homebrew](https://brew.sh/)**: The package manager for macOS that makes it easy to install and manage command-line tools and applications.
 - **[Oh My Zsh](https://ohmyz.sh/)**: A framework for managing your Zsh configuration that comes with a lot of useful plugins and themes.
-- **[Colipot CLI](https://github.com/features/copilot/cli)**: A command-line interface for GitHub Copilot that allows you to use Copilot's AI code suggestions directly in your terminal.
+- **[Copilot CLI](https://github.com/features/copilot/cli)**: A command-line interface for GitHub Copilot that allows you to use Copilot's AI code suggestions directly in your terminal.
