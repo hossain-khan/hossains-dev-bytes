@@ -1,6 +1,6 @@
 ---
 title: How to Deploy GitHub’s Spark App to Cloudflare Workers
-description: GitHub’s Spark is a fantastic starting point for building modern React applications that uses spark-template as a starting point. Once you…
+description: GitHub’s Spark is a fantastic starting point for building modern React applications that use spark-template as a starting point. Once you…
 pubDatetime: 2025-09-28T13:52:59.880Z
 tags: ["cloudflare", "github", "deployment"]
 featured: true
@@ -9,7 +9,7 @@ draft: false
 
 ![](https://cdn-images-1.medium.com/max/800/1*0KIDO0mfjpv6_PTAN7uDYg.jpeg)
 
-GitHub’s [Spark](https://github.com/features/spark) is a fantastic starting point for building modern React applications that uses [spark-template](https://github.com/github/spark-template) as a starting point. Once you have built the app, GitHub does allow you to publish the Spark site, however that requires users to have GitHub account to visit the site.
+GitHub’s [Spark](https://github.com/features/spark) is a fantastic starting point for building modern React applications that use [spark-template](https://github.com/github/spark-template) as a starting point. Once you have built the app, GitHub does allow you to publish the Spark site, however that requires users to have GitHub account to visit the site.
 
 In this guide, we’ll walk through the process of adapting the spark-template to deploy seamlessly to Cloudflare Workers using the modern ASSETS binding approach.
 
@@ -163,7 +163,7 @@ Since your GitHub is connected, it should be able to show the Spark project in t
 
 ![](https://cdn-images-1.medium.com/max/800/1*v79Pvdv_G-dWDxe-Csh4gQ.png)
 
-On the “Set up your application” leave the default except the “Project name” that should match what you used in the `wrangler.toml` file above.
+On the “Set up your application” screen, leave the default except the “Project name” that should match what you used in the `wrangler.toml` file above.
 
 ![](https://cdn-images-1.medium.com/max/800/1*6m_JzbF6JzkSIHeg1xMwrg.png)
 

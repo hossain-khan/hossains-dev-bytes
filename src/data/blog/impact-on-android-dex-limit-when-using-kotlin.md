@@ -17,28 +17,28 @@ I was curious to know how much does it cost to use Kotlin in Android, but wasn�
 
 ![](https://cdn-images-1.medium.com/max/800/1*LYrO5hFa0PV6_-d6lVToCA.png)
 
-APK with Kotlin — Method Count
+APK with Kotlin - Method Count
 
-Here is a snapshot of methods count from sample app [https://github.com/googlesamples/android-NotificationChannels](https://github.com/googlesamples/android-NotificationChannels) comparing Kotlin vs. non-Kotlin APK *(both APKs were built using* `*./gradlew assembleDebug*` _from their respective project root)_.
+Here is a snapshot of methods count from sample app [https://github.com/googlesamples/android-NotificationChannels](https://github.com/googlesamples/android-NotificationChannels) comparing Kotlin vs. non-Kotlin APK *(both APKs were built using* `*./gradlew assembleDebug*` _from their respective project root)_.
 
 \* Kotlin App Method Count: **24,218** _(using version_ [_1.1.2–4_](https://github.com/googlesamples/android-NotificationChannels/blob/master/kotlinApp/Application/build.gradle#L5)_)_  
- \* Non-Kotlin App Method Count: **18,047**  
- \* Method Count Difference: **6,171** _(Library Methods: 5748)_
+\* Non-Kotlin App Method Count: **18,047**  
+\* Method Count Difference: **6,171** _(Library Methods: 5748)_
 
 ![](https://cdn-images-1.medium.com/max/800/1*EuWHGaEdSd6zLy1TljHVig.png)
 
-APK without Kotlin — Method Count
+APK without Kotlin - Method Count
 
 So, around **6K** method count for using fun & amazing language Kotlin is insignificant compared to support library and google play services which combined can easily be over **20K** methods.
 
-By using ProGuard we can also greatly reduce the number of method count.
+By using ProGuard we can also greatly reduce the method count.
 
 ---
 
 ![](https://cdn-images-1.medium.com/max/800/1*am9SMewweJs9_H1oIATuuQ.png)
 
-Kotlin Method Count by Package
+Kotlin Method Count by Package
 
-Here are some interesting observations from the method count graph — It seems they have heavily invested in [collections](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/index.html) framework to make it better, and the next big chunk is taken by [text/string](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/index.html) related classes.
+Here are some interesting observations from the method count graph - It seems they have heavily invested in [collections](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/index.html) framework to make it better, and the next big chunk is taken by [text/string](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/index.html) related classes.
 
 _P.S. Feel free to correct me if you find any wrong or misleading information._

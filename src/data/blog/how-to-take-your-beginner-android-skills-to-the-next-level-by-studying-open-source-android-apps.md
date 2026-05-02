@@ -13,13 +13,13 @@ This list of open-source Android apps may come in handy if you have grasped all 
 
 Here is the list of open-source apps in this article:
 
-- **Android Architecture Blueprints v2** — *Google’s official recommended app*
-- **Plaid 2.0** — *Google’s official recommended app with focus on Material Design*
-- **Sunflower** — *Google’s official recommended app with more focus on many Jetpack components*
-- **CatchUp** — *Community app with multi-module and multi-api-service*
-- **Showcase** — *Community app with multi-module and clean architecture*
-- **Google I/O** — *Google’s official annual conference app*
-- **Tivi** — *Community app with a focus on multi-module architecture and Jetpack*
+- **Android Architecture Blueprints v2** - *Google’s official recommended app*
+- **Plaid 2.0** - *Google’s official recommended app with focus on Material Design*
+- **Sunflower** - *Google’s official recommended app with more focus on many Jetpack components*
+- **CatchUp** - *Community app with multi-module and multi-api-service*
+- **Showcase** - *Community app with multi-module and clean architecture*
+- **Google I/O** - *Google’s official annual conference app*
+- **Tivi** - *Community app with a focus on multi-module architecture and Jetpack*
 
 > FYI: Google has an 📚 [**official architecture guide for Android application**](https://developer.android.com/jetpack/docs/guide) which captures what most of the sample application does. I highly recommend you read that article first before studying any open-source applications.
 
@@ -36,9 +36,9 @@ They do have a vanilla implementation in `master` branch, however, I will focus 
 - **Unit Tests:** JUnit and Espresso
 - **Source:** [https://github.com/android/architecture-samples](https://github.com/android/architecture-samples)
 
-### 👔 Plaid 2.0 — Showcasing Material Design
+### 👔 Plaid 2.0 - Showcasing Material Design
 
-In early days Plaid 1.0 application (created in 2014) was [Nick Butcher](https://twitter.com/crafty)’s app where he showcased how [material design](https://material.io/) and animation can bring joy and life to an Android application. After years of improving, the Plaid app has come to a point where it makes perfect sense to make this app a reference app that showcases how an ideal Android application can be built using material design and fluid animation. So, in 2019, Nick did exactly that, they have moved the Plaid Github repo to Google’s official repository — [here is the article explaining the move and goal](https://medium.com/@crafty/restitching-plaid-9ca5588d3b0a) _(I highly recommend to read it)_.
+In early days Plaid 1.0 application (created in 2014) was [Nick Butcher](https://twitter.com/crafty)’s app where he showcased how [material design](https://material.io/) and animation can bring joy and life to an Android application. After years of improving, the Plaid app has come to a point where it makes perfect sense to make this app a reference app that showcases how an ideal Android application can be built using material design and fluid animation. So, in 2019, Nick did exactly that, they have moved the Plaid Github repo to Google’s official repository - [here is the article explaining the move and goal](https://medium.com/@crafty/restitching-plaid-9ca5588d3b0a) _(I highly recommend to read it)_.
 
 NOTE: The Plaid 2.0 is still under heavy development, which as a bonus, gives you an opportunity to learn how an application is migrated to modern architecture and Kotlin. See the GitHub project page with different technical articles explaining how the app is being migrated to 2.0
 
@@ -54,11 +54,11 @@ NOTE: The Plaid 2.0 is still under heavy development, which as a bonus, gives yo
 
 ![](https://cdn-images-1.medium.com/max/1200/1*jgsbsIWacu4JvnhPpVUuJg.jpeg)
 
-Snapshot of Plaid 1.0 — The latest 2.0 app is still under heavy development.
+Snapshot of Plaid 1.0 - The latest 2.0 app is still under heavy development.
 
 ---
 
-### 🌻 Sunflower — Showcasing Android Jetpack
+### 🌻 Sunflower - Showcasing Android Jetpack
 
 This is another Google’s official app that showcases many Jetpack components in one application.
 
@@ -76,11 +76,11 @@ This is a minimal application that is great for learning.
 
 ![](https://cdn-images-1.medium.com/max/1200/1*-GJ_m-AWu8Ro235pXt8_AA.png)
 
-Sunflower — Demo Screenshots
+Sunflower - Demo Screenshots
 
 ---
 
-### 🔖 CatchUp — All in one
+### 🔖 CatchUp - All in one
 
 This app aggregates articles and posts from different services like Hackernews, Medium, Reddit, Slashdot, Dribble, Uplabs and so on. This is a very recent app from [Zac Sweers](https://www.zacsweers.dev/) who has put a significant amount of time to develop this app. The app architecture is [inspired](https://github.com/ZacSweers/CatchUp#influences) by Plaid and U+2020 app. CatchUp is being actively developed, you can clone and build locally to try it out.
 
@@ -90,7 +90,7 @@ Please note, this is a kinda large-scale, complex application that is well done 
 
 - **Key Features:** Dark Mode, Animation, Advanced Dagger,
 - **Language:** Kotlin
-- **Architecture:** — (Not sure, I need to study this app more)
+- **Architecture:** - (Not sure, I need to study this app more)
 - **Dependency Injection:** Dagger Hilt (Advanced usage)
 - **Navigation:** Basic (Intent Based)
 - **Unit Tests:** Some JUnit tests exist (not priority).
@@ -100,13 +100,13 @@ Please note, this is a kinda large-scale, complex application that is well done 
 
 ![](https://cdn-images-1.medium.com/max/1200/1*xBXnT6pYfL_4LFI1r7rp5Q.png)
 
-CatchUP — Demo Screenshots
+CatchUP - Demo Screenshots
 
 ---
 
 > NOTE: As per Zac, he recently [tweeted](https://twitter.com/ZacSweers/status/1274830421835100162?s=20) “standard disclaimer that CatchUp is not necessarily a template of patterns I endorse or recommend. It’s a laboratory not a representative sample”
 
-### Showcase — clean architecture
+### Showcase - clean architecture
 
 This is another community sample that I discovered recently. The sample app is developed by [Igor Wojda](https://twitter.com/igorwojda), author of “_Android Development with Kotlin_” [book](https://www.amazon.ca/Android-Development-Kotlin-Marcin-Moskala/dp/1787123685).
 
@@ -146,11 +146,11 @@ Since 2011 the Google I/O companion application has been the spotlight applicati
 
 ![](https://cdn-images-1.medium.com/max/1200/1*wYRpiq0kWWgx9q1TVJzapg.png)
 
-Google I/O 2019 — Demo Screenshots
+Google I/O 2019 - Demo Screenshots
 
 ---
 
-#### 📺 Tivi — Track Show Tracking
+#### 📺 Tivi - Track Show Tracking
 
 Tivi app is currently in the early stages developed by [Chris Banes](https://twitter.com/chrisbanes), a member of the Android Developer Relations team. He closely works with [Nick Butcher](https://twitter.com/crafty), author of Plaid.
 
@@ -168,7 +168,7 @@ The app uses all the latest libraries and recommendations from Google. This app 
 
 ![](https://cdn-images-1.medium.com/max/1200/1*lBKt8TfnSonAiD5F904TQg.png)
 
-Tivi — Demo Screenshots
+Tivi - Demo Screenshots
 
 ---
 

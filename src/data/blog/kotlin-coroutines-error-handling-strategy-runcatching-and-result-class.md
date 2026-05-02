@@ -1,5 +1,5 @@
 ---
-title: Kotlin coroutines error handling strategy — `runCatching` and `Result` class
+title: Kotlin coroutines error handling strategy - `runCatching` and `Result` class
 description: Use Kotlin’s standard function `runCatching` API to handle errors from standard or coroutines functions.
 pubDatetime: 2021-05-02T20:45:33.105Z
 tags: ["kotlin", "coroutines", "error-handling"]
@@ -7,7 +7,7 @@ featured: false
 draft: false
 ---
 
-I am trying to learn Kotlin coroutines, and was trying to learn more about how to handle errors from suspended functions. One of the [recommended way](https://developer.android.com/kotlin/coroutines) by Google is to create a “Result” class like the following:
+I am trying to learn Kotlin coroutines, and was trying to learn more about how to handle errors from suspended functions. One of the [recommended ways](https://developer.android.com/kotlin/coroutines) by Google is to create a “Result” class like the following:
 
 ```kotlin
 sealed class Result {
@@ -37,7 +37,7 @@ Here is a basic idea of how `runCatching {}` can be used from Android ViewModel.
 
 ---
 
-Based on Kotlin standard lib [doc](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/run-catching.html), you can use `runCatching { }` in 2 different ways. I will focus on one of them, since the concept for other one is similar.
+Based on Kotlin standard lib [doc](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/run-catching.html), you can use `runCatching { }` in 2 different ways. I will focus on one of them, since the concept for the other one is similar.
 
 To handle a function that may throw an exception in coroutines or regular function use this:
 

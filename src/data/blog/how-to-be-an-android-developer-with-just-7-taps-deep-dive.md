@@ -29,7 +29,7 @@ Here is how I became a developer using my Pixel 2 XL device:
 
 A short clip showcasing how to enable ‘Developer options’
 
-If you made this far, you know this is a _joke_ 🙈! By now, every Android devs know how to activate the developer options on any Android device.
+If you made it this far, you know this is a _joke_ 🙈! By now, every Android devs know how to activate the developer options on any Android device.
 
 However, back in the days, there was no tapping required to activate it, it was always there. So, when they added this feature, I’ll be honest, I did have to Google for it 😁.
 
@@ -37,12 +37,12 @@ However, back in the days, there was no tapping required to activate it, it was 
 
 #### Under the hood
 
-As I was curious, I wanted to see how the logic works in the Android settings screen. I found that all these logic of activating the developer options is in [**BuildNumberPreferenceController.java**](https://android.googlesource.com/platform/packages/apps/Settings/+/master/src/com/android/settings/deviceinfo/BuildNumberPreferenceController.java) (_AOSP_) source code.
+As I was curious, I wanted to see how the logic works in the Android settings screen. I found that all this logic of activating the developer options is in [**BuildNumberPreferenceController.java**](https://android.googlesource.com/platform/packages/apps/Settings/+/master/src/com/android/settings/deviceinfo/BuildNumberPreferenceController.java) (_AOSP_) source code.
 
 First, the most important constant that defines how many times we have to tap to become the ‘developer’ is:
 
 ```java
-static final int **TAPS_TO_BE_A_DEVELOPER** = **7**;
+static final int TAPS_TO_BE_A_DEVELOPER = 7;
 ```
 
 Why 7? Maybe because it’s considered a lucky number? ¯\\\_(ツ)\_/¯
