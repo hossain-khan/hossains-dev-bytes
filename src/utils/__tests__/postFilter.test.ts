@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-// postFilter imports @/config (plain TS — no Astro deps) and dayjs — no mock needed.
+// postFilter imports @/config (plain TS - no Astro deps) and dayjs - no mock needed.
 
 import postFilter from "../postFilter";
 import type { ContentEntry } from "../contentEntry";

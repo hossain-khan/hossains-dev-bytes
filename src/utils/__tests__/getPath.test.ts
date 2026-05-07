@@ -19,13 +19,12 @@ describe("getPath", () => {
     });
 
     it("uses only the last segment of id when id contains a slash", () => {
-      // In the content layer, id can be a relative path like "subdir/my-post"
       expect(getPath("subdir/my-post", undefined)).toBe("/posts/my-post");
     });
   });
 
   describe("when filePath is a root-level blog path (no subdirectory)", () => {
-    it("returns /posts/<id> — no intermediate path segments", () => {
+    it("returns /posts/<id> - no intermediate path segments", () => {
       expect(getPath("my-post", "src/data/blog/my-post.md")).toBe(
         "/posts/my-post"
       );

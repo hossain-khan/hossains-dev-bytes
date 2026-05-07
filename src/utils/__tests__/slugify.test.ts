@@ -10,11 +10,11 @@ describe("slugifyStr", () => {
     expect(slugifyStr("Hello World")).toBe("hello-world");
   });
 
-  it("handles E2E Testing (number–letter boundary)", () => {
+  it("handles E2E Testing (number-letter boundary)", () => {
     expect(slugifyStr("E2E Testing")).toBe("e2e-testing");
   });
 
-  it("preserves decimal numbers — TypeScript 5.0", () => {
+  it("preserves decimal numbers - TypeScript 5.0", () => {
     expect(slugifyStr("TypeScript 5.0")).toBe("typescript-5.0");
   });
 
