@@ -38,6 +38,9 @@ jobs:
       - name: Lint check
         run: pnpm run lint
 
+      - name: Test
+        run: pnpm run test
+
       # Disabled for now, will enable it in future when I have more time to fix the formatting issues  
       # - name: Format check
       #   run: pnpm run format:check
