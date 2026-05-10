@@ -14,7 +14,7 @@ While in [part 1](/posts/syntax-highlighting-on-android-bringing-shiki-engine-to
 
 The answer was surprisingly simple: **Highlight.js running inside a hidden WebView**. The tokenized HTML output - those `<span class="hljs-*">` elements - gets parsed and mapped to native Compose `AnnotatedString` spans. The WebView never actually renders anything visible. It just does the parsing work in the background, and the result is fully native text that supports real text selection and accessibility out of the box.
 
-That pattern was elegant enough that I decided to experiment with it and build a proof-of-concept library for Jetpack Compose.
+That pattern was elegant enough that I decided to experiment with it and build a proof-of-concept library for Jetpack Compose along with sample app to showcase the usage.
 
 <GitHubEmbed repo="hossain-khan/android-compose-highlight" />
 
