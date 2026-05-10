@@ -9,11 +9,12 @@ draft: false
 
 import GitHubEmbed from "@/components/GitHubEmbed.astro";
 
-A while back I was poking around at how apps like ChatGPT, Claude, and Perplexity handle source code display on Android. The code blocks look great - proper colors, correct token boundaries, clean rendering. I was curious what was actually powering that, so I dug in.
+Recently I've been on a bit of a syntax highlighting journey on Android. 
+While in [part 1](/posts/syntax-highlighting-on-android-bringing-shiki-engine-to-compose/) both cloud based on on-device highlihgting worked, I was wondering how modern apps like ChatGPT, Claude, and Perplexity handle source code highlighting on Android. The code blocks look great - proper colors, correct token boundaries, clean rendering. I was curious what was actually powering that, so I did some further inverstigation on their apps using good old [`apktool`](https://apktool.org/).
 
 The answer was surprisingly simple: **Highlight.js running inside a hidden WebView**. The tokenized HTML output - those `<span class="hljs-*">` elements - gets parsed and mapped to native Compose `AnnotatedString` spans. The WebView never actually renders anything visible. It just does the parsing work in the background, and the result is fully native text that supports real text selection and accessibility out of the box.
 
-That pattern was elegant enough that I decided to experiment with it and build a proof-of-concept library for Jetpack Compose.
+That pattern was elegant enough that I decided to experiment with it and build a proof-of-concept library for Jetpack Compose along with sample app to showcase the usage.
 
 <GitHubEmbed repo="hossain-khan/android-compose-highlight" />
 
@@ -45,6 +46,17 @@ HighlightThemeProvider(
 `HighlightThemeProvider` reads `isSystemInDarkTheme()` automatically and picks the right theme. You can pass `darkTheme = true/false` to force a specific mode.
 
 The composable comes with a few useful parameters out of the box - a language badge in the header and a copy-to-clipboard button are on by default, while line numbers are off (pass `showLineNumbers = true` to enable them). You can swap in a custom copy icon or override the copy handler if you want to own that UX yourself.
+
+<div style="display: flex; gap: 1rem; justify-content: center; align-items: flex-start;">
+  <figure style="flex: 1; margin: 0; text-align: center;">
+    ![Sample app home screen showing syntax highlighted code](../../assets/images/android-compose-highlight-home.png)
+    <figcaption>Sample app with different languages</figcaption>
+  </figure>
+  <figure style="flex: 1; margin: 0; text-align: center;">
+    ![Benchmark performance results for syntax highlighting](../../assets/images/android-compose-highlight-perf.png)
+    <figcaption>Syntax highlighting performance data</figcaption>
+  </figure>
+</div>
 
 ## The shared WebView design
 
