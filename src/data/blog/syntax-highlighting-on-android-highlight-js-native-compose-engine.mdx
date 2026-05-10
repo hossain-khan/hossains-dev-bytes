@@ -1,0 +1,191 @@
+---
+title: "Syntax Highlighting on Android - Highlight.js as a Native Compose Engine"
+pubDatetime: 2026-05-09T12:00:00Z
+description: "How I built android-compose-highlight - a Jetpack Compose library that runs Highlight.js in a hidden WebView and converts the output to native AnnotatedString for real text selection and accessibility."
+tags: ["android", "jetpack-compose", "syntax-highlighting", "open-source", "ui"]
+featured: false
+draft: false
+---
+
+import GitHubEmbed from "@/components/GitHubEmbed.astro";
+
+A while back I was poking around at how apps like ChatGPT, Claude, and Perplexity handle source code display on Android. The code blocks look great - proper colors, correct token boundaries, clean rendering. I was curious what was actually powering that, so I dug in.
+
+The answer was surprisingly simple: **Highlight.js running inside a hidden WebView**. The tokenized HTML output - those `<span class="hljs-*">` elements - gets parsed and mapped to native Compose `AnnotatedString` spans. The WebView never actually renders anything visible. It just does the parsing work in the background, and the result is fully native text that supports real text selection and accessibility out of the box.
+
+That pattern was elegant enough that I decided to build it as a proper open-source library.
+
+<GitHubEmbed repo="hossain-khan/android-compose-highlight" />
+
+## Why this instead of other approaches
+
+I've explored this space before. [Back in 2020](/posts/source-code-syntax-highlighting-on-android-taking-full-control) I wrote about using PrismJS directly in a WebView - the full rendering approach where you load an HTML page with the highlighted code and display it inside `WebView`. It works, but it means you're embedding a browser renderer just to show colored text. You lose native text selection, accessibility is awkward, and scrolling behavior can be unpredictable.
+
+More recently I explored [Shiki running server-side via Cloudflare Workers](/posts/syntax-highlighting-on-android-bringing-shiki-engine-to-compose), which gives genuinely excellent output quality. But it requires a network call, adds latency, and means your app has a hard dependency on an external service.
+
+This library takes a middle path - it keeps everything on-device, uses a battle-tested JS highlighter (Highlight.js supports 190+ languages), and produces native Compose text. The WebView is completely hidden and acts purely as a JS execution engine.
+
+## Getting started
+
+Add JitPack to your `settings.gradle.kts`:
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
+}
+```
+
+Then add the dependency:
+
+```kotlin
+dependencies {
+    implementation("com.github.hossain-khan:android-compose-highlight:0.7.0")
+}
+```
+
+Requires `minSdk = 24`, Kotlin 2.x, and uses Compose BOM 2026.05+.
+
+## The basic usage
+
+Wrap your screen in `HighlightThemeProvider`, then drop `SyntaxHighlightedCode` wherever you need it:
+
+```kotlin
+HighlightThemeProvider(
+    lightHighlightTheme = HighlightTheme.tomorrow(context),
+    darkHighlightTheme  = HighlightTheme.atomOneDark(context),
+) {
+    SyntaxHighlightedCode(
+        code            = myCode,
+        language        = "kotlin",
+        showLineNumbers = true,
+    )
+}
+```
+
+`HighlightThemeProvider` reads `isSystemInDarkTheme()` automatically and picks the right theme. You can pass `darkTheme = true/false` to force a specific mode.
+
+The composable comes with a few useful parameters out of the box - line numbers, a language badge in the header, and a copy-to-clipboard button are all on by default. You can swap in a custom copy icon or override the copy handler if you want to own that UX yourself.
+
+## The shared WebView design
+
+One thing I wanted to get right early was the WebView lifecycle. A naive implementation would spin up a new WebView for every `SyntaxHighlightedCode` block on screen, which would be slow (~200ms warm-up each) and memory-hungry (~2-4MB per WebView).
+
+Instead, `HighlightThemeProvider` creates a **single shared `HighlightEngine`** for its entire subtree. All `SyntaxHighlightedCode` blocks within that provider share one hidden WebView. A `Mutex` serializes the JS calls so requests don't collide. This means a screen with ten code blocks is nearly as fast as one with a single block.
+
+The WebView loads `bridge.html` from the library's bundled assets, which in turn loads the full Highlight.js bundle. All WebView operations run on the main thread but the suspend functions let callers interact from any coroutine scope.
+
+## Built-in themes
+
+Four themes are included:
+
+- `HighlightTheme.tomorrow(context)` - light
+- `HighlightTheme.atomOneLight(context)` - light
+- `HighlightTheme.tomorrowNight(context)` - dark
+- `HighlightTheme.atomOneDark(context)` - dark
+
+## Custom themes
+
+Any Highlight.js CSS theme works. The most straightforward way is to load from an asset file:
+
+```kotlin
+val theme = HighlightTheme.fromAsset(context, "themes/my-theme.css", name = "my-theme")
+```
+
+Or pass raw CSS directly:
+
+```kotlin
+val theme = HighlightTheme.fromCss(cssString, name = "my-inline-theme")
+```
+
+There's also a `fromColorMap` factory that takes a `Map<String, SpanStyle>` keyed by CSS class name. That one's particularly useful if you want to build a theme that follows Material 3 dynamic colors at runtime:
+
+```kotlin
+val theme = HighlightTheme.fromColorMap(
+    name             = "dynamic",
+    colorMap         = mapOf(
+        "hljs"         to SpanStyle(color = onSurface, background = surface),
+        "hljs-keyword" to SpanStyle(color = primary, fontWeight = FontWeight.Bold),
+        "hljs-string"  to SpanStyle(color = tertiary),
+    ),
+    backgroundColor  = surface,
+    defaultTextColor = onSurface,
+)
+```
+
+Community themes are available at the [highlight.js styles directory](https://github.com/highlightjs/highlight.js/tree/main/src/styles) if you want to explore beyond what's bundled.
+
+## Using the engine directly
+
+If you need an `AnnotatedString` but don't want the full composable UI, you can use `HighlightEngine` directly:
+
+```kotlin
+val engine = HighlightEngine(context)
+
+viewModelScope.launch {
+    engine.initialize() // warms up the WebView
+
+    val result: Result<AnnotatedString> =
+        engine.highlight(code = "val x = 42", language = "kotlin", theme = HighlightTheme.tomorrow(context))
+
+    result.onSuccess { annotated ->
+        // use in your own composable
+    }
+
+    engine.destroy()
+}
+```
+
+There's also `highlightBothThemes()` if you want to do a single JS call and get both light and dark versions back at once - handy if you're building something that needs to handle theme switching without triggering a re-highlight.
+
+## The remember helpers
+
+For the common case of highlighting inside a composable, two helpers are included:
+
+```kotlin
+// single theme
+val highlighted by rememberHighlightedCode(
+    code     = snippet,
+    language = "kotlin",
+    onHighlightComplete = { ms -> Log.d("Perf", "Highlighted in ${ms}ms") },
+)
+Text(text = highlighted ?: AnnotatedString(snippet))
+```
+
+```kotlin
+// both themes at once - theme switching is instant after first highlight
+val result by rememberHighlightedCodeBothThemes(
+    code       = snippet,
+    language   = "kotlin",
+    lightTheme = remember(context) { HighlightTheme.tomorrow(context.applicationContext) },
+    darkTheme  = remember(context) { HighlightTheme.tomorrowNight(context.applicationContext) },
+)
+Text(text = (if (isDark) result?.dark else result?.light) ?: AnnotatedString(snippet))
+```
+
+`rememberHighlightedCodeBothThemes` is the better default if your app respects system dark/light mode - the initial highlight takes one JS call instead of two, and toggling dark mode afterward is instant since both versions are already cached.
+
+## How fast is it?
+
+I added microbenchmarks using the AndroidX Benchmark library to measure the three pipeline stages. Running on a Pixel 9 Pro XL (debuggable build):
+
+| Code                      | Median  |
+| ------------------------- | ------- |
+| Python snippet            | 7.5 ms  |
+| Kotlin snippet            | 8.7 ms  |
+| SQL snippet               | 8.3 ms  |
+| ~150-line Kotlin file     | 18.8 ms |
+| ~200-line TypeScript file | 17.6 ms |
+
+The dominant cost is the WebView JS round-trip. `ThemeParser` (CSS parsing) and `HtmlToAnnotatedString` (jsoup conversion) are sub-millisecond individually. Even large real-world files come in under 20ms, and results are cached per `rememberHighlightedCode` call so subsequent renders are free.
+
+> 💡 To reduce first-call latency, you can pre-warm the WebView renderer in `Application.onCreate()` using `WebViewCompat.startUpWebView()` from `androidx.webkit:webkit:1.16+` - which is already a transitive dependency of this library.
+
+## Wrapping up
+
+It's satisfying that something I was just curious about - how do those AI apps do it? - turned into a library I can actually use in my own projects. The WebView-as-JS-engine pattern is not new, but packaging it cleanly with proper lifecycle management, theme support, and Compose integration turned out to be a worthwhile project.
+
+If you try it and run into issues, drop a comment or open a GitHub issue. Happy highlighting! ✌️
