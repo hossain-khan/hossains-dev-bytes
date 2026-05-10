@@ -25,30 +25,6 @@ More recently I explored [Shiki running server-side via Cloudflare Workers](/pos
 
 This library takes a middle path - it keeps everything on-device, uses a battle-tested JS highlighter (Highlight.js supports 190+ languages), and produces native Compose text. The WebView is completely hidden and acts purely as a JS execution engine.
 
-## Getting started
-
-Add JitPack to your `settings.gradle.kts`:
-
-```kotlin
-dependencyResolutionManagement {
-    repositories {
-        google()
-        mavenCentral()
-        maven { url = uri("https://jitpack.io") }
-    }
-}
-```
-
-Then add the dependency:
-
-```kotlin
-dependencies {
-    implementation("com.github.hossain-khan:android-compose-highlight:0.7.0")
-}
-```
-
-Requires `minSdk = 24`, Kotlin 2.x, and uses Compose BOM 2026.05+.
-
 ## The basic usage
 
 Wrap your screen in `HighlightThemeProvider`, then drop `SyntaxHighlightedCode` wherever you need it:
