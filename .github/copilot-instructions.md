@@ -261,11 +261,13 @@ Use `>` blockquotes for tips and callouts. Optionally with a 💡 prefix.
 If you personally hit issues, add a Troubleshooting section at the end with the actual errors and what fixed them.
 
 **Friendly sign-off**
-End posts with a short, warm close that invites readers to comment if something's broken or unclear. Examples:
+End posts with a short, warm close. Examples:
 
 - "Happy mocking 😃!"
 - "Hope it helps somebody. ✌️"
-- "If you find any issue, leave a comment or open a GitHub issue."
+- "If you find any issue, open a GitHub issue."
+
+> **Note**: This site does NOT have comment support. Never tell readers to "drop a comment" or "leave a comment" - direct them to GitHub issues instead.
 
 **Emoji usage**
 Use emoji sparingly and naturally - a few in the body and sign-off is fine. Don't force them into every bullet or heading.
