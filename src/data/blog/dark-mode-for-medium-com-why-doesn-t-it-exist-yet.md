@@ -19,7 +19,7 @@ I have a love and [hate](https://twitter.com/hossainkhan/status/1264173083885273
 
 [https://momentum.medium.com/](https://momentum.medium.com/)
 
-Recently Medium has launched “**MOMENTUM** - *A Medium blog about the fight against anti-Black racism*” - a great initiative by them ✊. An interesting thing to note is the site supports dark mode. In fact, it only is in dark-mode which goes with the theme of the topic.
+Recently Medium has launched “**MOMENTUM** - _A Medium blog about the fight against anti-Black racism_” - a great initiative by them ✊. An interesting thing to note is the site supports dark mode. In fact, it only is in dark-mode which goes with the theme of the topic.
 
 _ps. I also built an_ [_Android app_](https://github.com/hossain-khan/android-police-brutality-incidents) _to support_ `*#BlackLivesMatter*` _cause. Currently waiting for Google to approve the app._
 

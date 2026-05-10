@@ -39,7 +39,12 @@ export default defineConfig({
   ],
 
   markdown: {
-    remarkPlugins: [remarkReadingTime, remarkGithubAlerts, remarkToc, [remarkCollapse, { test: "Table of contents" }]],
+    remarkPlugins: [
+      remarkReadingTime,
+      remarkGithubAlerts,
+      remarkToc,
+      [remarkCollapse, { test: "Table of contents" }],
+    ],
     shikiConfig: {
       // For more themes, visit https://shiki.style/themes
       themes: { light: "min-light", dark: "github-dark-default" },
