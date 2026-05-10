@@ -23,12 +23,12 @@ Googling for this specific topic didn’t bring much content. I wanted to keep t
 
 Here are the key elements used for CI:
 
-* shUnit2 - for writing unit tests in shell script. This is downloaded via Travis build config _before_ the build begins.
+- shUnit2 - for writing unit tests in shell script. This is downloaded via Travis build config _before_ the build begins.
 
-* .travis.yml - Travis CI build config
+- .travis.yml - Travis CI build config
 
-* validator-badge - online web-service to validate OpenAPI specification file
+- validator-badge - online web-service to validate OpenAPI specification file
 
-* api-spec_validation_test.sh - Shell script for unit test
+- api-spec_validation_test.sh - Shell script for unit test
 
 I hope somebody finds this useful for their project.

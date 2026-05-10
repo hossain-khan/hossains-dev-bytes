@@ -13,13 +13,13 @@ This list of open-source Android apps may come in handy if you have grasped all 
 
 Here is the list of open-source apps in this article:
 
-- **Android Architecture Blueprints v2** - *Google’s official recommended app*
-- **Plaid 2.0** - *Google’s official recommended app with focus on Material Design*
-- **Sunflower** - *Google’s official recommended app with more focus on many Jetpack components*
-- **CatchUp** - *Community app with multi-module and multi-api-service*
-- **Showcase** - *Community app with multi-module and clean architecture*
-- **Google I/O** - *Google’s official annual conference app*
-- **Tivi** - *Community app with a focus on multi-module architecture and Jetpack*
+- **Android Architecture Blueprints v2** - _Google’s official recommended app_
+- **Plaid 2.0** - _Google’s official recommended app with focus on Material Design_
+- **Sunflower** - _Google’s official recommended app with more focus on many Jetpack components_
+- **CatchUp** - _Community app with multi-module and multi-api-service_
+- **Showcase** - _Community app with multi-module and clean architecture_
+- **Google I/O** - _Google’s official annual conference app_
+- **Tivi** - _Community app with a focus on multi-module architecture and Jetpack_
 
 > FYI: Google has an 📚 [**official architecture guide for Android application**](https://developer.android.com/jetpack/docs/guide) which captures what most of the sample application does. I highly recommend you read that article first before studying any open-source applications.
 
