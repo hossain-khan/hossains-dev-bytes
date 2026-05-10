@@ -47,6 +47,17 @@ HighlightThemeProvider(
 
 The composable comes with a few useful parameters out of the box - a language badge in the header and a copy-to-clipboard button are on by default, while line numbers are off (pass `showLineNumbers = true` to enable them). You can swap in a custom copy icon or override the copy handler if you want to own that UX yourself.
 
+<div style="display: flex; gap: 1rem; justify-content: center; align-items: flex-start;">
+  <figure style="flex: 1; margin: 0; text-align: center;">
+    ![Sample app home screen showing syntax highlighted code](../../assets/images/android-compose-highlight-home.png)
+    <figcaption>Sample app with different languages</figcaption>
+  </figure>
+  <figure style="flex: 1; margin: 0; text-align: center;">
+    ![Benchmark performance results for syntax highlighting](../../assets/images/android-compose-highlight-perf.png)
+    <figcaption>Syntax highlighting performance data</figcaption>
+  </figure>
+</div>
+
 ## The shared WebView design
 
 One thing I wanted to get right early was the WebView lifecycle. A naive implementation would spin up a new WebView for every `SyntaxHighlightedCode` block on screen, which would be slow (~200ms warm-up each) and memory-hungry (~2-4MB per WebView).
