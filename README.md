@@ -51,20 +51,20 @@ Your content here...
 
 **Frontmatter Options:**
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `title` | string | ✅ | — | Post headline |
-| `pubDatetime` | date | ✅ | — | Publication date (ISO 8601 format: `YYYY-MM-DDTHH:mm:ssZ`) |
-| `description` | string | ✅ | — | SEO/social preview text (155–160 chars recommended) |
-| `author` | string | ❌ | `SITE.author` | Post author name |
-| `tags` | array | ❌ | `["others"]` | Post categories (lowercase kebab-case) |
-| `featured` | boolean | ❌ | — | Pin post to homepage |
-| `draft` | boolean | ❌ | — | Hide post from production builds |
-| `modDatetime` | date | ❌ | — | Last modified date (ISO 8601 format) |
-| `ogImage` | image/string | ❌ | — | Custom Open Graph image (file path or URL) |
-| `canonicalURL` | string | ❌ | — | Canonical URL for SEO purposes |
-| `hideEditPost` | boolean | ❌ | — | Hide "Edit this post" link |
-| `timezone` | string | ❌ | — | Timezone override for datetime display |
+| Field          | Type         | Required | Default       | Description                                                |
+| -------------- | ------------ | -------- | ------------- | ---------------------------------------------------------- |
+| `title`        | string       | ✅       | —             | Post headline                                              |
+| `pubDatetime`  | date         | ✅       | —             | Publication date (ISO 8601 format: `YYYY-MM-DDTHH:mm:ssZ`) |
+| `description`  | string       | ✅       | —             | SEO/social preview text (155–160 chars recommended)        |
+| `author`       | string       | ❌       | `SITE.author` | Post author name                                           |
+| `tags`         | array        | ❌       | `["others"]`  | Post categories (lowercase kebab-case)                     |
+| `featured`     | boolean      | ❌       | —             | Pin post to homepage                                       |
+| `draft`        | boolean      | ❌       | —             | Hide post from production builds                           |
+| `modDatetime`  | date         | ❌       | —             | Last modified date (ISO 8601 format)                       |
+| `ogImage`      | image/string | ❌       | —             | Custom Open Graph image (file path or URL)                 |
+| `canonicalURL` | string       | ❌       | —             | Canonical URL for SEO purposes                             |
+| `hideEditPost` | boolean      | ❌       | —             | Hide "Edit this post" link                                 |
+| `timezone`     | string       | ❌       | —             | Timezone override for datetime display                     |
 
 ### Image Galleries
 
@@ -112,7 +112,7 @@ Edit `src/config.ts` to customize:
 - **Styling:** Tailwind CSS
 - **Search:** Pagefind
 - **OG Images:** Satori
-- **AI:** Cloudflare Workers AI (`@cf/meta/llama-3.1-8b-instruct-fp8`) — per-post summarization and Q&A
+- **AI:** Cloudflare Workers AI (`@cf/google/gemma-4-26b-a4b-it`) — per-post summarization and Q&A
 - **Deployment:** Cloudflare Workers
 - **Package Manager:** pnpm
 

@@ -11,7 +11,9 @@
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "lint": "eslint .",
-    "generate-types": "wrangler types"
+    "generate-types": "wrangler types",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.1.4",
@@ -26,6 +28,7 @@
     "lodash.kebabcase": "^4.1.1",
     "marked": "^18.0.0",
     "remark-collapse": "^0.1.2",
+    "remark-github-alerts": "^0.1.1",
     "remark-toc": "^9.0.0",
     "satori": "^0.19.2",
     "sharp": "^0.34.5",
@@ -48,7 +51,8 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.0"
+    "typescript-eslint": "^8.57.0",
+    "vitest": "^4.1.5"
   },
   "overrides": {
     "vite": "^7"

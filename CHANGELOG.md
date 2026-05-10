@@ -4,6 +4,45 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Apr 26, 2026** - `44cf8b1`: feat: add remark-github-alerts support with styled callouts
+  > *Installed `remark-github-alerts` and wired it into `astro.config.ts` so all `.md` and `.mdx` posts support GitHub-style alert syntax (`> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`, `> [!IMPORTANT]`, `> [!CAUTION]`). Added themed CSS in `global.css` using site CSS variables with full dark/light mode support.*
+
+- **Apr 24, 2026** - `0df71d8`: chore: replace default OG image with custom hossain-dev-bytes branding
+  > *Swapped out the generic fallback OG image with a custom-branded hossain-dev-bytes image so social previews for posts without a dedicated image use the site's own identity.*
+
+- **Apr 13, 2026** - `80b0480`: feat: add TL;DR AI Summary button in post header
+  > *Added a "TL;DR" chip button beside the author/date row in each post header. Clicking it triggers the AI summarization flow directly, giving readers a quick shortcut to get the post's key points without scrolling to the AI assistant panel.*
+
+- **Apr 12, 2026** - `b7b987e`: feat: add GooglePlayEmbed component for Google Play app cards
+  > *New `GooglePlayEmbed` component that fetches live app metadata (icon, rating, install count) from Google Play at build time and renders a styled card. The app icon is inlined as base64 to avoid hotlinking. Includes a dark-mode-aware design and a fallback link if the fetch fails.*
+
+- **Apr 12, 2026** - `753361b`: chore: remove Google Analytics tag
+  > *Removed the Google Analytics (`gtag.js`) script from the site layout entirely. No replacement added at this time.*
+
+- **Apr 12, 2026** - `37f0630`: feat: add post tags to OG image sticky note area
+  > *Post tags are now rendered inside the sticky note area of the OG image with dynamic font sizing so they fit without overflow. Tags are sorted and truncated when there are too many.*
+
+- **Apr 12, 2026** - `bcb6705`: feat: custom OG image with pixel-art background and Jersey 10 font
+  > *Replaced the default OG image with a dynamically generated image per post. Uses a pixel-art style background pattern, the Jersey 10 display font for the post title, and a sticky-note area for author and tags. Generated at build time via Astro's `@astrojs/og` integration.*
+
+- **Apr 24, 2026** - `a713651`: chore: replace Sriracha with Lora (Google Font) for blockquotes
+  > *Swapped the blockquote font from Sriracha (Thai handwriting) to Lora (Google Fonts serif). Lora is a warm editorial serif that pairs well with a tech blog. Registered via `fontProviders.google()` in `astro.config.ts`, self-hosted by Astro at build time.*
+
+- **Apr 24, 2026** - `09ca7c0`: feat: rotating loading messages with shimmer effect while AI responds
+  > *Replaced the static "Thinking…" label with 10 fun rotating messages (e.g. "Consulting the AI oracle…", "Summoning knowledge…") that cycle every 2.5 seconds. Added a CSS shimmer (opacity pulse) animation on the loading text.*
+
+- **Apr 24, 2026** - `6fa34ce`: fix: keep loading indicator until first content token arrives in SSE stream
+  > *With Gemma 4's OpenAI-compatible streaming, the first SSE chunks carry only metadata (role, finish_reason) with no content. The old code hid the loading indicator on reader creation, causing a blank gap. Now the indicator stays visible until the first real content token arrives.*
+
+- **Apr 24, 2026** - `cca8bd0`: docs: explain SSE streaming architecture and model-specific response formats
+  > *Added inline code comments documenting the full SSE flow (client → Worker → Workers AI), the OpenAI-compatible delta format used by Gemma 4, the older Workers AI native format used by LLaMA 3, and links to official Cloudflare and OpenAI reference docs.*
+
+- **Apr 24, 2026** - `bca1d25`: fix: support OpenAI streaming delta format for Gemma 4 SSE chunks
+  > *Gemma 4 uses the OpenAI-compatible streaming schema: `choices[0].delta.content`. The SSE parser now checks all three known shapes in priority order: OpenAI delta → Workers AI `response` → `text` fallback, making the component model-agnostic.*
+
+- **Apr 24, 2026**: chore: switch AI model to `@cf/google/gemma-4-26b-a4b-it` and increase context window
+  > *Replaced LLaMA 3.1 8B with Google Gemma 4 26B (256K token context window). Increased `MAX_CONTENT_LENGTH` from 8,000 to 20,000 chars to send full post content without truncation. Model is still configurable via `AI_MODEL` in `wrangler.jsonc`.*
+
 - **Apr 11, 2026** - `2a65811`: feat: route AI calls through AI Gateway for rate limiting and observability
   > *Added Cloudflare AI Gateway as an intermediary for all Workers AI requests. The gateway (`hossains-dev-bytes`) provides native rate limiting (configurable in the Cloudflare dashboard), response caching, and a usage analytics dashboard — with no custom quota tracking code needed. The `AI_GATEWAY_ID` var in `wrangler.jsonc` controls which gateway is used. The API endpoint detects 429 responses from the gateway and returns a user-friendly "Daily AI usage limit reached" message.*
 

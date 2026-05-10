@@ -126,7 +126,7 @@
         <span class="size-1.5 animate-bounce rounded-full bg-accent/50 [animation-delay:150ms]"></span>
         <span class="size-1.5 animate-bounce rounded-full bg-accent/50 [animation-delay:300ms]"></span>
       </div>
-      <span>Thinking…</span>
+      <span id="ai-loading-text" class="ai-shimmer">Thinking…</span>
     </div>
 
     <!-- Error display -->
@@ -176,11 +176,26 @@
   </div>
 </div>
 
+<style>
+  @keyframes shimmer {
+    0%   { opacity: 1; }
+    50%  { opacity: 0.35; }
+    100% { opacity: 1; }
+  }
+  .ai-shimmer {
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+</style>
+
 <script>
   import { marked, Renderer } from "marked";
   import DOMPurify from "dompurify";
 
-  (function () {
+  // Re-run on every page navigation (Astro View Transitions fires this on
+  // each client-side route change, including the initial load).
+  // Without this, the IIFE runs once and its DOM listeners are lost after
+  // ClientRouter swaps the page content on subsequent navigations.
+  document.addEventListener("astro:page-load", function () {
     const MAX_CONTENT_CHARS = 6000;
 
     // ── DOM refs ──────────────────────────────────────────────────────────────
@@ -193,9 +208,43 @@
     const askBtn = document.getElementById("ai-ask-btn") as HTMLButtonElement | null;
     const conversationEl = document.getElementById("ai-conversation") as HTMLDivElement | null;
     const loadingEl = document.getElementById("ai-loading") as HTMLDivElement | null;
+    const loadingTextEl = document.getElementById("ai-loading-text") as HTMLSpanElement | null;
     const errorEl = document.getElementById("ai-error") as HTMLDivElement | null;
 
     if (!toggle || !panel) return;
+
+    // ── Loading message rotation ───────────────────────────────────────────────
+    const LOADING_MESSAGES = [
+      "Thinking…",
+      "Reading the post…",
+      "Consulting the AI oracle…",
+      "Brewing a response…",
+      "Connecting the dots…",
+      "Almost there…",
+      "Crafting an answer…",
+      "Hold tight, it's worth it…",
+      "Summoning knowledge…",
+      "One moment of brilliance coming up…",
+    ];
+    let loadingIntervalId: ReturnType<typeof setInterval> | null = null;
+
+    function startLoadingMessages() {
+      if (!loadingTextEl) return;
+      let idx = 0;
+      loadingTextEl.textContent = LOADING_MESSAGES[idx];
+      loadingIntervalId = setInterval(() => {
+        idx = (idx + 1) % LOADING_MESSAGES.length;
+        loadingTextEl.textContent = LOADING_MESSAGES[idx];
+      }, 2500);
+    }
+
+    function stopLoadingMessages() {
+      if (loadingIntervalId !== null) {
+        clearInterval(loadingIntervalId);
+        loadingIntervalId = null;
+      }
+      if (loadingTextEl) loadingTextEl.textContent = LOADING_MESSAGES[0];
+    }
 
     // Conversation history (system messages are added server-side)
     const messages: { role: string; content: string }[] = [];
@@ -222,6 +271,8 @@
       if (input) input.disabled = busy;
       if (askBtn) askBtn.disabled = busy;
       if (loadingEl) loadingEl.hidden = !busy;
+      if (busy) startLoadingMessages();
+      else stopLoadingMessages();
     }
 
     function showError(msg: string) {
@@ -321,6 +372,28 @@
     }
 
     // ── SSE stream reader ──────────────────────────────────────────────────────
+    //
+    // Flow: fetch("/api/ai-chat") → Cloudflare Worker → Workers AI (Gemma 4)
+    //
+    // The Worker calls env.AI.run(model, { messages, stream: true }) and forwards
+    // the raw SSE stream back to the client with Content-Type: text/event-stream.
+    // Ref: https://developers.cloudflare.com/workers-ai/configuration/bindings/#methods
+    //
+    // Gemma 4 (@cf/google/gemma-4-26b-a4b-it) uses the OpenAI-compatible API:
+    //   https://developers.cloudflare.com/workers-ai/models/gemma-4-26b-a4b-it/
+    // Each SSE chunk is JSON with an OpenAI streaming delta shape:
+    //   data: {"choices":[{"delta":{"content":"token"}}]}
+    //   data: [DONE]
+    // Ref: https://platform.openai.com/docs/api-reference/chat/streaming
+    //
+    // Older models (e.g. LLaMA 3) used the Workers AI native format instead:
+    //   data: {"response":"token"}
+    // Ref: https://developers.cloudflare.com/workers-ai/models/llama-3.1-8b-instruct/
+    // Some models may also use {"text":"token"}.
+    //
+    // The parser below checks all three shapes so the component stays
+    // model-agnostic if the underlying model is swapped in wrangler.jsonc.
+    // Ref: https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/
     async function streamAIResponse(userMessage: string) {
       clearError();
       setUIBusy(true);
@@ -356,8 +429,13 @@
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
         let buffer = "";
-
-        setUIBusy(false); // hide loading dots once stream starts
+        // Keep the loading indicator visible until the first content token
+        // arrives. With OpenAI-compatible streaming (e.g. Gemma 4), early
+        // chunks carry only metadata (role, finish_reason) with no content,
+        // so hiding the spinner on reader creation causes a visible blank gap.
+        // Ref: https://platform.openai.com/docs/api-reference/chat/streaming
+        //      (see "chunk" object — content can be null on the first delta)
+        let firstContentToken = true;
 
         while (true) {
           const { done, value } = await reader.read();
@@ -372,9 +450,25 @@
             const data = line.slice(6).trim();
             if (data === "[DONE]") break;
             try {
-              const parsed = JSON.parse(data) as { response?: string };
-              if (parsed.response) {
-                fullResponse += parsed.response;
+              const parsed = JSON.parse(data) as {
+                // OpenAI-compatible streaming (Gemma 4 and newer models)
+                choices?: { delta?: { content?: string } }[];
+                // Workers AI native streaming (LLaMA 3 and similar)
+                response?: string;
+                // Fallback field used by some Workers AI models
+                text?: string;
+              };
+              // Priority: OpenAI delta → Workers AI response → text fallback
+              const token =
+                parsed.choices?.[0]?.delta?.content ??
+                parsed.response ??
+                parsed.text;
+              if (token) {
+                if (firstContentToken) {
+                  setUIBusy(false); // hide loading dots on first real content
+                  firstContentToken = false;
+                }
+                fullResponse += token;
                 responseEl.innerHTML = renderMarkdown(fullResponse);
                 responseEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
               }
@@ -383,6 +477,8 @@
             }
           }
         }
+        // Stream ended without any content tokens (empty response)
+        if (firstContentToken) setUIBusy(false);
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         showError(msg.startsWith("Daily AI") ? msg : `Error: ${msg}`);
@@ -419,5 +515,5 @@
       appendUserBubble(question);
       streamAIResponse(question);
     });
-  })();
+  });
 </script>

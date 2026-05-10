@@ -6,23 +6,25 @@
 
 ## Quick Command Reference
 
-| Task | Command |
-|------|---------|
-| **Start dev server** | `pnpm run dev` (localhost:4321) |
-| **Build for production** | `pnpm run build` |
-| **Check formatting** | `pnpm run format:check` |
-| **Auto-format code** | `pnpm run format` |
-| **Lint code** | `pnpm run lint` |
-| **Type check** | `astro check` (automatic on build) |
-| **Preview build locally** | `pnpm run preview` |
+| Task                      | Command                            |
+| ------------------------- | ---------------------------------- |
+| **Start dev server**      | `pnpm run dev` (localhost:4321)    |
+| **Build for production**  | `pnpm run build`                   |
+| **Check formatting**      | `pnpm run format:check`            |
+| **Auto-format code**      | `pnpm run format`                  |
+| **Lint code**             | `pnpm run lint`                    |
+| **Type check**            | `astro check` (automatic on build) |
+| **Preview build locally** | `pnpm run preview`                 |
 
 ## Content Creation Patterns
 
 ### Blog Posts
+
 **Location**: `src/data/blog/`
 **Filename**: kebab-case (e.g., `my-post-title.md` or `.mdx` for rich components)
 
 **Frontmatter template**:
+
 ```yaml
 ---
 title: "Post Title"
@@ -35,6 +37,7 @@ draft: false
 ```
 
 **Guidelines**:
+
 - `pubDatetime` format: ISO 8601 (required for sorting)
 - `description`: 155–160 chars (SEO/social preview)
 - `tags`: Use lowercase kebab-case; existing tags found in all post frontmatter
@@ -43,17 +46,22 @@ draft: false
 - Content can be Markdown or MDX (Astro components supported)
 
 ### Blog Post Images
+
 **Location**: `src/assets/images/`
 
 Place images here and reference them in posts with a relative path:
+
 ```markdown
 ![Alt text](../../assets/images/my-image.png)
 ```
+
 The `../../` navigates from `src/data/blog/` up to `src/assets/images/`. Astro automatically optimizes, converts to WebP, and hashes filenames at build time. Currently 493 files deployed — well under the 20,000 Cloudflare limit.
 
 ### Image Galleries
+
 **Location**: `src/data/galleries/`
 **Structure**:
+
 ```
 src/data/galleries/{gallery-name}/
 ├── index.md          # Gallery metadata + description
@@ -63,6 +71,7 @@ src/data/galleries/{gallery-name}/
 ```
 
 **Gallery index.md**:
+
 ```yaml
 ---
 title: "Gallery Title"
@@ -95,18 +104,19 @@ src/
 
 ## Key Configuration Files
 
-| File | Purpose |
-|------|---------|
-| `src/config.ts` | Site metadata, author, RSS/SEO config |
-| `astro.config.ts` | Astro integrations, Markdown plugins, build config |
-| `.prettierrc.mjs` | Prettier formatting rules (80 print width, 2-space tabs) |
-| `eslint.config.js` | ESLint rules |
-| `tsconfig.json` | TypeScript configuration |
-| `.github/workflows/ci.yml` | CI/CD: build, lint, format check on Node 22.x & 24.x |
+| File                       | Purpose                                                  |
+| -------------------------- | -------------------------------------------------------- |
+| `src/config.ts`            | Site metadata, author, RSS/SEO config                    |
+| `astro.config.ts`          | Astro integrations, Markdown plugins, build config       |
+| `.prettierrc.mjs`          | Prettier formatting rules (80 print width, 2-space tabs) |
+| `eslint.config.js`         | ESLint rules                                             |
+| `tsconfig.json`            | TypeScript configuration                                 |
+| `.github/workflows/ci.yml` | CI/CD: build, lint, format check on Node 22.x & 24.x     |
 
 ## Development Workflow
 
 ### Adding a Blog Post
+
 1. Create `src/data/blog/{post-name}.md` with frontmatter (see pattern above)
 2. Write content in Markdown (or use MDX for components)
 3. Run `pnpm run format` to auto-format
@@ -114,33 +124,63 @@ src/
 5. Commit with: `git add -A && git commit -m "feat: add post about {topic}"`
 
 ### Modifying Components
+
 - **Global layout**: See `src/layouts/Layout.astro`
 - **Post layout**: See `src/layouts/PostDetails.astro`
 - **Page components**: See `src/components/` (Header, Footer, Search, etc.)
 - After changes: Run `pnpm run lint` and `pnpm run format:check`
 
 ### Updating Site Config
+
 Edit `src/config.ts` for:
+
 - Site URL, author name, description
 - Social links (Bluesky, GitHub, etc.)
 - RSS feed settings
 - Gallery visibility toggle
 - Archive visibility toggle
 
+### Updating CHANGELOG
+
+Update `CHANGELOG.md` when making **feature or fix changes** to the site itself — not for blog post additions or edits.
+
+Record entries for:
+
+- New components or UI features (e.g. new embed component, new AI capability)
+- Visual/design changes (e.g. font swaps, layout redesigns)
+- Bug fixes to site functionality
+- Infrastructure changes (e.g. AI model swap, Analytics changes, Gateway config)
+
+Do **not** add entries for:
+
+- Adding or editing blog posts
+- Minor copy/grammar fixes in posts
+- Updating post tags or metadata
+
+Entry format:
+
+```markdown
+- **MMM DD, YYYY** - `<short-hash>`: <type>: <description>
+  > _One or two sentence summary of what changed and why._
+```
+
 ## Formatting & Linting
 
 **Auto-format on save** (optional):
+
 ```bash
 pnpm run format
 ```
 
 **CI/CD enforces**:
+
 - Prettier formatting (80 char width, 2 spaces)
 - ESLint rules (Astro-aware)
 - TypeScript type checking
 - All three must pass for merges
 
 **Fix formatting errors**:
+
 ```bash
 pnpm run format && pnpm run lint --fix
 ```
@@ -159,21 +199,25 @@ pnpm run format && pnpm run lint --fix
 ## Deployment
 
 **Build & Deploy**: Handled by Cloudflare Pages
+
 - Automatic deployment triggered on push to `main`
 - Cloudflare builds, optimizes, and deploys to Workers
 - Site available at: `https://hossain.dev` (custom domain)
 
 **Environment Variables** (Cloudflare):
 Set these in **Cloudflare Dashboard → Workers & Pages → hossains-dev-bytes → Settings → Environment variables**:
+
 - `GITHUB_TOKEN` - GitHub Personal Access Token (with `public_repo` scope) - used by GitHubEmbed component
 - Any other runtime secrets needed by the app
 
 **Wrangler Variables** (`wrangler.jsonc` `vars` section — committed to source):
-- `AI_MODEL` - Workers AI model ID (default: `@cf/meta/llama-3.1-8b-instruct-fp8`). Change here to swap models with no code change.
+
+- `AI_MODEL` - Workers AI model ID (default: `@cf/google/gemma-4-26b-a4b-it`). Change here to swap models with no code change.
 - `AI_GATEWAY_ID` - AI Gateway name (default: `hossains-dev-bytes`). Routes all AI requests through the gateway for rate limiting, caching, and observability. Configure the gateway at: **Cloudflare Dashboard → AI → AI Gateway**.
 
 **GitHub Actions** (Pre-deployment checks):
 Runs on Node 22.x and 24.x when pushing to `main`:
+
 - Checks ESLint rules
 - Validates Prettier formatting (currently commented out)
 - Runs full build to catch errors early
@@ -182,6 +226,7 @@ Runs on Node 22.x and 24.x when pushing to `main`:
 ## Blog Writing Style
 
 Blog posts should sound like they were written by a real person solving a real problem - not a polished tutorial or technical documentation. The reference posts for tone are:
+
 - `src/data/blog/create-your-own-mock-api-server-with-express-js-and-firebase-for-free.md`
 - `src/data/blog/source-code-syntax-highlighting-on-android-taking-full-control.md`
 
@@ -197,10 +242,12 @@ When choosing a tool or approach, say why you chose it. "Since Firebase has a fr
 Write in first person throughout. "I noticed", "I wanted to avoid", "I just wanted to focus on" - not passive voice or third person.
 
 **Section titles - short and lowercase**
+
 - Good: "What it does", "The API endpoint", "Keeping it free", "Seeing it in the dashboard"
 - Avoid: "Understanding the Feature", "Building the API Endpoint", "Real-World Cost Analysis"
 
 **No bold-label-then-dash bullets**
+
 - Avoid: `**Streaming** - this gives us token-by-token output`
 - Use plain sentences instead, or just a dash: `- Streaming gives us token-by-token output`
 
@@ -214,10 +261,13 @@ Use `>` blockquotes for tips and callouts. Optionally with a 💡 prefix.
 If you personally hit issues, add a Troubleshooting section at the end with the actual errors and what fixed them.
 
 **Friendly sign-off**
-End posts with a short, warm close that invites readers to comment if something's broken or unclear. Examples:
+End posts with a short, warm close. Examples:
+
 - "Happy mocking 😃!"
 - "Hope it helps somebody. ✌️"
-- "If you find any issue, leave a comment or open a GitHub issue."
+- "If you find any issue, open a GitHub issue."
+
+> **Note**: This site does NOT have comment support. Never tell readers to "drop a comment" or "leave a comment" - direct them to GitHub issues instead.
 
 **Emoji usage**
 Use emoji sparingly and naturally - a few in the body and sign-off is fine. Don't force them into every bullet or heading.
@@ -228,16 +278,19 @@ If something may be outdated or has caveats, note it inline with a `> **UPDATE:*
 ## Code Conventions
 
 ### Naming
+
 - **Files**: kebab-case (e.g., `post-title.md`, `header.astro`)
 - **Components**: PascalCase (e.g., `Header.astro`)
 - **Utilities**: camelCase (e.g., `getSortedPosts.ts`)
 - **CSS classes**: kebab-case (Tailwind utility chaining)
 
 ### Imports
+
 - Use path aliases: `@/components`, `@/layouts`, `@/utils` (defined in `tsconfig.json`)
 - Organize: built-ins → packages → aliases
 
 ### TypeScript
+
 - Strict mode enabled
 - Use `type` keyword for type definitions
 - Define component props with `interface Props`
@@ -247,6 +300,7 @@ If something may be outdated or has caveats, note it inline with a `> **UPDATE:*
 **Do not use em dashes** (`—`); use a regular hyphen-minus (`-`) instead.
 
 **Code blocks** with syntax highlighting:
+
 ````markdown
 ```javascript
 // Syntax highlighting enabled via Shiki
@@ -255,11 +309,13 @@ const greeting = "hello";
 ````
 
 **Special notations** (Shiki transformers):
+
 - Diffs: `// [!code ++]` or `// [!code --]`
 - Highlight: `// [!code highlight]`
 - Word highlight: `// [!code word:variable]`
 
 ### Components
+
 - Single-file Astro components
 - Props defined with `interface`
 - Use Tailwind CSS for styling
@@ -267,17 +323,17 @@ const greeting = "hello";
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| **Dev server won't start** | `pnpm install --frozen-lockfile` then `pnpm run dev` |
-| **Build fails** | Run `pnpm run format && pnpm run lint --fix` to fix syntax |
-| **Search not working** | Ensure `pnpm run build` completes; pagefind index must be generated |
-| **Imports fail** | Check alias paths in `tsconfig.json` match `astro.config.ts` |
-| **Formatting conflicts** | Delete `.prettierrc.mjs` and rebuild if corrupted |
-| **GitHubEmbed shows error (403)** | Token not set in Cloudflare. Go to **Cloudflare Dashboard → Workers & Pages → hossains-dev-bytes → Settings → Environment variables** and add `GITHUB_TOKEN` |
-| **GitHubEmbed component fails locally** | Create `.env` file from `.env.example` and add your GitHub Personal Access Token |
-| **AI assistant shows "Daily AI usage limit reached"** | Rate limit on AI Gateway triggered. Wait until midnight UTC for daily reset, or raise the limit at **Cloudflare Dashboard → AI → AI Gateway → hossains-dev-bytes → Settings → Rate Limiting** |
-| **AI assistant not routing through gateway / no gateway logs** | Ensure the gateway named `hossains-dev-bytes` exists in the Cloudflare Dashboard under AI → AI Gateway. The `AI_GATEWAY_ID` var in `wrangler.jsonc` must match the gateway name exactly |
+| Issue                                                          | Solution                                                                                                                                                                                      |
+| -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Dev server won't start**                                     | `pnpm install --frozen-lockfile` then `pnpm run dev`                                                                                                                                          |
+| **Build fails**                                                | Run `pnpm run format && pnpm run lint --fix` to fix syntax                                                                                                                                    |
+| **Search not working**                                         | Ensure `pnpm run build` completes; pagefind index must be generated                                                                                                                           |
+| **Imports fail**                                               | Check alias paths in `tsconfig.json` match `astro.config.ts`                                                                                                                                  |
+| **Formatting conflicts**                                       | Delete `.prettierrc.mjs` and rebuild if corrupted                                                                                                                                             |
+| **GitHubEmbed shows error (403)**                              | Token not set in Cloudflare. Go to **Cloudflare Dashboard → Workers & Pages → hossains-dev-bytes → Settings → Environment variables** and add `GITHUB_TOKEN`                                  |
+| **GitHubEmbed component fails locally**                        | Create `.env` file from `.env.example` and add your GitHub Personal Access Token                                                                                                              |
+| **AI assistant shows "Daily AI usage limit reached"**          | Rate limit on AI Gateway triggered. Wait until midnight UTC for daily reset, or raise the limit at **Cloudflare Dashboard → AI → AI Gateway → hossains-dev-bytes → Settings → Rate Limiting** |
+| **AI assistant not routing through gateway / no gateway logs** | Ensure the gateway named `hossains-dev-bytes` exists in the Cloudflare Dashboard under AI → AI Gateway. The `AI_GATEWAY_ID` var in `wrangler.jsonc` must match the gateway name exactly       |
 
 ## CI/CD Pipeline
 
@@ -285,6 +341,7 @@ const greeting = "hello";
 **Workflow file**: `.github/workflows/ci.yml`
 
 **On push/PR to main**:
+
 1. Install dependencies with `pnpm install --frozen-lockfile`
 2. Run `pnpm run lint` - ESLint code quality checks
 3. Run `pnpm run format:check` - Prettier formatting validation (currently disabled)
@@ -296,6 +353,7 @@ All checks must pass before merging to `main`. This acts as a safety gate before
 **Triggered**: Automatically when commits reach `main` branch
 
 **Build process**:
+
 1. Git clone on Cloudflare's build servers
 2. Install dependencies (`pnpm install --frozen-lockfile`)
 3. Run build command: `npm run build`
@@ -305,6 +363,7 @@ All checks must pass before merging to `main`. This acts as a safety gate before
 7. Available at: `https://hossain.dev`
 
 **Environment variables** (Cloudflare build):
+
 - Set in **Cloudflare Dashboard → Workers & Pages → hossains-dev-bytes → Settings → Environment variables**
 - Example: `GITHUB_TOKEN` (used by GitHubEmbed component at build time)
 - These are passed to the build process and available as `process.env.*` in Astro components
@@ -315,6 +374,7 @@ All checks must pass before merging to `main`. This acts as a safety gate before
 ## Git Conventions
 
 **Commit messages** follow conventional commits:
+
 - `feat:` - New feature or content
 - `fix:` - Bug fix
 - `ci:` - CI/CD changes
@@ -322,6 +382,7 @@ All checks must pass before merging to `main`. This acts as a safety gate before
 - `docs:` - Documentation
 
 **Examples**:
+
 ```
 feat: add post about Rust for JavaScript developers
 fix: correct sidebar navigation on mobile
@@ -340,5 +401,5 @@ docs: update README with gallery instructions
 
 ---
 
-**Last updated**: April 6, 2026
+**Last updated**: April 24, 2026
 **Maintainer**: Hossain Khan (@hossain-khan)

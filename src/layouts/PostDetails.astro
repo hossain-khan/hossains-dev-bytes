@@ -34,7 +34,8 @@ const {
   hideEditPost,
 } = post.data;
 
-const { Content } = await render(post);
+const { Content, remarkPluginFrontmatter } = await render(post);
+const readingTime = (remarkPluginFrontmatter?.readingTime as string | undefined) ?? "";
 
 let ogImageUrl: string | undefined;
 
@@ -165,6 +166,27 @@ const nextPost =
               class="opacity-70 [&>svg]:hidden"
             />
           </div>
+
+          <!-- Reading time chip -->
+          {readingTime && (
+            <div
+              class="inline-flex items-center gap-1.5 rounded-lg border border-border/25 bg-muted/10 px-2.5 py-1 backdrop-blur-sm"
+            >
+              <svg
+                class="size-3.5 text-accent/70"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span class="text-sm opacity-70">{readingTime}</span>
+            </div>
+          )}
 
           <!-- TL;DR AI Summary shortcut -->
           <a

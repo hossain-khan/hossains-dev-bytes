@@ -17,7 +17,7 @@
 		// AI model to use for post summarization and Q&A.
 		// Change this to try a different model without redeploying code.
 		// See available models: https://developers.cloudflare.com/workers-ai/models/
-		"AI_MODEL": "@cf/meta/llama-3.1-8b-instruct-fp8",
+		"AI_MODEL": "@cf/google/gemma-4-26b-a4b-it",
 		// AI Gateway ID for rate limiting, caching, and observability.
 		// Create the gateway at: Cloudflare Dashboard > AI > AI Gateway
 		// Then enable rate limiting in: Settings > Rate Limiting (recommended: 150 req/day fixed window)

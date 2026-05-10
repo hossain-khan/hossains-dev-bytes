@@ -1,13 +1,13 @@
 ---
 title: Setup Android Gradle based Firebase App Distribution with GitHub Actions CI
-description: A quick guide on how to set up Github Actions CI workflow to automatically post APK to Firebase App Distribution from your Android project.
+description: A quick guide on how to set up GitHub Actions CI workflow to automatically post APK to Firebase App Distribution from your Android project.
 pubDatetime: 2020-06-16T12:50:37.864Z
 tags: ["android", "gradle", "firebase", "ci"]
 featured: false
 draft: false
 ---
 
-This is a quick guide on how you can easily set up Github Actions CI workflow to automatically post APK to [Firebase App Distribution](https://firebase.google.com/docs/app-distribution) on merge to `release` or `master` (or soon to be known as `main`) branch.
+This is a quick guide on how you can easily set up GitHub Actions CI workflow to automatically post APK to [Firebase App Distribution](https://firebase.google.com/docs/app-distribution) on merge to `release` or `master` (or soon to be known as `main`) branch.
 
 Firebase already has an [**excellent guide**](https://firebase.google.com/docs/app-distribution/android/distribute-gradle) 🏆 on how to set up the Gradle task on your Android project to post APK to App Distribution. However, I will quickly touch those areas using the easiest path ✌️.
 
@@ -49,7 +49,7 @@ Firebase has [3 different documented ways](https://firebase.google.com/docs/app-
 
 ![](https://cdn-images-1.medium.com/max/800/1*_EC-NBCkx-VwM9m_0O1D6g.png)
 
-From the root of your android app project, run following Gradle command which will give you a URL to authenticate for the Firebase project that app uses.
+From the root of your android app project, run the following Gradle command which will give you a URL to authenticate for the Firebase project that app uses.
 
 ```bash
 ./gradlew appDistributionLogin

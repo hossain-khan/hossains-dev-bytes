@@ -15,20 +15,20 @@ Now, recently I’ve started adding [**Travis**](https://travis-ci.org/) Continu
 
 > **UPDATE: I have written another article that leverages GitHub actions and node modules to validate different things. Use this article to validate anything including Swagger/OpenAPI specifications.**
 
-[**Use node.js tools on GitHub actions CI workflow** — _On April 14th, 2020 GitHub announced a major change in their plans to allow free private repositories. It’s a good time…_](https://medium.com/@hossainkhan/use-node-js-tools-on-github-actions-ci-workflow-120fb3b4a3e1)
+[**Use node.js tools on GitHub actions CI workflow** - _On April 14th, 2020 GitHub announced a major change in their plans to allow free private repositories. It’s a good time…_](https://medium.com/@hossainkhan/use-node-js-tools-on-github-actions-ci-workflow-120fb3b4a3e1)
 
 ### Adding Travis CI build support for OpenAPI specification
 
-Googling for this specific topic didn’t bring much content. I wanted to keep the script simple and use existing validator provided by [swagger-validator-badge](https://github.com/swagger-api/validator-badge) web service _(NOTE: There are dozens of validators in different languages built by the community — see_ [_http://swagger.io/open-source-integrations/_](http://swagger.io/open-source-integrations/)_)_.
+Googling for this specific topic didn’t bring much content. I wanted to keep the script simple and use existing validator provided by [swagger-validator-badge](https://github.com/swagger-api/validator-badge) web service _(NOTE: There are dozens of validators in different languages built by the community - see_ [_http://swagger.io/open-source-integrations/_](http://swagger.io/open-source-integrations/)_)_.
 
 Here are the key elements used for CI:
 
-\* shUnit2 — for writing unit tests in shell script. This is downloaded via Travis build config _before_ the build begins.
+- shUnit2 - for writing unit tests in shell script. This is downloaded via Travis build config _before_ the build begins.
 
-.travis.yml — Travis CI build config
+- .travis.yml - Travis CI build config
 
-\* validator-badge — online web-service to validate OpenAPI specification file
+- validator-badge - online web-service to validate OpenAPI specification file
 
-api-spec_validation_test.sh — Shell script for unit test
+- api-spec_validation_test.sh - Shell script for unit test
 
 I hope somebody finds this useful for their project.

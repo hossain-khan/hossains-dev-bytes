@@ -1,6 +1,6 @@
 ---
 title: Android remote logging to Airtable using Timber
-description: Have you ever needed to save your Android Logcat logs for later analysis? You can achieve this using Timber and service that has REST API
+description: Have you ever needed to save your Android Logcat logs for later analysis? You can achieve this using Timber and a service that has REST API
 pubDatetime: 2024-09-10T04:03:01.367Z
 tags: ["android", "kotlin", "logging"]
 featured: false
@@ -199,12 +199,12 @@ Everything is great except there is one piece of missing code that uses the API 
 val records = JSONArray().apply { logs.forEach { put(it.toLogRecord()) } }
 ```
 
-This function implementation will be very specific to how you have setup your Airtable spreadsheet.
+This function implementation will be very specific to how you have set up your Airtable spreadsheet.
 
 For my case, I have two columns for the table in the Airtable base:
 
-1.  `"Device"` — to store the device model. Single-line text.
-2.  `"Log"` — to store the log message. Multiline text.
+1.  `"Device"` - to store the device model. Single-line text.
+2.  `"Log"` - to store the log message. Multiline text.
 
 ```kotlin
 fun toLogRecord(): JSONObject {
@@ -251,7 +251,7 @@ Timber.plant(
 
 ✅ And that’s it. You have a working Timber tree that can send all logcat logs to the Airtable base (spreadsheet) that adheres to their API rate limit.
 
-Continue to log using Timber as usual, all logs will be also sent to Airtable
+Continue to log using Timber as usual, all logs will be also sent to Airtable.
 
 ```kotlin
 Timber.tag("Cart").d("New item added to cart")
@@ -273,4 +273,4 @@ Here is a screenshot of how the log looks in the Airtable
 
 ![](https://cdn-images-1.medium.com/max/1200/1*6qnyRKwjluVhE5L0S3sHIw.png)
 
-Demo of remotly logged messages in the Airtable
+Demo of remotely logged messages in the Airtable

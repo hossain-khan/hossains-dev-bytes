@@ -13,19 +13,19 @@ Here are **2** key steps to set up your GitHub pages [enabled](https://guides.gi
 
 ---
 
-#### ⚙️Step 1 — Set domain in GitHub project
+#### ⚙️ Step 1 - Set domain in GitHub project
 
 ---
 
 ![](https://cdn-images-1.medium.com/max/1200/1*bMCYC7Q-FXhMiW9HC3676g.png)
 
-Go to your GitHub Pages site’s repository settings. Under “Custom domain”, add or remove your custom domain and click “Save”.
+Go to your GitHub Pages site’s repository settings. Under “Custom domain”, add or remove your custom domain and click “Save”.
 
 ---
 
 Setting “custom domain” creates a file named `**CNAME**` in the same repository. Don’t delete it.
 
-#### ⚙️Step 2 — Set custom resource record for domain
+#### ⚙️ Step 2 - Set custom resource record for domain
 
 This step is specific to your domain name registrar (like GoDaddy, Domain.com, Google Domains, etc). All you need to do is set `**A**` & `**CNAME**` records for the selected domain.
 
@@ -33,13 +33,13 @@ This step is specific to your domain name registrar (like GoDaddy, Domain.com, G
 
 ![](https://cdn-images-1.medium.com/max/1200/1*lT1CCfb9jX74vGrsF5AoLA.png)
 
-This is a sample screenshot taken from the **Google Domains** portal.
+This is a sample screenshot taken from the **Google Domains** portal.
 
 ---
 
-For `**A**` record, set `185.199.108.153`, `185.199.109.153`, `185.199.110.153` and `185.199.111.153`. To redirect `**www**` subdomain to the original domain, add a `**CNAME**` record with your GitHub pages profile URL with a `.`(dot) in the end, for example, ‘`*YOUR-GITHUB-USERNAME.github.io.*`’.
+For `**A**` record, set `185.199.108.153`, `185.199.109.153`, `185.199.110.153` and `185.199.111.153`. To redirect `**www**` subdomain to the original domain, add a `**CNAME**` record with your GitHub pages profile URL with a `.`(dot) in the end, for example, ‘`*YOUR-GITHUB-USERNAME.github.io.*`’.
 
-**\*Official References\*\***: For most up to date IP Addresses, use GitHub’s* [*official documentation*](https://help.github.com/articles/setting-up-an-apex-domain/) *and for setting up CNAME use this* [*documentation*](https://help.github.com/articles/setting-up-a-www-subdomain/)*.\*
+**Official References**: For most up to date IP Addresses, use GitHub’s [official documentation](https://help.github.com/articles/setting-up-an-apex-domain/) and for setting up CNAME use this [documentation](https://help.github.com/articles/setting-up-a-www-subdomain/).
 
 ---
 
