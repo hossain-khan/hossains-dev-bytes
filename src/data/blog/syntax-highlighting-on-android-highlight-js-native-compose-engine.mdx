@@ -54,45 +54,7 @@ Instead, `HighlightThemeProvider` creates a **single shared `HighlightEngine`** 
 
 The WebView loads `bridge.html` from the library's bundled assets, which in turn loads the full Highlight.js bundle. All WebView operations run on the main thread but the suspend functions let callers interact from any coroutine scope.
 
-## Built-in themes
-
-Four themes are included:
-
-- `HighlightTheme.tomorrow(context)` - light
-- `HighlightTheme.atomOneLight(context)` - light
-- `HighlightTheme.tomorrowNight(context)` - dark
-- `HighlightTheme.atomOneDark(context)` - dark
-
-## Custom themes
-
-Any Highlight.js CSS theme works. The most straightforward way is to load from an asset file:
-
-```kotlin
-val theme = HighlightTheme.fromAsset(context, "themes/my-theme.css", name = "my-theme")
-```
-
-Or pass raw CSS directly:
-
-```kotlin
-val theme = HighlightTheme.fromCss(cssString, name = "my-inline-theme")
-```
-
-There's also a `fromColorMap` factory that takes a `Map<String, SpanStyle>` keyed by CSS class name. That one's particularly useful if you want to build a theme that follows Material 3 dynamic colors at runtime:
-
-```kotlin
-val theme = HighlightTheme.fromColorMap(
-    name             = "dynamic",
-    colorMap         = mapOf(
-        "hljs"         to SpanStyle(color = onSurface, background = surface),
-        "hljs-keyword" to SpanStyle(color = primary, fontWeight = FontWeight.Bold),
-        "hljs-string"  to SpanStyle(color = tertiary),
-    ),
-    backgroundColor  = surface,
-    defaultTextColor = onSurface,
-)
-```
-
-Community themes are available at the [highlight.js styles directory](https://github.com/highlightjs/highlight.js/tree/main/src/styles) if you want to explore beyond what's bundled.
+The library ships with four bundled themes (two light, two dark) and supports custom themes via asset files, raw CSS, or a `fromColorMap` factory that's handy for wiring up Material 3 dynamic colors.
 
 ## Using the engine directly
 
