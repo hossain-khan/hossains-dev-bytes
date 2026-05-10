@@ -9,7 +9,8 @@ draft: false
 
 import GitHubEmbed from "@/components/GitHubEmbed.astro";
 
-While I was [investigating](/posts/syntax-highlighting-on-android-bringing-shiki-engine-to-compose/) syntax highlighting on Android, I was wondering how modern apps like ChatGPT, Claude, and Perplexity handle source code highlighting on Android. The code blocks look great - proper colors, correct token boundaries, clean rendering. I was curious what was actually powering that, so I did some further inverstigation on their apps.
+Recently I've been on a bit of a syntax highlighting journey on Android. 
+While in [part 1](/posts/syntax-highlighting-on-android-bringing-shiki-engine-to-compose/), both cloud based on on-device highlihgting worked, I was wondering how modern apps like ChatGPT, Claude, and Perplexity handle source code highlighting on Android. The code blocks look great - proper colors, correct token boundaries, clean rendering. I was curious what was actually powering that, so I did some further inverstigation on their apps using good old [`apktool`](https://apktool.org/).
 
 The answer was surprisingly simple: **Highlight.js running inside a hidden WebView**. The tokenized HTML output - those `<span class="hljs-*">` elements - gets parsed and mapped to native Compose `AnnotatedString` spans. The WebView never actually renders anything visible. It just does the parsing work in the background, and the result is fully native text that supports real text selection and accessibility out of the box.
 
