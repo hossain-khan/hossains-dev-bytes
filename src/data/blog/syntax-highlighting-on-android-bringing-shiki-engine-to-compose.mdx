@@ -70,7 +70,8 @@ private fun buildAnnotatedStringFromDualResponse(
 private fun parseHexColor(hex: String): Color {
     val clean = hex.trimStart('#')
     return when (clean.length) {
-        6, 8 -> Color(android.graphics.Color.parseColor("#$clean"))
+        // Parses only when it's likely valid HEX color 
+        6, 8 -> Color(Color.parseColor("#$clean"))
         else -> Color.Unspecified
     }
 }
