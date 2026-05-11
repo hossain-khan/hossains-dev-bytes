@@ -9,8 +9,8 @@ draft: false
 
 import GitHubEmbed from "@/components/GitHubEmbed.astro";
 
-Recently I've been on a bit of a syntax highlighting journey on Android. 
-While in [part 1](/posts/syntax-highlighting-on-android-bringing-shiki-engine-to-compose/) both cloud based on on-device highlihgting worked, I was wondering how modern apps like ChatGPT, Claude, and Perplexity handle source code highlighting on Android. The code blocks look great - proper colors, correct token boundaries, clean rendering. I was curious what was actually powering that, so I did some further inverstigation on their apps using good old [`apktool`](https://apktool.org/).
+Recently I've been on a bit of a syntax highlighting journey on Android.
+While in [part 1](/posts/syntax-highlighting-on-android-bringing-shiki-engine-to-compose/) both cloud-based and on-device highlighting worked, I was wondering how modern apps like ChatGPT, Claude, and Perplexity handle source code highlighting on Android. The code blocks look great - proper colors, correct token boundaries, clean rendering. I was curious what was actually powering that, so I did some further investigation on their apps using good old [`apktool`](https://apktool.org/).
 
 The answer was surprisingly simple: **Highlight.js running inside a hidden WebView**. The tokenized HTML output - those `<span class="hljs-*">` elements - gets parsed and mapped to native Compose `AnnotatedString` spans. The WebView never actually renders anything visible. It just does the parsing work in the background, and the result is fully native text that supports real text selection and accessibility out of the box.
 
@@ -32,8 +32,8 @@ Wrap your screen in `HighlightThemeProvider`, then drop `SyntaxHighlightedCode` 
 
 ```kotlin
 HighlightThemeProvider(
-    lightHighlightTheme = HighlightTheme.tomorrow(context),
-    darkHighlightTheme  = HighlightTheme.atomOneDark(context),
+    lightHighlightTheme = rememberTomorrowTheme(),
+    darkHighlightTheme  = rememberAtomOneDarkTheme(),
 ) {
     SyntaxHighlightedCode(
         code            = myCode,
@@ -45,15 +45,19 @@ HighlightThemeProvider(
 
 `HighlightThemeProvider` reads `isSystemInDarkTheme()` automatically and picks the right theme. You can pass `darkTheme = true/false` to force a specific mode.
 
-The composable comes with a few useful parameters out of the box - a language badge in the header and a copy-to-clipboard button are on by default, while line numbers are off (pass `showLineNumbers = true` to enable them). You can swap in a custom copy icon or override the copy handler if you want to own that UX yourself.
+The `@Composable` helpers like `rememberTomorrowTheme()`, `rememberAtomOneDarkTheme()`, `rememberTomorrowNightTheme()`, and `rememberAtomOneLightTheme()` resolve context internally, so there is no need to pass `LocalContext.current` manually.
+
+The composable comes with a few useful parameters out of the box - a language badge in the header and a copy-to-clipboard button are on by default, while line numbers are off (pass `showLineNumbers = true` to enable them). The copy button does not show a built-in "Copied!" flash - you own that feedback. Pass a `onCopyClick` lambda to hook in a Snackbar, Toast, or your own animation. You can also supply a custom composable for the copy icon itself via the `copyButtonIcon` slot.
 
 <div style="display: flex; gap: 1rem; justify-content: center; align-items: flex-start;">
   <figure style="flex: 1; margin: 0; text-align: center;">
-    ![Sample app home screen showing syntax highlighted code](../../assets/images/android-compose-highlight-home.png)
+    ![Sample app home screen showing syntax highlighted
+    code](../../assets/images/android-compose-highlight-home.png)
     <figcaption>Sample app with different languages</figcaption>
   </figure>
   <figure style="flex: 1; margin: 0; text-align: center;">
-    ![Benchmark performance results for syntax highlighting](../../assets/images/android-compose-highlight-perf.png)
+    ![Benchmark performance results for syntax
+    highlighting](../../assets/images/android-compose-highlight-perf.png)
     <figcaption>Syntax highlighting performance data</figcaption>
   </figure>
 </div>
@@ -67,6 +71,21 @@ Instead, `HighlightThemeProvider` creates a **single shared `HighlightEngine`** 
 The WebView loads `bridge.html` from the library's bundled assets, which in turn loads the full Highlight.js bundle. All WebView operations run on the main thread but the suspend functions let callers interact from any coroutine scope.
 
 The library ships with four bundled themes (two light, two dark) and supports custom themes via asset files, raw CSS, or a `fromColorMap` factory that's handy for wiring up Material 3 dynamic colors.
+
+Font family, size, and line height are controlled via `CodeBlockStyle.textStyle`. Start from `SyntaxHighlightedCodeDefaults.codeTextStyle` and override just the properties you need:
+
+```kotlin
+SyntaxHighlightedCode(
+    code     = snippet,
+    language = "kotlin",
+    style    = CodeBlockStyle(
+        textStyle = SyntaxHighlightedCodeDefaults.codeTextStyle.copy(
+            fontSize   = 15.sp,
+            lineHeight = 24.sp,
+        ),
+    ),
+)
+```
 
 ## Using the engine directly
 
@@ -91,6 +110,21 @@ viewModelScope.launch {
 
 There's also `highlightBothThemes()` if you want to do a single JS call and get both light and dark versions back at once - handy if you're building something that needs to handle theme switching without triggering a re-highlight.
 
+You can also introspect the bundled Highlight.js at runtime:
+
+```kotlin
+engine.highlightJsVersion().onSuccess { version -> Log.d("HL", "Highlight.js $version") }
+engine.supportedLanguages().onSuccess { langs -> Log.d("HL", "${langs.size} languages available") }
+```
+
+`supportedLanguages()` returns the sorted list of the 190+ language identifiers that the bundled Highlight.js knows about. Both values are cached after the first call so repeated reads are free.
+
+`engine.isInitialized` is a `StateFlow<Boolean>` that turns `true` once the hidden WebView has finished loading. Compose UIs can observe it reactively:
+
+```kotlin
+val isReady by engine.isInitialized.collectAsState()
+```
+
 ## The remember helpers
 
 For the common case of highlighting inside a composable, two helpers are included:
@@ -100,7 +134,7 @@ For the common case of highlighting inside a composable, two helpers are include
 val highlighted by rememberHighlightedCode(
     code     = snippet,
     language = "kotlin",
-    onHighlightComplete = { ms -> Log.d("Perf", "Highlighted in ${ms}ms") },
+    onHighlightComplete = { result -> Log.d("Perf", "Highlighted in ${result.durationMs}ms") },
 )
 Text(text = highlighted ?: AnnotatedString(snippet))
 ```
@@ -110,8 +144,8 @@ Text(text = highlighted ?: AnnotatedString(snippet))
 val result by rememberHighlightedCodeBothThemes(
     code       = snippet,
     language   = "kotlin",
-    lightTheme = remember(context) { HighlightTheme.tomorrow(context.applicationContext) },
-    darkTheme  = remember(context) { HighlightTheme.tomorrowNight(context.applicationContext) },
+    lightTheme = rememberTomorrowTheme(),
+    darkTheme  = rememberTomorrowNightTheme(),
 )
 Text(text = (if (isDark) result?.dark else result?.light) ?: AnnotatedString(snippet))
 ```
