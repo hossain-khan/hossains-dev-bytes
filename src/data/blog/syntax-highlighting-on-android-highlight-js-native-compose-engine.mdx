@@ -97,10 +97,11 @@ val engine = HighlightEngine(context)
 viewModelScope.launch {
     engine.initialize() // warms up the WebView
 
-    val result: Result<AnnotatedString> =
+    val result: Result<HighlightResult> =
         engine.highlight(code = "val x = 42", language = "kotlin", theme = HighlightTheme.tomorrow(context))
 
-    result.onSuccess { annotated ->
+    result.onSuccess { highlighted ->
+        val annotated = highlighted.annotated // AnnotatedString
         // use in your own composable
     }
 
