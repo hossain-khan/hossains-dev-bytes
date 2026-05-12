@@ -176,8 +176,8 @@ The dominant cost is the WebView JS round-trip. `ThemeParser` (CSS parsing) and 
 Performance numbers are one side of the cost equation - the other is how much the library adds to your APK. I measured this using [diffuse](https://github.com/JakeWharton/diffuse) against a **Phase 2 enriched baseline** - a realistic app that already uses WebView, LazyColumn, Canvas, and animations - so the delta reflects only what `compose-highlight` actually brings in.
 
 <MetricsSummary
-  title="True Library Impact (with-library vs enriched baseline)"
-  subtitle="Compared against a realistic app that already uses WebView, LazyColumn, Canvas, and animations."
+  title="True Library Impact (with-library vs baseline app)"
+  subtitle="Compared against a realistic basic app that already uses WebView, LazyColumn, Canvas, and animations."
   metrics={[
     { value: "+561.4 KB", label: "Release APK Delta" },
     { value: "+440.1 KB", label: "Debug APK Delta" },
@@ -203,7 +203,7 @@ The bulk of the size increase comes from the bundled Highlight.js asset (~308 KB
   ]}
 />
 
-The ~309 KB asset delta is entirely the bundled `highlight.min.js`. That is a real cost, though it compresses well in a release APK and is only loaded once during the shared `HighlightEngine` warm-up. If you were already shipping a WebView-heavy app, the marginal cost is lower than these numbers suggest - WebView itself is a system component and not included here.
+The ~309 KB asset delta is entirely the bundled `highlight.min.js` and few theme files. That is a real cost, though it compresses well in a release APK and is only loaded once during the shared `HighlightEngine` warm-up. If you were already shipping a WebView-heavy app, the marginal cost is lower than these numbers suggest - WebView itself is a system component and not included here.
 
 ## Wrapping up
 
