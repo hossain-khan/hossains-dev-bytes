@@ -173,7 +173,7 @@ The dominant cost is the WebView JS round-trip. `ThemeParser` (CSS parsing) and 
 
 ## APK size impact
 
-Performance numbers are one side of the cost equation - the other is how much the library adds to your APK. I measured this using [diffuse](https://github.com/JakeWharton/diffuse) against a **Phase 2 enriched baseline** - a realistic app that already uses WebView, LazyColumn, Canvas, and animations - so the delta reflects only what `compose-highlight` actually brings in.
+Performance numbers are one side of the cost equation - the other is how much the library adds to your APK. I measured this using [diffuse](https://github.com/JakeWharton/diffuse) against an **enriched baseline app** - a realistic app that already uses WebView, LazyColumn, Canvas, and animations - so the delta reflects only what `compose-highlight` actually brings in.
 
 <MetricsSummary
   title="True Library Impact (with-library vs baseline app)"
@@ -189,8 +189,8 @@ Performance numbers are one side of the cost equation - the other is how much th
 The bulk of the size increase comes from the bundled Highlight.js asset (~308 KB) and the dex code for the library itself (~235 KB). The per-category breakdown:
 
 <DataTable
-  title="Phase 2 Release Breakdown"
-  headers={["Category", "Enriched Baseline", "With Library", "Delta"]}
+  title="Release Build Breakdown"
+  headers={["Category", "Baseline App", "With Library", "Delta"]}
   rows={[
     { category: "dex",      values: ["826.1 KB", "1 MB"],      delta: "+235.9 KB" },
     { category: "arsc",     values: ["70.2 KB",  "79.3 KB"],   delta: "+9.1 KB" },
