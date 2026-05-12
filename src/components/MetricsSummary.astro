@@ -53,11 +53,11 @@ const { title, subtitle, metrics } = Astro.props;
 
 function valueColor(intent?: ColorIntent): string {
   switch (intent) {
-    case "DANGER":  return "text-(--color-red-400)";
-    case "WARN":    return "text-orange-500 dark:text-orange-400";
-    case "OK":      return "text-green-600 dark:text-green-400";
+    case "DANGER":  return "text-red-700/75 dark:text-red-300/75";
+    case "WARN":    return "text-amber-700/75 dark:text-amber-300/75";
+    case "OK":      return "text-emerald-700/75 dark:text-emerald-300/75";
     case "NEUTRAL":
-    default:        return "text-accent";
+    default:        return "text-sky-700/75 dark:text-sky-300/75";
   }
 }
 
