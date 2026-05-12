@@ -179,10 +179,10 @@ Performance numbers are one side of the cost equation - the other is how much th
   title="True Library Impact (with-library vs baseline app)"
   subtitle="Compared against a realistic basic app that already uses WebView, LazyColumn, Canvas, and animations."
   metrics={[
-    { value: "+561.4 KB", label: "Release APK Delta" },
-    { value: "+440.1 KB", label: "Debug APK Delta" },
-    { value: "+2,708",    label: "Methods (release)" },
-    { value: "+571",      label: "Classes (release)" },
+    { value: "+561.4 KB", label: "Release APK Delta",  intent: "DANGER" },
+    { value: "+440.1 KB", label: "Debug APK Delta",    intent: "DANGER" },
+    { value: "+2,708",    label: "Methods (release)",  intent: "DANGER" },
+    { value: "+571",      label: "Classes (release)",  intent: "DANGER" },
   ]}
 />
 
@@ -192,14 +192,14 @@ The bulk of the size increase comes from the bundled Highlight.js asset (~308 KB
   title="Release Build Breakdown"
   headers={["Category", "Baseline App", "With Library", "Delta"]}
   rows={[
-    { category: "dex",      values: ["826.1 KB", "1 MB"],      delta: "+235.9 KB" },
-    { category: "arsc",     values: ["70.2 KB",  "79.3 KB"],   delta: "+9.1 KB" },
-    { category: "manifest", values: ["1.7 KB",   "1.7 KB"],    delta: "-32B" },
-    { category: "res",      values: ["36.4 KB",  "36.4 KB"],   delta: "+6B" },
-    { category: "native",   values: ["84.4 KB",  "91.4 KB"],   delta: "+7 KB" },
-    { category: "asset",    values: ["3.9 KB",   "312.5 KB"],  delta: "+308.6 KB" },
-    { category: "other",    values: ["45.2 KB",  "46 KB"],     delta: "+780B" },
-    { category: "TOTAL",    values: ["1 MB",     "1.6 MB"],    delta: "+561.4 KB", isTotal: true },
+    { category: "dex",      values: ["826.1 KB", "1 MB"],      delta: "+235.9 KB",  deltaIntent: "DANGER" },
+    { category: "arsc",     values: ["70.2 KB",  "79.3 KB"],   delta: "+9.1 KB",    deltaIntent: "DANGER" },
+    { category: "manifest", values: ["1.7 KB",   "1.7 KB"],    delta: "-32B",        deltaIntent: "OK" },
+    { category: "res",      values: ["36.4 KB",  "36.4 KB"],   delta: "+6B",          deltaIntent: "NEUTRAL" },
+    { category: "native",   values: ["84.4 KB",  "91.4 KB"],   delta: "+7 KB",       deltaIntent: "DANGER" },
+    { category: "asset",    values: ["3.9 KB",   "312.5 KB"],  delta: "+308.6 KB",  deltaIntent: "DANGER" },
+    { category: "other",    values: ["45.2 KB",  "46 KB"],     delta: "+780B",        deltaIntent: "NEUTRAL" },
+    { category: "TOTAL",    values: ["1 MB",     "1.6 MB"],    delta: "+561.4 KB",  deltaIntent: "DANGER", isTotal: true },
   ]}
 />
 

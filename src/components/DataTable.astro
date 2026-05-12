@@ -2,16 +2,11 @@
 /**
  * DataTable — Renders a styled comparison table with an optional color-coded delta column.
  *
- * Delta color is determined by an explicit `deltaIntent` per row:
+ * Delta color is controlled by `deltaIntent` per row (required when `delta` is set):
  *   - "DANGER"  → red    (increases, failures, cost)
  *   - "WARN"    → orange (notable but not critical)
  *   - "OK"      → green  (reductions, improvements)
  *   - "NEUTRAL" → accent blue (informational)
- *
- * When `deltaIntent` is omitted, color is inferred from the delta string prefix:
- *   - "+" prefix → DANGER (red)
- *   - "-" prefix → OK (green)
- *   - no prefix  → NEUTRAL (accent blue)
  *
  * Usage in .mdx files:
  *
@@ -21,10 +16,10 @@
  *     title="Release Build Breakdown"
  *     headers={["Category", "Baseline App", "With Library", "Delta"]}
  *     rows={[
- *       { category: "dex",      values: ["826.1 KB", "1 MB"],      delta: "+235.9 KB" },
- *       { category: "manifest", values: ["1.7 KB",   "1.7 KB"],    delta: "-32B" },
- *       { category: "score",    values: ["72",       "89"],         delta: "+17", deltaIntent: "OK" },
- *       { category: "TOTAL",    values: ["1 MB",     "1.6 MB"],    delta: "+561.4 KB", isTotal: true },
+ *       { category: "dex",      values: ["826.1 KB", "1 MB"],      delta: "+235.9 KB", deltaIntent: "DANGER" },
+ *       { category: "manifest", values: ["1.7 KB",   "1.7 KB"],    delta: "-32B",       deltaIntent: "OK" },
+ *       { category: "score",    values: ["72",       "89"],         delta: "+17",        deltaIntent: "OK" },
+ *       { category: "TOTAL",    values: ["1 MB",     "1.6 MB"],    delta: "+561.4 KB",  deltaIntent: "DANGER", isTotal: true },
  *     ]}
  *   />
  */
@@ -39,8 +34,8 @@ type Row = {
   /** Delta value string, e.g. "+235.9 KB", "-32B", "0 B". */
   delta?: string;
   /**
-   * Explicit color intent for the delta cell.
-   * When omitted, color is auto-detected from the delta string prefix.
+   * Color intent for the delta cell. Should be set whenever `delta` is set.
+   * Defaults to NEUTRAL (accent blue) when omitted.
    */
   deltaIntent?: ColorIntent;
   /** When true the row is rendered bold (useful for TOTAL rows). */
@@ -58,26 +53,18 @@ type Props = {
    */
   headers: string[];
   rows: Row[];
-  // NOTE: positiveIsGood removed — use explicit `deltaIntent` per row instead.
 };
 
 const { title, headers, rows } = Astro.props;
 
-function intentColor(intent: ColorIntent): string {
+function deltaColor(intent?: ColorIntent): string {
   switch (intent) {
     case "DANGER":  return "text-red-500 dark:text-red-400";
     case "WARN":    return "text-orange-500 dark:text-orange-400";
     case "OK":      return "text-green-600 dark:text-green-400";
-    case "NEUTRAL": return "text-accent";
+    case "NEUTRAL":
+    default:        return "text-accent";
   }
-}
-
-function deltaColor(delta: string | undefined, intent?: ColorIntent): string {
-  if (!delta) return "";
-  if (intent) return intentColor(intent);
-  if (delta.startsWith("+")) return "text-red-500 dark:text-red-400";
-  if (delta.startsWith("-")) return "text-green-600 dark:text-green-400";
-  return "text-slate-500 dark:text-slate-400";
 }
 
 // Number of value columns = headers.length - 1 (category) - 1 (delta) = headers.length - 2
@@ -165,7 +152,7 @@ const deltaHeader = hasDelta ? headers[headers.length - 1] : null;
                 class:list={[
                   "border-0 px-5 py-3 text-right tabular-nums font-semibold",
                   row.isTotal ? "font-bold" : "",
-                  deltaColor(row.delta, row.deltaIntent),
+                  deltaColor(row.deltaIntent),
                 ]}
               >
                 {row.delta ?? ""}

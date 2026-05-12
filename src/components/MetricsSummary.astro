@@ -4,16 +4,11 @@
  * large highlighted metric numbers — useful for APK size impact summaries,
  * benchmark results, or any before/after stats.
  *
- * Metric color is determined by an explicit `intent` per metric:
+ * Metric color is controlled by `intent` per metric (required for meaningful display):
  *   - "DANGER"  → red    (increases, failures, cost)
  *   - "WARN"    → orange (notable but not critical)
  *   - "OK"      → green  (reductions, improvements)
  *   - "NEUTRAL" → accent blue (informational, default)
- *
- * When `intent` is omitted, color is inferred from the value string prefix:
- *   - "+" prefix → DANGER (red)
- *   - "-" prefix → OK (green)
- *   - no prefix  → NEUTRAL (accent blue)
  *
  * Usage in .mdx files:
  *
@@ -23,10 +18,10 @@
  *     title="True Library Impact"
  *     subtitle="Compared against a realistic baseline app."
  *     metrics={[
- *       { value: "+561.4 KB", label: "Release APK Delta" },
- *       { value: "+440.1 KB", label: "Debug APK Delta" },
- *       { value: "4,783",     label: "Total methods",   intent: "NEUTRAL" },
- *       { value: "-32B",      label: "Manifest delta",  intent: "OK" },
+ *       { value: "+561.4 KB", label: "Release APK Delta", intent: "DANGER" },
+ *       { value: "+440.1 KB", label: "Debug APK Delta",   intent: "DANGER" },
+ *       { value: "4,783",     label: "Total methods",      intent: "NEUTRAL" },
+ *       { value: "-32B",      label: "Manifest delta",     intent: "OK" },
  *     ]}
  *   />
  */
@@ -39,8 +34,8 @@ type Metric = {
   /** Short label shown below the value, e.g. "Release APK Delta". */
   label: string;
   /**
-   * Explicit color intent for this metric.
-   * When omitted, color is auto-detected from the value string prefix.
+   * Color intent for this metric. Should always be set explicitly.
+   * Defaults to NEUTRAL (accent blue) when omitted.
    */
   intent?: ColorIntent;
 };
@@ -52,31 +47,18 @@ type Props = {
   subtitle?: string;
   /** Array of metrics to display in the grid. 2–4 items look best. */
   metrics: Metric[];
-  // NOTE: positiveIsGood removed — use explicit `intent` per metric instead.
 };
 
 const { title, subtitle, metrics } = Astro.props;
 
-function intentColor(intent: ColorIntent): string {
+function valueColor(intent?: ColorIntent): string {
   switch (intent) {
     case "DANGER":  return "text-red-500 dark:text-red-400";
     case "WARN":    return "text-orange-500 dark:text-orange-400";
     case "OK":      return "text-green-600 dark:text-green-400";
-    case "NEUTRAL": return "text-accent";
+    case "NEUTRAL":
+    default:        return "text-accent";
   }
-}
-
-function valueColor(value: string, intent?: ColorIntent): string {
-  if (intent) return intentColor(intent);
-  const isIncrease = value.trimStart().startsWith("+");
-  const isDecrease = value.trimStart().startsWith("-");
-  if (isIncrease) {
-    return "text-red-500 dark:text-red-400";
-  }
-  if (isDecrease) {
-    return "text-green-600 dark:text-green-400";
-  }
-  return "text-accent";
 }
 
 // Responsive grid: 2 cols on small screens, up to 4 on md+
@@ -113,7 +95,7 @@ const gridCols =
           <span
             class:list={[
               "text-2xl font-bold tabular-nums leading-tight",
-              valueColor(metric.value, metric.intent),
+              valueColor(metric.intent),
             ]}
           >
             {metric.value}
