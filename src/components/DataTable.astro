@@ -78,7 +78,7 @@ const deltaHeader = hasDelta ? headers[headers.length - 1] : null;
 ---
 
 <div
-  class="not-prose my-6 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700/60 dark:bg-slate-900/60"
+  class="not-prose my-6 overflow-x-auto rounded-xl border border-slate-300/40 bg-slate-100/40 shadow-sm dark:border-slate-700/30 dark:bg-slate-800/30"
 >
   <div class="px-5 pt-5 pb-3">
     <h3
@@ -88,12 +88,12 @@ const deltaHeader = hasDelta ? headers[headers.length - 1] : null;
     </h3>
   </div>
 
-  <table class="w-full border-collapse text-sm">
+  <table class="w-full border-0 border-collapse text-sm">
     <thead>
-      <tr class="border-b border-slate-200 dark:border-slate-700">
+      <tr class="border-b border-0 border-b-slate-300/50 dark:border-b-slate-600/40">
         <!-- Category header -->
         <th
-          class="px-5 py-2.5 text-left font-semibold text-slate-700 dark:text-slate-300"
+          class="border-0 px-5 py-2.5 text-left font-semibold text-slate-600 dark:text-slate-400"
         >
           {headers[0]}
         </th>
@@ -101,7 +101,7 @@ const deltaHeader = hasDelta ? headers[headers.length - 1] : null;
         <!-- Value column headers -->
         {
           valueHeaders.map(h => (
-            <th class="px-5 py-2.5 text-right font-semibold text-slate-700 dark:text-slate-300">
+            <th class="border-0 px-5 py-2.5 text-right font-semibold text-slate-600 dark:text-slate-400">
               {h}
             </th>
           ))
@@ -110,7 +110,7 @@ const deltaHeader = hasDelta ? headers[headers.length - 1] : null;
         <!-- Delta header -->
         {
           deltaHeader && (
-            <th class="px-5 py-2.5 text-right font-semibold text-slate-700 dark:text-slate-300">
+            <th class="border-0 px-5 py-2.5 text-right font-semibold text-slate-600 dark:text-slate-400">
               {deltaHeader}
             </th>
           )
@@ -120,21 +120,17 @@ const deltaHeader = hasDelta ? headers[headers.length - 1] : null;
 
     <tbody>
       {
-        rows.map((row, i) => (
+        rows.map(row => (
           <tr
             class:list={[
-              "border-b border-slate-100 last:border-0 dark:border-slate-800",
-              row.isTotal
-                ? "bg-slate-50/60 dark:bg-slate-800/40"
-                : i % 2 === 0
-                  ? ""
-                  : "",
+              "border-0 border-b border-b-slate-200/60 last:border-0 dark:border-b-slate-700/30",
+              row.isTotal ? "bg-slate-200/30 dark:bg-slate-700/20" : "",
             ]}
           >
             <!-- Category cell -->
             <td
               class:list={[
-                "px-5 py-3 text-left text-slate-800 dark:text-slate-200",
+                "border-0 px-5 py-3 text-left text-slate-800 dark:text-slate-200",
                 row.isTotal ? "font-bold" : "",
               ]}
             >
@@ -145,7 +141,7 @@ const deltaHeader = hasDelta ? headers[headers.length - 1] : null;
             {row.values.map(v => (
               <td
                 class:list={[
-                  "px-5 py-3 text-right tabular-nums text-slate-700 dark:text-slate-300",
+                  "border-0 px-5 py-3 text-right tabular-nums text-slate-700 dark:text-slate-300",
                   row.isTotal ? "font-bold" : "",
                 ]}
               >
@@ -157,7 +153,7 @@ const deltaHeader = hasDelta ? headers[headers.length - 1] : null;
             {hasDelta && (
               <td
                 class:list={[
-                  "px-5 py-3 text-right tabular-nums font-semibold",
+                  "border-0 px-5 py-3 text-right tabular-nums font-semibold",
                   row.isTotal ? "font-bold" : "",
                   deltaColor(row.delta),
                 ]}
