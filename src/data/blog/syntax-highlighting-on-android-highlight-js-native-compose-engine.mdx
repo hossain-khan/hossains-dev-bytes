@@ -159,13 +159,17 @@ Text(text = (if (isDark) result?.dark else result?.light) ?: AnnotatedString(sni
 
 I added microbenchmarks using the AndroidX Benchmark library to measure the three pipeline stages. Running on a Pixel 9 Pro XL (debuggable build):
 
-| Code                      | Median  |
-| ------------------------- | ------- |
-| Python snippet            | 7.5 ms  |
-| Kotlin snippet            | 8.7 ms  |
-| SQL snippet               | 8.3 ms  |
-| ~150-line Kotlin file     | 18.8 ms |
-| ~200-line TypeScript file | 17.6 ms |
+<DataTable
+  title="Highlight Performance (Pixel 9 Pro XL, debuggable)"
+  headers={["Code", "Median"]}
+  rows={[
+    { category: "Python snippet",            values: ["7.5 ms"] },
+    { category: "Kotlin snippet",            values: ["8.7 ms"] },
+    { category: "SQL snippet",               values: ["8.3 ms"] },
+    { category: "~150-line Kotlin file",     values: ["18.8 ms"] },
+    { category: "~200-line TypeScript file", values: ["17.6 ms"] },
+  ]}
+/>
 
 The dominant cost is the WebView JS round-trip. `ThemeParser` (CSS parsing) and `HtmlToAnnotatedString` (jsoup conversion) are sub-millisecond individually. Even large real-world files come in under 20ms, and results are cached per `rememberHighlightedCode` call so subsequent renders are free.
 
