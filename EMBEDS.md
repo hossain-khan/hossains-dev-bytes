@@ -658,6 +658,150 @@ downloads, and version (when available).
 
 **Data source**: `https://playbadges.pavi2410.com/app/details?id=<packageId>`
 
+## Data Visualization Components
+
+These components let you display structured data — comparison tables and metric
+summary cards — directly in MDX blog posts. Great for benchmark results, APK
+size breakdowns, before/after comparisons, or any tabular data.
+
+---
+
+### DataTable
+
+Renders a styled comparison table with an optional color-coded **Delta** column.
+Positive (`+`) deltas are red and negative (`-`) deltas are green by default
+(size/cost context where increases are bad). Pass `positiveIsGood={true}` to
+invert the logic.
+
+**Usage**:
+
+```mdx
+import DataTable from "@/components/DataTable.astro";
+
+<DataTable
+  title="Phase 2 Release Breakdown"
+  headers={["Category", "Enriched Baseline", "With Library", "Delta"]}
+  rows={[
+    { category: "dex",      values: ["826.1 KB", "1 MB"],      delta: "+235.9 KB" },
+    { category: "arsc",     values: ["70.2 KB",  "79.3 KB"],   delta: "+9.1 KB" },
+    { category: "manifest", values: ["1.7 KB",   "1.7 KB"],    delta: "-32B" },
+    { category: "res",      values: ["36.4 KB",  "36.4 KB"],   delta: "+6B" },
+    { category: "native",   values: ["84.4 KB",  "91.4 KB"],   delta: "+7 KB" },
+    { category: "asset",    values: ["3.9 KB",   "312.5 KB"],  delta: "+308.6 KB" },
+    { category: "other",    values: ["45.2 KB",  "46 KB"],     delta: "+780B" },
+    { category: "TOTAL",    values: ["1 MB",     "1.6 MB"],    delta: "+561.4 KB", isTotal: true },
+  ]}
+/>
+```
+
+**Props**:
+
+| Prop             | Type      | Required | Default | Description                                                                              |
+| ---------------- | --------- | -------- | ------- | ---------------------------------------------------------------------------------------- |
+| `title`          | `string`  | ✅        | -       | Table title shown above the header row                                                   |
+| `headers`        | `string[]`| ✅        | -       | Column headers. First = category (left), last = delta (right), middle = value columns   |
+| `rows`           | `Row[]`   | ✅        | -       | Array of row objects (see below)                                                         |
+| `positiveIsGood` | `boolean` | ❌        | `false` | When `true`, `+` deltas are green and `-` deltas are red (e.g. for speed improvements) |
+
+**Row object shape**:
+
+| Field      | Type       | Required | Description                                          |
+| ---------- | ---------- | -------- | ---------------------------------------------------- |
+| `category` | `string`   | ✅        | Left-most cell (label/category)                      |
+| `values`   | `string[]` | ✅        | Values for each non-category, non-delta column       |
+| `delta`    | `string`   | ❌        | Delta value string, e.g. `"+235.9 KB"`, `"-32B"`   |
+| `isTotal`  | `boolean`  | ❌        | Renders the row bold (for TOTAL/summary rows)        |
+
+**Notes**:
+- The last `headers` entry is treated as the delta column header only when at least one `row` has a `delta` field.
+- Tables without any `delta` values render all columns as plain value columns.
+- Supports light and dark mode automatically.
+
+---
+
+### MetricsSummary
+
+Renders a card with a title, optional subtitle, and a responsive grid of large
+highlighted metric numbers. Best for APK impact summaries, benchmark results,
+or any set of 2-4 key figures you want to call out visually.
+
+Same color logic as `DataTable`: `+` = red (bad), `-` = green (good) by
+default. Pass `positiveIsGood={true}` to invert.
+
+**Usage**:
+
+```mdx
+import MetricsSummary from "@/components/MetricsSummary.astro";
+
+<MetricsSummary
+  title="True Library Impact (with-library vs enriched baseline)"
+  subtitle="Compared against a realistic app that already uses WebView, LazyColumn, Canvas, and animations."
+  metrics={[
+    { value: "+561.4 KB", label: "Release APK Delta" },
+    { value: "+440.1 KB", label: "Debug APK Delta" },
+    { value: "+2,708",    label: "Methods (release)" },
+    { value: "+571",      label: "Classes (release)" },
+  ]}
+/>
+```
+
+**Props**:
+
+| Prop             | Type       | Required | Default | Description                                                                              |
+| ---------------- | ---------- | -------- | ------- | ---------------------------------------------------------------------------------------- |
+| `title`          | `string`   | ✅        | -       | Card title                                                                               |
+| `subtitle`       | `string`   | ❌        | -       | Optional descriptive text shown below the title                                          |
+| `metrics`        | `Metric[]` | ✅        | -       | Array of metric objects (see below)                                                      |
+| `positiveIsGood` | `boolean`  | ❌        | `false` | When `true`, `+` values are green and `-` values are red                                |
+
+**Metric object shape**:
+
+| Field   | Type     | Required | Description                                              |
+| ------- | -------- | -------- | -------------------------------------------------------- |
+| `value` | `string` | ✅        | The big number to highlight, e.g. `"+561.4 KB"`, `"4,783"` |
+| `label` | `string` | ✅        | Short label shown below the value                        |
+
+**Notes**:
+- 2 metrics: 2-column grid. 3 metrics: 3-column grid. 4 metrics: 2×2 on mobile, 4-column on `sm+`.
+- Values without a `+` or `-` prefix are shown in the site accent color (blue).
+- Supports light and dark mode automatically.
+
+---
+
+### Combining both in a post
+
+```mdx
+import DataTable from "@/components/DataTable.astro";
+import MetricsSummary from "@/components/MetricsSummary.astro";
+
+Here's the full APK size breakdown with R8 minification:
+
+<DataTable
+  title="Release APK (with R8 minification)"
+  headers={["Category", "Baseline", "With Library", "Delta"]}
+  rows={[
+    { category: "dex",    values: ["676.1 KB", "1,062 KB"],  delta: "+385.9 KB" },
+    { category: "native", values: ["98.1 KB",  "91.4 KB"],   delta: "-6.7 KB" },
+    { category: "asset",  values: ["3.1 KB",   "312.5 KB"],  delta: "+309.5 KB" },
+    { category: "TOTAL",  values: ["930.7 KB", "1,629 KB"],  delta: "+698.7 KB", isTotal: true },
+  ]}
+/>
+
+And here's what that means in practice:
+
+<MetricsSummary
+  title="Impact Summary"
+  metrics={[
+    { value: "+698.7 KB", label: "Release APK (compressed)" },
+    { value: "+510.7 KB", label: "Debug APK (compressed)" },
+    { value: "+4,783",    label: "Methods added (release)" },
+    { value: "+1,042",    label: "Classes added (release)" },
+  ]}
+/>
+```
+
+---
+
 ## File Organization
 
 Your embed components belong in `src/components/`:
@@ -666,6 +810,8 @@ Your embed components belong in `src/components/`:
 src/components/
 ├── GitHubEmbed.astro      # GitHub repo card
 ├── GooglePlayEmbed.astro  # Google Play app card
+├── DataTable.astro        # Comparison table with color-coded delta column
+├── MetricsSummary.astro   # Large-number stats summary card
 ├── VideoEmbed.astro       # YouTube/video embed
 ├── QuoteEmbed.astro       # Pull quotes
 ├── CodepenEmbed.astro     # Codepen projects
