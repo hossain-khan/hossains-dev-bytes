@@ -658,6 +658,187 @@ downloads, and version (when available).
 
 **Data source**: `https://playbadges.pavi2410.com/app/details?id=<packageId>`
 
+## Data Visualization Components
+
+These components let you display structured data — comparison tables and metric
+summary cards — directly in MDX blog posts. Great for benchmark results, APK
+size breakdowns, before/after comparisons, or any tabular data.
+
+### Color intents
+
+Both components share the same explicit color intent system. Set `intent` (on
+a metric) or `deltaIntent` (on a row) to one of:
+
+| Intent      | Color  | Use for                                      |
+| ----------- | ------ | -------------------------------------------- |
+| `"DANGER"`  | Red    | Increases, failures, cost, regressions       |
+| `"WARN"`    | Orange | Notable but not critical changes             |
+| `"OK"`      | Green  | Reductions, improvements, passing            |
+| `"NEUTRAL"` | Blue   | Informational values with no good/bad signal |
+
+When `intent` / `deltaIntent` is omitted, the value defaults to `NEUTRAL` (blue).
+Always set intent explicitly so the meaning is clear to readers.
+
+---
+
+### DataTable
+
+Renders a styled comparison table with an optional color-coded **Delta** column.
+
+**Usage**:
+
+```mdx
+import DataTable from "@/components/DataTable.astro";
+
+<DataTable
+  title="Release Build Breakdown"
+  headers={["Category", "Baseline App", "With Library", "Delta"]}
+  rows={[
+    { category: "dex",      values: ["826.1 KB", "1 MB"],      delta: "+235.9 KB",  deltaIntent: "DANGER" },
+    { category: "arsc",     values: ["70.2 KB",  "79.3 KB"],   delta: "+9.1 KB",    deltaIntent: "DANGER" },
+    { category: "manifest", values: ["1.7 KB",   "1.7 KB"],    delta: "-32B",        deltaIntent: "OK" },
+    { category: "res",      values: ["36.4 KB",  "36.4 KB"],   delta: "+6B",          deltaIntent: "NEUTRAL" },
+    { category: "native",   values: ["84.4 KB",  "91.4 KB"],   delta: "+7 KB",       deltaIntent: "DANGER" },
+    { category: "asset",    values: ["3.9 KB",   "312.5 KB"],  delta: "+308.6 KB",  deltaIntent: "DANGER" },
+    { category: "other",    values: ["45.2 KB",  "46 KB"],     delta: "+780B",        deltaIntent: "NEUTRAL" },
+    { category: "TOTAL",    values: ["1 MB",     "1.6 MB"],    delta: "+561.4 KB",  deltaIntent: "DANGER", isTotal: true },
+  ]}
+/>
+```
+
+With explicit intents (e.g. a score increase is good):
+
+```mdx
+<DataTable
+  title="Benchmark Results"
+  headers={["Test", "Before", "After", "Delta"]}
+  rows={[
+    { category: "Render time", values: ["42ms", "28ms"], delta: "-14ms",  deltaIntent: "OK" },
+    { category: "Memory",      values: ["48MB", "51MB"], delta: "+3MB",   deltaIntent: "WARN" },
+    { category: "Score",       values: ["72",   "89"],   delta: "+17",    deltaIntent: "OK" },
+  ]}
+/>
+```
+
+**Props**:
+
+| Prop      | Type      | Required | Description                                                                             |
+| --------- | --------- | -------- | --------------------------------------------------------------------------------------- |
+| `title`   | `string`  | ✅        | Table title shown above the header row                                                  |
+| `headers` | `string[]`| ✅        | Column headers. First = category (left), last = delta (right), middle = value columns  |
+| `rows`    | `Row[]`   | ✅        | Array of row objects (see below)                                                        |
+
+**Row object shape**:
+
+| Field          | Type          | Required | Description                                                              |
+| -------------- | ------------- | -------- | ------------------------------------------------------------------------ |
+| `category`     | `string`      | ✅        | Left-most cell (label/category)                                          |
+| `values`       | `string[]`    | ✅        | Values for each non-category, non-delta column                           |
+| `delta`        | `string`      | ❌        | Delta value string, e.g. `"+235.9 KB"`, `"-32B"`                       |
+| `deltaIntent`  | `ColorIntent` | ❌        | Color for the delta cell. Defaults to `NEUTRAL` if omitted               |
+| `isTotal`      | `boolean`     | ❌        | Renders the row bold (for TOTAL/summary rows)                            |
+
+**Notes**:
+- The last `headers` entry is treated as the delta column header only when at least one `row` has a `delta` field.
+- Tables without any `delta` values render all columns as plain value columns.
+- Supports light and dark mode automatically.
+
+---
+
+### MetricsSummary
+
+Renders a card with a title, optional subtitle, and a responsive grid of large
+highlighted metric numbers. Best for APK impact summaries, benchmark results,
+or any set of 2-4 key figures you want to call out visually.
+
+**Usage**:
+
+```mdx
+import MetricsSummary from "@/components/MetricsSummary.astro";
+
+<MetricsSummary
+  title="True Library Impact (with-library vs baseline app)"
+  subtitle="Compared against a realistic app that already uses WebView, LazyColumn, Canvas, and animations."
+  metrics={[
+    { value: "+561.4 KB", label: "Release APK Delta",  intent: "DANGER" },
+    { value: "+440.1 KB", label: "Debug APK Delta",    intent: "DANGER" },
+    { value: "+2,708",    label: "Methods (release)",  intent: "DANGER" },
+    { value: "+571",      label: "Classes (release)",  intent: "DANGER" },
+  ]}
+/>
+```
+
+With explicit intents:
+
+```mdx
+<MetricsSummary
+  title="Test Suite Results"
+  metrics={[
+    { value: "98.4%",  label: "Tests passing",    intent: "OK" },
+    { value: "3",      label: "Tests failing",     intent: "DANGER" },
+    { value: "12",     label: "Tests skipped",     intent: "WARN" },
+    { value: "1,042",  label: "Total test cases",  intent: "NEUTRAL" },
+  ]}
+/>
+```
+
+**Props**:
+
+| Prop       | Type       | Required | Description                                      |
+| ---------- | ---------- | -------- | ------------------------------------------------ |
+| `title`    | `string`   | ✅        | Card title                                       |
+| `subtitle` | `string`   | ❌        | Optional descriptive text shown below the title  |
+| `metrics`  | `Metric[]` | ✅        | Array of metric objects (see below)              |
+
+**Metric object shape**:
+
+| Field    | Type          | Required | Description                                                             |
+| -------- | ------------- | -------- | ----------------------------------------------------------------------- |
+| `value`  | `string`      | ✅        | The big number to highlight, e.g. `"+561.4 KB"`, `"4,783"`            |
+| `label`  | `string`      | ✅        | Short label shown below the value                                       |
+| `intent` | `ColorIntent` | ❌        | Color for this metric. Defaults to `NEUTRAL` if omitted                 |
+
+**Notes**:
+- 2 metrics: 2-column grid. 3 metrics: 3-column grid. 4 metrics: 2×2 on mobile, 4-column on `sm+`.
+- Values with no explicit `intent` default to `NEUTRAL` (site accent color).
+- Supports light and dark mode automatically.
+
+---
+
+### Combining both in a post
+
+```mdx
+import DataTable from "@/components/DataTable.astro";
+import MetricsSummary from "@/components/MetricsSummary.astro";
+
+Here's the full APK size breakdown:
+
+<DataTable
+  title="Release Build Breakdown"
+  headers={["Category", "Baseline", "With Library", "Delta"]}
+  rows={[
+    { category: "dex",    values: ["676.1 KB", "1,062 KB"],  delta: "+385.9 KB",  deltaIntent: "DANGER" },
+    { category: "native", values: ["98.1 KB",  "91.4 KB"],   delta: "-6.7 KB",    deltaIntent: "OK" },
+    { category: "asset",  values: ["3.1 KB",   "312.5 KB"],  delta: "+309.5 KB",  deltaIntent: "DANGER" },
+    { category: "TOTAL",  values: ["930.7 KB", "1,629 KB"],  delta: "+698.7 KB",  deltaIntent: "DANGER", isTotal: true },
+  ]}
+/>
+
+And here's what that means in practice:
+
+<MetricsSummary
+  title="Impact Summary"
+  metrics={[
+    { value: "+698.7 KB", label: "Release APK (compressed)",  intent: "DANGER" },
+    { value: "+510.7 KB", label: "Debug APK (compressed)",    intent: "DANGER" },
+    { value: "+4,783",    label: "Methods added (release)",   intent: "DANGER" },
+    { value: "+1,042",    label: "Classes added (release)",   intent: "DANGER" },
+  ]}
+/>
+```
+
+---
+
 ## File Organization
 
 Your embed components belong in `src/components/`:
@@ -666,6 +847,8 @@ Your embed components belong in `src/components/`:
 src/components/
 ├── GitHubEmbed.astro      # GitHub repo card
 ├── GooglePlayEmbed.astro  # Google Play app card
+├── DataTable.astro        # Comparison table with color-coded delta column
+├── MetricsSummary.astro   # Large-number stats summary card
 ├── VideoEmbed.astro       # YouTube/video embed
 ├── QuoteEmbed.astro       # Pull quotes
 ├── CodepenEmbed.astro     # Codepen projects

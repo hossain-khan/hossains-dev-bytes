@@ -1,0 +1,110 @@
+---
+/**
+ * MetricsSummary — Renders a card with a title, optional subtitle, and a grid of
+ * large highlighted metric numbers — useful for APK size impact summaries,
+ * benchmark results, or any before/after stats.
+ *
+ * Metric color is controlled by `intent` per metric (required for meaningful display):
+ *   - "DANGER"  → red    (increases, failures, cost)
+ *   - "WARN"    → orange (notable but not critical)
+ *   - "OK"      → green  (reductions, improvements)
+ *   - "NEUTRAL" → accent blue (informational, default)
+ *
+ * Usage in .mdx files:
+ *
+ *   import MetricsSummary from '@/components/MetricsSummary.astro';
+ *
+ *   <MetricsSummary
+ *     title="True Library Impact"
+ *     subtitle="Compared against a realistic baseline app."
+ *     metrics={[
+ *       { value: "+561.4 KB", label: "Release APK Delta", intent: "DANGER" },
+ *       { value: "+440.1 KB", label: "Debug APK Delta",   intent: "DANGER" },
+ *       { value: "4,783",     label: "Total methods",      intent: "NEUTRAL" },
+ *       { value: "-32B",      label: "Manifest delta",     intent: "OK" },
+ *     ]}
+ *   />
+ */
+
+type ColorIntent = "DANGER" | "WARN" | "OK" | "NEUTRAL";
+
+type Metric = {
+  /** The big number / value to highlight, e.g. "+561.4 KB", "-32B", "4,783". */
+  value: string;
+  /** Short label shown below the value, e.g. "Release APK Delta". */
+  label: string;
+  /**
+   * Color intent for this metric. Should always be set explicitly.
+   * Defaults to NEUTRAL (accent blue) when omitted.
+   */
+  intent?: ColorIntent;
+};
+
+type Props = {
+  /** Card title. */
+  title: string;
+  /** Optional descriptive subtitle shown below the title. */
+  subtitle?: string;
+  /** Array of metrics to display in the grid. 2–4 items look best. */
+  metrics: Metric[];
+};
+
+const { title, subtitle, metrics } = Astro.props;
+
+function valueColor(intent?: ColorIntent): string {
+  switch (intent) {
+    case "DANGER":  return "text-(--color-red-400)";
+    case "WARN":    return "text-orange-500 dark:text-orange-400";
+    case "OK":      return "text-green-600 dark:text-green-400";
+    case "NEUTRAL":
+    default:        return "text-accent";
+  }
+}
+
+// Responsive grid: 2 cols on small screens, up to 4 on md+
+const gridCols =
+  metrics.length <= 2
+    ? "grid-cols-1 sm:grid-cols-2"
+    : metrics.length === 3
+      ? "grid-cols-1 sm:grid-cols-3"
+      : "grid-cols-2 sm:grid-cols-4";
+---
+
+<div
+  class="not-prose my-6 rounded-xl border border-slate-300/40 bg-slate-100/40 p-5 shadow-sm dark:border-slate-700/30 dark:bg-slate-800/30"
+>
+  <!-- Title -->
+  <h3 class="m-0 text-base font-bold text-slate-900 dark:text-slate-100">
+    {title}
+  </h3>
+
+  <!-- Subtitle -->
+  {
+    subtitle && (
+      <p class="mt-1 mb-4 text-sm text-slate-500 dark:text-slate-400">
+        {subtitle}
+      </p>
+    )
+  }
+
+  <!-- Metrics grid -->
+  <div class:list={["mt-4 grid gap-3", gridCols]}>
+    {
+      metrics.map(metric => (
+        <div class="flex flex-col items-center justify-center rounded-lg bg-white/70 px-4 py-4 text-center dark:bg-slate-700/30">
+          <span
+            class:list={[
+              "text-2xl font-bold tabular-nums leading-tight",
+              valueColor(metric.intent),
+            ]}
+          >
+            {metric.value}
+          </span>
+          <span class="mt-1 text-xs font-semibold text-slate-600 dark:text-slate-400">
+            {metric.label}
+          </span>
+        </div>
+      ))
+    }
+  </div>
+</div>

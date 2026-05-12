@@ -1,0 +1,166 @@
+---
+/**
+ * DataTable — Renders a styled comparison table with an optional color-coded delta column.
+ *
+ * Delta color is controlled by `deltaIntent` per row (required when `delta` is set):
+ *   - "DANGER"  → red    (increases, failures, cost)
+ *   - "WARN"    → orange (notable but not critical)
+ *   - "OK"      → green  (reductions, improvements)
+ *   - "NEUTRAL" → accent blue (informational)
+ *
+ * Usage in .mdx files:
+ *
+ *   import DataTable from '@/components/DataTable.astro';
+ *
+ *   <DataTable
+ *     title="Release Build Breakdown"
+ *     headers={["Category", "Baseline App", "With Library", "Delta"]}
+ *     rows={[
+ *       { category: "dex",      values: ["826.1 KB", "1 MB"],      delta: "+235.9 KB", deltaIntent: "DANGER" },
+ *       { category: "manifest", values: ["1.7 KB",   "1.7 KB"],    delta: "-32B",       deltaIntent: "OK" },
+ *       { category: "score",    values: ["72",       "89"],         delta: "+17",        deltaIntent: "OK" },
+ *       { category: "TOTAL",    values: ["1 MB",     "1.6 MB"],    delta: "+561.4 KB",  deltaIntent: "DANGER", isTotal: true },
+ *     ]}
+ *   />
+ */
+
+type ColorIntent = "DANGER" | "WARN" | "OK" | "NEUTRAL";
+
+type Row = {
+  /** Left-most cell (category/label column). */
+  category: string;
+  /** Values for each non-category, non-delta column — in header order. */
+  values: string[];
+  /** Delta value string, e.g. "+235.9 KB", "-32B", "0 B". */
+  delta?: string;
+  /**
+   * Color intent for the delta cell. Should be set whenever `delta` is set.
+   * Defaults to NEUTRAL (accent blue) when omitted.
+   */
+  deltaIntent?: ColorIntent;
+  /** When true the row is rendered bold (useful for TOTAL rows). */
+  isTotal?: boolean;
+};
+
+type Props = {
+  /** Table title shown above the header row. */
+  title: string;
+  /**
+   * Column headers.
+   * First header = category column (left-aligned).
+   * Last header = delta column (right-aligned, colored) if `rows` have a `delta` field.
+   * Middle headers = value columns (right-aligned).
+   */
+  headers: string[];
+  rows: Row[];
+};
+
+const { title, headers, rows } = Astro.props;
+
+function deltaColor(intent?: ColorIntent): string {
+  switch (intent) {
+    case "DANGER":  return "text-(--color-red-400)";
+    case "WARN":    return "text-orange-500 dark:text-orange-400";
+    case "OK":      return "text-green-600 dark:text-green-400";
+    case "NEUTRAL":
+    default:        return "text-accent";
+  }
+}
+
+// Number of value columns = headers.length - 1 (category) - 1 (delta) = headers.length - 2
+// But if no rows have deltas, treat last header as a plain value column.
+const hasDelta = rows.some(r => r.delta !== undefined);
+const valueHeaders = hasDelta ? headers.slice(1, -1) : headers.slice(1);
+const deltaHeader = hasDelta ? headers[headers.length - 1] : null;
+---
+
+<div
+  class="not-prose my-6 overflow-x-auto rounded-xl border border-slate-300/40 bg-slate-100/40 shadow-sm dark:border-slate-700/30 dark:bg-slate-800/30"
+>
+  <div class="px-5 pt-5 pb-3">
+    <h3
+      class="m-0 text-base font-bold text-slate-900 dark:text-slate-100"
+    >
+      {title}
+    </h3>
+  </div>
+
+  <table class="w-full border-0 border-collapse text-sm">
+    <thead>
+      <tr class="border-b border-0 border-b-slate-300/50 dark:border-b-slate-600/40">
+        <!-- Category header -->
+        <th
+          class="border-0 px-5 py-2.5 text-left font-semibold text-slate-600 dark:text-slate-400"
+        >
+          {headers[0]}
+        </th>
+
+        <!-- Value column headers -->
+        {
+          valueHeaders.map(h => (
+            <th class="border-0 px-5 py-2.5 text-right font-semibold text-slate-600 dark:text-slate-400">
+              {h}
+            </th>
+          ))
+        }
+
+        <!-- Delta header -->
+        {
+          deltaHeader && (
+            <th class="border-0 px-5 py-2.5 text-right font-semibold text-slate-600 dark:text-slate-400">
+              {deltaHeader}
+            </th>
+          )
+        }
+      </tr>
+    </thead>
+
+    <tbody>
+      {
+        rows.map(row => (
+          <tr
+            class:list={[
+              "border-0 border-b border-b-slate-200/60 last:border-0 dark:border-b-slate-700/30",
+              row.isTotal ? "bg-slate-200/30 dark:bg-slate-700/20" : "",
+            ]}
+          >
+            <!-- Category cell -->
+            <td
+              class:list={[
+                "border-0 px-5 py-3 text-left text-slate-800 dark:text-slate-200",
+                row.isTotal ? "font-bold" : "",
+              ]}
+            >
+              {row.category}
+            </td>
+
+            <!-- Value cells -->
+            {row.values.map(v => (
+              <td
+                class:list={[
+                  "border-0 px-5 py-3 text-right tabular-nums text-slate-700 dark:text-slate-300",
+                  row.isTotal ? "font-bold" : "",
+                ]}
+              >
+                {v}
+              </td>
+            ))}
+
+            <!-- Delta cell -->
+            {hasDelta && (
+              <td
+                class:list={[
+                  "border-0 px-5 py-3 text-right tabular-nums font-semibold",
+                  row.isTotal ? "font-bold" : "",
+                  deltaColor(row.deltaIntent),
+                ]}
+              >
+                {row.delta ?? ""}
+              </td>
+            )}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>

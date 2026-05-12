@@ -8,6 +8,8 @@ draft: false
 ---
 
 import GitHubEmbed from "@/components/GitHubEmbed.astro";
+import DataTable from "@/components/DataTable.astro";
+import MetricsSummary from "@/components/MetricsSummary.astro";
 
 Recently I've been on a bit of a syntax highlighting journey on Android.
 While in [part 1](/posts/syntax-highlighting-on-android-bringing-shiki-engine-to-compose/) both cloud-based and on-device highlighting worked, I was wondering how modern apps like ChatGPT, Claude, and Perplexity handle source code highlighting on Android. The code blocks look great - proper colors, correct token boundaries, clean rendering. I was curious what was actually powering that, so I did some further investigation on their apps using good old [`apktool`](https://apktool.org/).
@@ -157,17 +159,55 @@ Text(text = (if (isDark) result?.dark else result?.light) ?: AnnotatedString(sni
 
 I added microbenchmarks using the AndroidX Benchmark library to measure the three pipeline stages. Running on a Pixel 9 Pro XL (debuggable build):
 
-| Code                      | Median  |
-| ------------------------- | ------- |
-| Python snippet            | 7.5 ms  |
-| Kotlin snippet            | 8.7 ms  |
-| SQL snippet               | 8.3 ms  |
-| ~150-line Kotlin file     | 18.8 ms |
-| ~200-line TypeScript file | 17.6 ms |
+<DataTable
+  title="Highlight Performance (Pixel 9 Pro XL, debuggable)"
+  headers={["Code", "Median"]}
+  rows={[
+    { category: "Python snippet",            values: ["7.5 ms"] },
+    { category: "Kotlin snippet",            values: ["8.7 ms"] },
+    { category: "SQL snippet",               values: ["8.3 ms"] },
+    { category: "~150-line Kotlin file",     values: ["18.8 ms"] },
+    { category: "~200-line TypeScript file", values: ["17.6 ms"] },
+  ]}
+/>
 
 The dominant cost is the WebView JS round-trip. `ThemeParser` (CSS parsing) and `HtmlToAnnotatedString` (jsoup conversion) are sub-millisecond individually. Even large real-world files come in under 20ms, and results are cached per `rememberHighlightedCode` call so subsequent renders are free.
 
 > 💡 To reduce first-call latency, you can pre-warm the WebView renderer in `Application.onCreate()` using `WebViewCompat.startUpWebView()` from `androidx.webkit:webkit:1.16+` - which is already a transitive dependency of this library.
+
+## APK size impact
+
+Performance numbers are one side of the cost equation - the other is how much the library adds to your APK. I measured this using [diffuse](https://github.com/JakeWharton/diffuse) against an **enriched baseline app** - a realistic app that already uses WebView, LazyColumn, Canvas, and animations - so the delta reflects only what `compose-highlight` actually brings in.
+
+<MetricsSummary
+  title="True Library Impact (with-library vs baseline app)"
+  subtitle="Compared against a realistic basic app that already uses WebView, LazyColumn, Canvas, and animations."
+  metrics={[
+    { value: "+561.4 KB", label: "Release APK Delta",  intent: "DANGER" },
+    { value: "+440.1 KB", label: "Debug APK Delta",    intent: "DANGER" },
+    { value: "+2,708",    label: "Methods (release)",  intent: "DANGER" },
+    { value: "+571",      label: "Classes (release)",  intent: "DANGER" },
+  ]}
+/>
+
+The bulk of the size increase comes from the bundled Highlight.js asset (~308 KB) and the dex code for the library itself (~235 KB). The per-category breakdown:
+
+<DataTable
+  title="Release Build Breakdown"
+  headers={["Category", "Baseline App", "With Library", "Delta"]}
+  rows={[
+    { category: "dex",      values: ["826.1 KB", "1 MB"],      delta: "+235.9 KB",  deltaIntent: "DANGER" },
+    { category: "arsc",     values: ["70.2 KB",  "79.3 KB"],   delta: "+9.1 KB",    deltaIntent: "DANGER" },
+    { category: "manifest", values: ["1.7 KB",   "1.7 KB"],    delta: "-32B",        deltaIntent: "OK" },
+    { category: "res",      values: ["36.4 KB",  "36.4 KB"],   delta: "+6B",          deltaIntent: "NEUTRAL" },
+    { category: "native",   values: ["84.4 KB",  "91.4 KB"],   delta: "+7 KB",       deltaIntent: "DANGER" },
+    { category: "asset",    values: ["3.9 KB",   "312.5 KB"],  delta: "+308.6 KB",  deltaIntent: "DANGER" },
+    { category: "other",    values: ["45.2 KB",  "46 KB"],     delta: "+780B",        deltaIntent: "NEUTRAL" },
+    { category: "TOTAL",    values: ["1 MB",     "1.6 MB"],    delta: "+561.4 KB",  deltaIntent: "DANGER", isTotal: true },
+  ]}
+/>
+
+The ~309 KB asset delta is entirely the bundled `highlight.min.js` and few theme files. That is a real cost, though it compresses well in a release APK and is only loaded once during the shared `HighlightEngine` warm-up. If you were already shipping a WebView-heavy app, the marginal cost is lower than these numbers suggest - WebView itself is a system component and not included here.
 
 ## Wrapping up
 
