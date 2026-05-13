@@ -1,7 +1,7 @@
 ---
 title: "Syntax Highlighting on Android - Highlight.js as a Native Compose Engine"
 pubDatetime: 2026-05-09T12:00:00Z
-description: "How I built android-compose-highlight - a Jetpack Compose library that runs Highlight.js in a hidden WebView and converts the output to native AnnotatedString for real text selection and accessibility."
+description: "A source code syntax highlighting library for Jetpack compose that leverages existing Highlight.js in a hidden WebView and converts the output to native AnnotatedString for real text selection and accessibility."
 tags: ["android", "jetpack-compose", "syntax-highlighting", "open-source", "ui"]
 featured: false
 draft: false
@@ -12,21 +12,23 @@ import DataTable from "@/components/DataTable.astro";
 import MetricsSummary from "@/components/MetricsSummary.astro";
 
 Recently I've been on a bit of a syntax highlighting journey on Android.
-While in [part 1](/posts/syntax-highlighting-on-android-bringing-shiki-engine-to-compose/) both cloud-based and on-device highlighting worked, I was wondering how modern apps like ChatGPT, Claude, and Perplexity handle source code highlighting on Android. The code blocks look great - proper colors, correct token boundaries, clean rendering. I was curious what was actually powering that, so I did some further investigation on their apps using good old [`apktool`](https://apktool.org/).
+While in [part 1](/posts/syntax-highlighting-on-android-bringing-shiki-engine-to-compose/) both cloud-based and on-device highlighting worked, I was wondering how modern apps like ChatGPT, Claude, and Perplexity handle source code highlighting on Android. 
+Their code blocks UI look great - proper colors, correct token boundaries, clean rendering. I was curious to know how they have done it, so I peeked inside their apps using good old [`apktool`](https://apktool.org/).
 
-The answer was surprisingly simple: **Highlight.js running inside a hidden WebView**. The tokenized HTML output - those `<span class="hljs-*">` elements - gets parsed and mapped to native Compose `AnnotatedString` spans. The WebView never actually renders anything visible. It just does the parsing work in the background, and the result is fully native text that supports real text selection and accessibility out of the box.
+The answer was surprisingly simple, those apps uses **Highlight.js running inside a hidden WebView**. The tokenized HTML output by Highlight.js like `<span class="hljs-*">` elements is then parsed and mapped to native Compose `AnnotatedString` spans. 
+The `WebView` never actually renders anything visible. It just does the parsing work in the background, and the result is fully native text that supports real text selection and accessibility and more out of the box.
 
-That pattern was elegant enough that I decided to experiment with it and build a proof-of-concept library for Jetpack Compose along with sample app to showcase the usage.
+This finding was interesting enough that I decided to experiment with it and build a proof-of-concept library for Jetpack Compose along with sample app to showcase the usage.
 
 <GitHubEmbed repo="hossain-khan/android-compose-highlight" />
 
 ## Why this instead of other approaches
 
-I've explored this space before. [Back in 2020](/posts/source-code-syntax-highlighting-on-android-taking-full-control) I wrote about using PrismJS directly in a WebView - the full rendering approach where you load an HTML page with the highlighted code and display it inside `WebView`. It works, but it means you're embedding a browser renderer just to show colored text. You lose native text selection, accessibility is awkward, and scrolling behavior can be unpredictable.
+I've explored this space before. [Back in 2020](/posts/source-code-syntax-highlighting-on-android-taking-full-control) I wrote about using PrismJS directly in a `WebView` - the full rendering approach where you load an HTML page with the highlighted code and display it inside `WebView`. It works, but it means you're embedding a browser renderer just to show colored text. You lose native text selection, accessibility is awkward, and scrolling behavior can be unpredictable.
 
 More recently I explored [Shiki running server-side via Cloudflare Workers](/posts/syntax-highlighting-on-android-bringing-shiki-engine-to-compose), which gives genuinely excellent output quality. But it requires a network call, adds latency, and means your app has a hard dependency on an external service.
 
-This library takes a middle path - it keeps everything on-device, uses a battle-tested JS highlighter (Highlight.js supports 190+ languages), and produces native Compose text. The WebView is completely hidden and acts purely as a JS execution engine.
+This library takes a middle path - it keeps everything on-device, uses a battle-tested JS highlighter (Highlight.js supports 190+ languages), and produces native Compose text. The `WebView` is completely hidden and acts purely as a JS execution engine.
 
 ## The basic usage
 
@@ -47,8 +49,6 @@ HighlightThemeProvider(
 
 `HighlightThemeProvider` reads `isSystemInDarkTheme()` automatically and picks the right theme. You can pass `darkTheme = true/false` to force a specific mode.
 
-The `@Composable` helpers like `rememberTomorrowTheme()`, `rememberAtomOneDarkTheme()`, `rememberTomorrowNightTheme()`, and `rememberAtomOneLightTheme()` resolve context internally, so there is no need to pass `LocalContext.current` manually.
-
 The composable comes with a few useful parameters out of the box - a language badge in the header and a copy-to-clipboard button are on by default, while line numbers are off (pass `showLineNumbers = true` to enable them). The copy button does not show a built-in "Copied!" flash - you own that feedback. Pass a `onCopyClick` lambda to hook in a Snackbar, Toast, or your own animation. You can also supply a custom composable for the copy icon itself via the `copyButtonIcon` slot.
 
 <div style="display: flex; gap: 1rem; justify-content: center; align-items: flex-start;">
@@ -66,11 +66,11 @@ The composable comes with a few useful parameters out of the box - a language ba
 
 ## The shared WebView design
 
-One thing I wanted to get right early was the WebView lifecycle. A naive implementation would spin up a new WebView for every `SyntaxHighlightedCode` block on screen, which would be slow (~200ms warm-up each) and memory-hungry (~2-4MB per WebView).
+One thing I wanted to get right early was the `WebView` lifecycle. A naive implementation would spin up a new `WebView` for every `SyntaxHighlightedCode` block on screen, which would be slow (~200ms warm-up each) and memory-hungry (~2-4MB per WebView).
 
 Instead, `HighlightThemeProvider` creates a **single shared `HighlightEngine`** for its entire subtree. All `SyntaxHighlightedCode` blocks within that provider share one hidden WebView. A `Mutex` serializes the JS calls so requests don't collide. This means a screen with ten code blocks is nearly as fast as one with a single block.
 
-The WebView loads `bridge.html` from the library's bundled assets, which in turn loads the full Highlight.js bundle. All WebView operations run on the main thread but the suspend functions let callers interact from any coroutine scope.
+The `WebView` loads `bridge.html` from the library's bundled assets, which in turn loads the full Highlight.js bundle. All WebView operations run on the main thread but the suspend functions let callers interact from any coroutine scope.
 
 The library ships with four bundled themes (two light, two dark) and supports custom themes via asset files, raw CSS, or a `fromColorMap` factory that's handy for wiring up Material 3 dynamic colors.
 
@@ -118,9 +118,6 @@ You can also introspect the bundled Highlight.js at runtime:
 ```kotlin
 engine.highlightJsVersion().onSuccess { version -> Log.d("HL", "Highlight.js $version") }
 engine.supportedLanguages().onSuccess { langs -> Log.d("HL", "${langs.size} languages available") }
-```
-
-`supportedLanguages()` returns the sorted list of the 190+ language identifiers that the bundled Highlight.js knows about. Both values are cached after the first call so repeated reads are free.
 
 `engine.isInitialized` is a `StateFlow<Boolean>` that turns `true` once the hidden WebView has finished loading. Compose UIs can observe it reactively:
 
@@ -177,7 +174,7 @@ The dominant cost is the WebView JS round-trip. `ThemeParser` (CSS parsing) and 
 
 ## APK size impact
 
-Performance numbers are one side of the cost equation - the other is how much the library adds to your APK. I measured this using [diffuse](https://github.com/JakeWharton/diffuse) against an **enriched baseline app** - a realistic app that already uses WebView, LazyColumn, Canvas, and animations - so the delta reflects only what `compose-highlight` actually brings in.
+Performance numbers are one side of the cost equation - the other is how much the library adds to your APK. I measured this using [diffuse](https://github.com/JakeWharton/diffuse) against an **enriched baseline app** - a realistic single activity app that already uses `WebView`, `LazyColumn`, `Canvas`, and animations - so the delta reflects only what `compose-highlight` library actually brings in.
 
 <MetricsSummary
   title="True Library Impact (with-library vs baseline app)"
@@ -211,6 +208,6 @@ The ~309 KB asset delta is entirely the bundled `highlight.min.js` and few theme
 
 ## Wrapping up
 
-It's satisfying that something I was just curious about - how do those AI apps do it? - turned into a library I can actually use in my own projects. The WebView-as-JS-engine pattern is not new, but packaging it cleanly with proper lifecycle management, theme support, and Compose integration turned out to be a worthwhile project.
+I am surprised how well this works and no wonder those modern AI chat apps uses this technique in their apps. I am very happy that I turned this into a library I can actually use in my own projects. The WebView-as-JS-engine pattern is not new, but packaging it cleanly with proper lifecycle management, theme support, and Compose integration turned out to be a worthwhile experiment.
 
-If you try it and run into issues, open a GitHub issue. Happy highlighting! ✌️
+If you try it and run into issues, open a GitHub issue or feel free to ping me on Bluesky. Happy highlighting! ✌️
