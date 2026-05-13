@@ -118,6 +118,7 @@ You can also introspect the bundled Highlight.js at runtime:
 ```kotlin
 engine.highlightJsVersion().onSuccess { version -> Log.d("HL", "Highlight.js $version") }
 engine.supportedLanguages().onSuccess { langs -> Log.d("HL", "${langs.size} languages available") }
+```
 
 `engine.isInitialized` is a `StateFlow<Boolean>` that turns `true` once the hidden WebView has finished loading. Compose UIs can observe it reactively:
 
@@ -130,13 +131,18 @@ val isReady by engine.isInitialized.collectAsState()
 For the common case of highlighting inside a composable, two helpers are included:
 
 ```kotlin
-// single theme
-val highlighted by rememberHighlightedCode(
-    code     = snippet,
-    language = "kotlin",
-    onHighlightComplete = { result -> Log.d("Perf", "Highlighted in ${result.durationMs}ms") },
-)
-Text(text = highlighted ?: AnnotatedString(snippet))
+// single theme — must be inside a HighlightThemeProvider (or pass an explicit theme parameter)
+HighlightThemeProvider(
+    lightHighlightTheme = rememberTomorrowTheme(),
+    darkHighlightTheme  = rememberAtomOneDarkTheme(),
+) {
+    val highlighted by rememberHighlightedCode(
+        code     = snippet,
+        language = "kotlin",
+        onHighlightComplete = { result -> Log.d("Perf", "Highlighted in ${result.durationMs}ms") },
+    )
+    Text(text = highlighted ?: AnnotatedString(snippet))
+}
 ```
 
 ```kotlin
