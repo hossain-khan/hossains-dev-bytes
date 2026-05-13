@@ -15,7 +15,7 @@ Recently I've been on a bit of a syntax highlighting journey on Android.
 While in [part 1](/posts/syntax-highlighting-on-android-bringing-shiki-engine-to-compose/) both cloud-based and on-device highlighting worked, I was wondering how modern apps like ChatGPT, Claude, and Perplexity handle source code highlighting on Android. 
 Their code blocks UI look great - proper colors, correct token boundaries, clean rendering. I was curious to know how they have done it, so I peeked inside their apps using good old [`apktool`](https://apktool.org/).
 
-The answer was surprisingly simple, those apps uses **Highlight.js running inside a hidden WebView**. The tokenized HTML output by Highlight.js like `<span class="hljs-*">` elements is then parsed and mapped to native Compose `AnnotatedString` spans. 
+The answer was surprisingly simple, those apps uses **Highlight.js running inside a hidden WebView**. The tokenized HTML output like `<span class="hljs-*">` elements is then parsed and mapped to native Compose `AnnotatedString` spans. 
 The `WebView` never actually renders anything visible. It just does the parsing work in the background, and the result is fully native text that supports real text selection and accessibility and more out of the box.
 
 This finding was interesting enough that I decided to experiment with it and build a proof-of-concept library for Jetpack Compose along with sample app to showcase the usage.
