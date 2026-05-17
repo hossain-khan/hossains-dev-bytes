@@ -97,7 +97,7 @@ If you need an `AnnotatedString` but don't want the full composable UI, you can 
 val engine = HighlightEngine(context)
 
 viewModelScope.launch {
-    engine.initialize() // warms up the WebView
+    engine.initialize().onFailure { /* handle WebView init failure */ } // warms up the WebView
 
     val result: Result<HighlightResult> =
         engine.highlight(code = "val x = 42", language = "kotlin", theme = HighlightTheme.tomorrow(context))
@@ -139,7 +139,12 @@ HighlightThemeProvider(
     val highlighted by rememberHighlightedCode(
         code     = snippet,
         language = "kotlin",
-        onHighlightComplete = { result -> Log.d("Perf", "Highlighted in ${result.durationMs}ms") },
+        onHighlightComplete = { result ->
+            // result.timings has per-stage Duration fields: jsBridge, htmlParse, treeWalk, etc.
+            Log.d("Perf", "Highlighted in ${result.durationMs}ms " +
+                "(JS: ${result.timings.jsBridge.inWholeMilliseconds}ms, " +
+                "parse: ${result.timings.htmlParse.inWholeMilliseconds}ms)")
+        },
     )
     Text(text = highlighted ?: AnnotatedString(snippet))
 }
