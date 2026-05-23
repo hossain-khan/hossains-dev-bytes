@@ -109,7 +109,7 @@ ${trimmedContent}
       gatewayOptions,
     );
 
-    return new Response(stream as ReadableStream, {
+    return new Response(stream as unknown as ReadableStream, {
       headers: {
         "content-type": "text/event-stream",
         "cache-control": "no-cache",
