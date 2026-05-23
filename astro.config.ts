@@ -1,4 +1,10 @@
-import { defineConfig, envField, fontProviders } from "astro/config";
+import {
+  defineConfig,
+  envField,
+  fontProviders,
+  logHandlers,
+  svgoOptimizer,
+} from "astro/config";
 
 // https://docs.astro.build/en/guides/integrations-guide/mdx/
 import mdx from "@astrojs/mdx";
@@ -151,4 +157,14 @@ export default defineConfig({
     // Production deployments on Cloudflare Workers do not use this proxy, so AI still works in prod.
     remoteBindings: process.env.CI !== "true",
   }),
+
+  experimental: {
+    // JSON logging for structured observability (useful for Cloudflare Analytics)
+    logger: logHandlers.json({
+      pretty: process.env.NODE_ENV === "development",
+      level: "info",
+    }),
+    // SVG optimization for smaller icon/asset file sizes
+    svgOptimizer: svgoOptimizer(),
+  },
 });

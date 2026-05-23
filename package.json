@@ -22,7 +22,7 @@
     "@astrojs/sitemap": "^3.7.1",
     "@resvg/resvg-wasm": "^2.6.2",
     "@tailwindcss/vite": "^4.2.2",
-    "astro": "^6.1.1",
+    "astro": "^6.3.7",
     "dayjs": "^1.11.19",
     "dompurify": "^3.3.3",
     "lodash.kebabcase": "^4.1.1",
