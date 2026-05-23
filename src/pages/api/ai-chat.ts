@@ -5,9 +5,9 @@ export const prerender = false;
 
 // Maximum characters of post content to send to the model.
 // gemma-4-26b-a4b-it has a 256,000 token context window - far more than enough for any blog post.
-// 20,000 chars (~5,000 tokens) covers full blog posts without truncation while keeping costs reasonable.
+// 30,000 chars (~7,500 tokens) ensures even very long posts are sent in full while keeping costs reasonable.
 // Raise this if posts are truncated, or lower it to reduce per-request token cost.
-const MAX_CONTENT_LENGTH = 20_000;
+const MAX_CONTENT_LENGTH = 30_000;
 
 export const POST: APIRoute = async ({ request }) => {
   // Only accept JSON
