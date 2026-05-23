@@ -196,9 +196,9 @@
   // Without this, the IIFE runs once and its DOM listeners are lost after
   // ClientRouter swaps the page content on subsequent navigations.
   document.addEventListener("astro:page-load", function () {
-    // Server allows up to 20k chars. 18k covers long posts (e.g. the highlight.js
+    // Server allows up to 30k chars. 25k covers long posts (e.g. the highlight.js
     // post at ~14.7k) while leaving headroom for future growth.
-    const MAX_CONTENT_CHARS = 18000;
+    const MAX_CONTENT_CHARS = 25000;
 
     // ── DOM refs ──────────────────────────────────────────────────────────────
     const toggle = document.getElementById("ai-toggle") as HTMLButtonElement | null;
