@@ -10,11 +10,23 @@
     h3,
     h4,
     th {
-      @apply mb-3 text-foreground;
+      @apply mb-3 text-foreground leading-tight;
+    }
+
+    h1 {
+      @apply text-3xl sm:text-4xl font-bold tracking-tight;
+    }
+
+    h2 {
+      @apply text-2xl sm:text-3xl font-bold tracking-wide;
     }
 
     h3 {
-      @apply font-sriracha italic;
+      @apply text-xl font-semibold;
+    }
+
+    h4 {
+      @apply text-lg font-semibold;
     }
 
     p,
@@ -24,11 +36,11 @@
     figcaption,
     table,
     code {
-      @apply text-foreground;
+      @apply text-foreground leading-relaxed;
     }
 
     a {
-      @apply relative font-medium text-foreground no-underline transition-all duration-200 wrap-break-word;
+      @apply relative font-medium text-accent/80 no-underline transition-all duration-200 wrap-break-word;
       background-image: linear-gradient(to right, color-mix(in srgb, var(--accent) 40%, transparent), color-mix(in srgb, var(--accent) 40%, transparent));
       background-position: 0 100%;
       background-size: 100% 1px;
@@ -84,15 +96,19 @@
     }
 
     code {
-      @apply rounded-md bg-muted/15 px-1.5 py-0.5 wrap-break-word font-cartograph text-sm text-foreground shadow-sm shadow-black/5 before:content-none after:content-none;
+      @apply rounded-md bg-accent/12 px-1.5 py-0.5 wrap-break-word font-cartograph text-sm text-foreground shadow-sm shadow-black/5 before:content-none after:content-none;
+    }
+
+    .astro-code {
+      @apply rounded-lg;
     }
 
     .astro-code code {
-      @apply flex-[1_0_100%] bg-inherit p-0;
+      @apply flex-[1_0_100%] bg-inherit p-4;
     }
 
     blockquote {
-      @apply rounded-r-xl border-s-[3px] border-accent/80 bg-accent/5 py-4 pr-5 pl-6 font-lora text-[1.05rem] text-foreground/90 opacity-90 shadow-sm shadow-accent/5 wrap-break-word;
+      @apply rounded-r-xl border-s-[3px] border-accent/80 bg-accent/5 py-4 pr-5 pl-6 font-lora text-[1.05rem] text-foreground/90 opacity-90 shadow-sm shadow-accent/5 wrap-break-word leading-relaxed;
     }
 
     blockquote em,
@@ -227,7 +243,7 @@
     }
 
     pre {
-      @apply focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
+      @apply rounded-lg p-0 overflow-x-auto focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
     }
   }
 
