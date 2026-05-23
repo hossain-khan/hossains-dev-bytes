@@ -217,6 +217,19 @@ The bulk of the size increase comes from the bundled Highlight.js asset (~308 KB
 
 The ~309 KB asset delta is entirely the bundled `highlight.min.js` and few theme files. That is a real cost, though it compresses well in a release APK and is only loaded once during the shared `HighlightEngine` warm-up. If you were already shipping a WebView-heavy app, the marginal cost is lower than these numbers suggest - WebView itself is a system component and not included here.
 
+## What's new since this post
+
+The library has evolved significantly since this article was published. Check out the [CHANGELOG](https://github.com/hossain-khan/android-compose-highlight/blob/main/CHANGELOG.md) for the full history, but here are a few highlights added in recent versions:
+
+- **Automatic language detection** — `HighlightEngine.highlightAuto()` detects the language for you when it's not known ahead of time.
+- **Language discovery APIs** — `HighlightEngine.getLanguage()` and `HighlightLanguage.fromExtension()` help validate and resolve language identifiers without a WebView round-trip.
+- **Better error handling** — `onError` callbacks on `SyntaxHighlightedCode` and `rememberHighlightedCode` let you react to failures (timeout, JS errors, WebView unavailability) while still showing a plain-text fallback.
+- **Custom loading states** — a new `placeholder` slot on `SyntaxHighlightedCode` lets you render a shimmer, dimmed text, or any composable while highlighting is in progress.
+- **Performance improvements** — HTML parsing and theme resolution now run off the main thread on `Dispatchers.Default`, and `highlightBothThemes` parses the HTML only once.
+- **Robustness fixes** — CSS4 `rgb()` syntax support, proper emoji/surrogate pair handling, and stricter control character escaping.
+
+All code examples in this post still work as written. For the latest API reference, see the [official docs](https://hossain-khan.github.io/android-compose-highlight/).
+
 ## Wrapping up
 
 I am surprised how well this works and no wonder those modern AI chat apps uses this technique in their apps. I am very happy that I turned this into a library I can actually use in my own projects. The WebView-as-JS-engine pattern is not new, but packaging it cleanly with proper lifecycle management, theme support, and Compose integration turned out to be a worthwhile experiment.
