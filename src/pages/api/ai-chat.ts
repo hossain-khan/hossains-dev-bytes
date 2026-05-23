@@ -109,7 +109,10 @@ ${trimmedContent}
       gatewayOptions,
     );
 
-    return new Response(stream as ReadableStream, {
+    // TypeScript 6.0 requires casting through `unknown` first because the AI.run()
+    // overload with stream:true isn't fully recognized. This is the recommended pattern.
+    // The stream is actually a ReadableStream<Uint8Array> per Cloudflare's type definitions.
+    return new Response(stream as unknown as ReadableStream<Uint8Array>, {
       headers: {
         "content-type": "text/event-stream",
         "cache-control": "no-cache",
