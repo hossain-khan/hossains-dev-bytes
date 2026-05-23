@@ -188,11 +188,22 @@ const nextPost =
             </div>
           )}
 
-          <!-- TL;DR AI Summary shortcut -->
-          <a
-            href="#ai-post-assistant"
+          <!--
+            TL;DR AI Summary Shortcut Button
+            
+            One-click access to the AI Assistant panel at the bottom of the post.
+            Clicking this button:
+            1. Scrolls smoothly to the AI Assistant section
+            2. Automatically expands the panel (if collapsed)
+            3. Prepares the interface for asking questions or getting a summary
+            
+            Handler: setupTldrButton() in the script section (reinitializes on View Transitions)
+          -->
+          <button
+            id="tldr-button"
+            type="button"
             class="inline-flex items-center gap-1.5 rounded-lg border border-accent/30 bg-accent/5 px-2.5 py-1 font-cartograph text-xs tracking-wide text-accent/70 backdrop-blur-sm transition-all duration-200 hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
-            aria-label="Jump to AI summary"
+            aria-label="Jump to AI summary and expand"
           >
             <svg
               class="size-3.5"
@@ -205,7 +216,7 @@ const nextPost =
               />
             </svg>
             TL;DR AI Summary
-          </a>
+          </button>
 
           <!-- Edit post -->
           <EditPost
@@ -469,10 +480,57 @@ const nextPost =
   }
   attachCopyButtons();
 
-  /* Go to page start after page swap */
-  document.addEventListener("astro:after-swap", () =>
-    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
-  );
+  /**
+   * TL;DR Button Handler
+   * 
+   * Clicking the TL;DR button in the post header scrolls to the AI Assistant
+   * panel at the bottom and automatically expands it, providing a seamless
+   * one-click experience instead of requiring: scroll + manual expand.
+   * 
+   * Wrapped in a function for re-initialization on view transitions
+   * (Astro View Transitions swap the DOM without re-running scripts).
+   */
+  function setupTldrButton() {
+    const tldrButton = document.getElementById("tldr-button");
+    if (tldrButton) {
+      tldrButton.addEventListener("click", () => {
+        const aiAssistant = document.getElementById("ai-post-assistant");
+        const aiToggle = document.getElementById("ai-toggle");
+        
+        if (!aiAssistant || !aiToggle) return;
+
+        // Scroll smoothly to the AI Assistant section (block: start = align to top)
+        aiAssistant.scrollIntoView({ behavior: "smooth", block: "start" });
+        
+        // Auto-expand the panel if it's currently collapsed
+        const isExpanded = aiToggle.getAttribute("aria-expanded") === "true";
+        if (!isExpanded) {
+          // Delay click by 100ms to let the smooth scroll animation begin first,
+          // creating a fluid scrolling experience before the expansion animation
+          setTimeout(() => {
+            aiToggle.click();
+          }, 100);
+        }
+      });
+    }
+  }
+
+  // Initialize the TL;DR button handler on initial page load
+  setupTldrButton();
+
+  /**
+   * Re-initialize handlers after View Transitions
+   * 
+   * When navigating between posts with View Transitions enabled, the DOM
+   * content is swapped but this script block is not re-executed. We listen
+   * for astro:after-swap to re-attach event listeners to the new DOM.
+   */
+  document.addEventListener("astro:after-swap", () => {
+    // Scroll to top of page after navigation
+    window.scrollTo({ left: 0, top: 0, behavior: "instant" });
+    // Re-attach the TL;DR button handler to newly-swapped DOM elements
+    setupTldrButton();
+  });
 </script>
 
 <style>
