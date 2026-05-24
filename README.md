@@ -116,10 +116,17 @@ Edit `src/config.ts` to customize:
 - **Deployment:** Cloudflare Workers
 - **Package Manager:** pnpm
 
+## Documentation
+
+For more detailed information about the site, check out:
+
+- **[AI Summary Feature](./docs/AI_SUMMARY_FEATURE_ANALYSIS.md)** - How the TL;DR AI assistant is implemented
+- **[Customizations](./docs/CUSTOMIZATIONS.md)** - All custom features and modifications
+- **[Embeds](./docs/EMBEDS.md)** - GitHub, Google Play, and custom embed components
+- **[Image Galleries](./docs/GALLERIES.md)** - Photo gallery feature and usage
+- **[Changelog](./docs/CHANGELOG.md)** - Version history and feature releases
+- **[Original Template](./docs/TEMPLATE_README.md)** - Base Astro Paper template docs
+
 ## License
 
 Built with Astro. Licensed under MIT.
-
----
-
-> For detailed template documentation, see [TEMPLATE_README.md](TEMPLATE_README.md)
