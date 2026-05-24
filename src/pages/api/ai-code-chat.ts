@@ -81,7 +81,7 @@ export const POST: APIRoute = async ({ request }) => {
     });
   }
 
-  const { prompt, language, sessionId, conversationHistory } = body;
+  const { prompt, language, conversationHistory } = body;
 
   // Validate prompt
   if (typeof prompt !== "string" || !prompt.trim()) {
