@@ -142,7 +142,7 @@ Edit `src/config.ts` for:
 
 ### Updating CHANGELOG
 
-Update `CHANGELOG.md` when making **feature or fix changes** to the site itself — not for blog post additions or edits.
+Update `docs/CHANGELOG.md` when making **feature or fix changes** to the site itself — not for blog post additions or edits.
 
 Record entries for:
 
