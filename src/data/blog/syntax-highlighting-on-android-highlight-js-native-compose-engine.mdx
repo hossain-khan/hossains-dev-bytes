@@ -49,7 +49,7 @@ HighlightThemeProvider(
 
 `HighlightThemeProvider` reads `isSystemInDarkTheme()` automatically and picks the right theme. You can pass `darkTheme = true/false` to force a specific mode.
 
-The composable comes with a few useful parameters out of the box - a language badge in the header and a copy-to-clipboard button are on by default, while line numbers are off (pass `showLineNumbers = true` to enable them). The copy button does not show a built-in "Copied!" flash - you own that feedback. Pass a `onCopyClick` lambda to hook in a Snackbar, Toast, or your own animation. You can also supply a custom composable for the copy icon itself via the `copyButtonIcon` slot.
+The composable comes with a few useful parameters out of the box - a language badge in the header and a copy-to-clipboard button are on by default, while line numbers are off (pass `showLineNumbers = true` to enable them). The copy button does not show a built-in "Copied!" flash - you own that feedback. Pass an `onCopyClick` lambda to hook in a Snackbar, Toast, or your own animation. You can also supply a custom composable for the copy action via the `copyButton` slot.
 
 <div style="display: flex; gap: 1rem; justify-content: center; align-items: flex-start;">
   <figure style="flex: 1; margin: 0; text-align: center;">
@@ -94,13 +94,13 @@ SyntaxHighlightedCode(
 If you need an `AnnotatedString` but don't want the full composable UI, you can use `HighlightEngine` directly:
 
 ```kotlin
-val engine = HighlightEngine(context)
+val engine = HighlightEngine(context.applicationContext)
 
 viewModelScope.launch {
     engine.initialize().onFailure { /* handle WebView init failure */ } // warms up the WebView
 
     val result: Result<HighlightResult> =
-        engine.highlight(code = "val x = 42", language = "kotlin", theme = HighlightTheme.tomorrow(context))
+        engine.highlight(code = "val x = 42", language = "kotlin", theme = HighlightTheme.tomorrow())
 
     result.onSuccess { highlighted ->
         val annotated = highlighted.annotated // AnnotatedString
@@ -221,6 +221,7 @@ The ~309 KB asset delta is entirely the bundled `highlight.min.js` and few theme
 
 The library has evolved significantly since this article was published. Check out the [CHANGELOG](https://github.com/hossain-khan/android-compose-highlight/blob/main/CHANGELOG.md) for the full history, but here are a few highlights added in recent versions:
 
+- **Live highlighted editor (experimental)** - `SyntaxHighlightedTextEditor` and `rememberSyntaxHighlightedEditorValue` add a real-time editing experience with debounced highlighting while preserving cursor and selection.
 - **Automatic language detection** — `HighlightEngine.highlightAuto()` detects the language for you when it's not known ahead of time.
 - **Language discovery APIs** — `HighlightEngine.getLanguage()` and `HighlightLanguage.fromExtension()` help validate and resolve language identifiers without a WebView round-trip.
 - **Better error handling** — `onError` callbacks on `SyntaxHighlightedCode` and `rememberHighlightedCode` let you react to failures (timeout, JS errors, WebView unavailability) while still showing a plain-text fallback.
@@ -228,7 +229,7 @@ The library has evolved significantly since this article was published. Check ou
 - **Performance improvements** — HTML parsing and theme resolution now run off the main thread on `Dispatchers.Default`, and `highlightBothThemes` parses the HTML only once.
 - **Robustness fixes** — CSS4 `rgb()` syntax support, proper emoji/surrogate pair handling, and stricter control character escaping.
 
-All code examples in this post still work as written. For the latest API reference, see the [official docs](https://hossain-khan.github.io/android-compose-highlight/).
+Most code examples in this post still work as written. A few API names evolved over recent releases (for example custom copy slot naming and theme factory convenience APIs). For the latest API reference, see the [official docs](https://hossain-khan.github.io/android-compose-highlight/).
 
 ## Wrapping up
 
