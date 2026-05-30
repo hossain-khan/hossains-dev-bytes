@@ -4,7 +4,7 @@ description: I replaced default Kotlin highlighting on my Zensical site with Shi
 pubDatetime: 2026-05-29T12:00:00Z
 tags: ["kotlin", "shiki", "syntax-highlighting", "zensical", "documentation"]
 featured: false
-draft: true
+draft: false
 ---
 
 Recently, I used Zensical for my new Compose Highlight library and noticed Kotlin syntax highlighting was not fully accurate. 
@@ -135,10 +135,9 @@ If you hit similar issues, start by preserving existing DOM wrappers and replaci
 
 After this update, Kotlin snippets are much more readable on my docs site, especially for newer syntax and mixed DSL-style code.
 
-The nice part is I got this improvement without rewriting my full docs rendering stack.
+Here is a demo of the new highlighting in action:
 
-> [!WARNING]
-> Add before and after screenshots here so readers can quickly see what improved.
+![Zensical syntax highlight using shiki](../../assets/images/shiki-code-highlight-on-zensical.png)
 
 Overall, I am very happy with the outcome even if there is split second of "flash" when the page loads and Shiki re-highlights.
 Let me know if you do try this approach or have any questions about the implementation! Cheers ✌️
