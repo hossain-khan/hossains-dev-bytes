@@ -7,42 +7,42 @@ featured: false
 draft: true
 ---
 
-Recently I used Zensical for my new Compose Highlight library, and I noticed Kotlin syntax highlighting was not fully accurate. I did a quick search to see if I could change the highlighting pipeline on a Zensical site, but I could not find much documentation. Then I asked in the Discord community, and someone shared a helpful clue in this thread: [Shiki highlighting discussion](https://discord.com/channels/1289187620659789824/1506439799500701768/1506439799500701768). That pointed me to a Shiki-based JavaScript approach that worked really well.
+Recently, I used Zensical for my new Compose Highlight library and noticed Kotlin syntax highlighting was not fully accurate. I did a quick search to see whether I could change the highlighting pipeline on a Zensical site, but I could not find much documentation. Then I asked in the Discord community, and someone shared a helpful clue in this thread: [Shiki highlighting discussion](https://discord.com/channels/1289187620659789824/1506439799500701768/1506439799500701768). That pointed me to a Shiki-based JavaScript approach that worked really well.
 
-My site already had build-time highlighting with Pygments, so this was not a "nothing works" problem. It was more of a "this works, but Kotlin deserves better" kind of problem. You can see the live docs site here: [android-compose-highlight docs](https://hossain-khan.github.io/android-compose-highlight/).
+My site already had build-time highlighting with Pygments, so this was not a "nothing works" problem. It was more of a "this works, but Kotlin deserves better" situation. You can see the live docs site here: [android-compose-highlight docs](https://hossain-khan.github.io/android-compose-highlight/).
 
-In this post, I will share how I added Shiki support for Kotlin code blocks without breaking the existing Zensical code block UI.
+In this post, I will share how I added Shiki support for Kotlin code blocks without breaking Zensical's existing code block UI.
 
 > [!IMPORTANT]
 > Zensical is still in an early stage. At the time of writing this post, the current release is `0.0.43`. There may be a native way to handle this in a future release, so treat this approach as a practical workaround for now.
 
-## Where things felt off
+## what felt off
 
-Pygments is fast and reliable for static builds, but its Kotlin lexer is regex-based. I noticed it sometimes misses context that matters for clean Kotlin highlighting.
+Pygments is fast and reliable for static builds, but its Kotlin lexer is regex-based. I noticed it sometimes misses context that matters for accurate Kotlin highlighting.
 
 Things I wanted to improve:
 
 - Better distinction between types, variables, and keywords
 - Better support for modern Kotlin syntax
-- Consistent colors between light and dark theme
+- Consistent colors between light and dark themes
 
-I did not want to replace everything though. I only wanted to improve Kotlin blocks and keep the rest of the site behavior unchanged.
+I did not want to replace everything. I only wanted to improve Kotlin blocks and keep the rest of the site behavior unchanged.
 
-## What I decided to try
+## what I tried
 
 I took a hybrid approach:
 
-1. Keep Pygments as the default highlighter for all languages at build time
-2. Re-highlight only Kotlin blocks on the client side with Shiki
-3. Preserve the existing `<pre>` and wrapper structure so copy buttons and layout keep working
+1. Keep Pygments as the default highlighter for all languages at build time.
+2. Re-highlight only Kotlin blocks on the client side with Shiki.
+3. Preserve the existing `<pre>` and wrapper structure so copy buttons and layout keep working.
 
 That gave me better Kotlin tokenization while keeping the stability of the current Zensical pipeline.
 
 > 💡 Tip: If your docs site already has working build-time highlighting, this incremental approach is much safer than swapping the whole highlighting system in one go.
 
-## What I changed in the repo
+## what changed in the repo
 
-I changed just three files:
+I changed only three files:
 
 - `docs/javascripts/shiki-kotlin.js` (new)
 - `docs/stylesheets/shiki-kotlin.css` (new)
@@ -53,11 +53,11 @@ The related issue and PR are here:
 - Issue [#128](https://github.com/hossain-khan/android-compose-highlight/issues/128)
 - PR [#129](https://github.com/hossain-khan/android-compose-highlight/pull/129)
 
-## How the JavaScript part works
+## how the script works
 
-The script scans code blocks, detects Kotlin blocks, asks Shiki to render highlighted HTML, then swaps only the inner `<code>` content.
+The script scans code blocks, detects Kotlin blocks, asks Shiki to render highlighted HTML, and then swaps only the inner `<code>` content.
 
-That "swap only inner HTML" decision mattered a lot for me because Zensical's existing wrappers handle extra UI behavior (like copy actions). Replacing the whole block would have been risky.
+That "swap only inner HTML" decision mattered a lot because Zensical's existing wrappers handle extra UI behavior (like copy actions). Replacing the whole block would have been risky.
 
 Here is a simplified version of the core flow:
 
@@ -105,11 +105,11 @@ function highlightKotlinBlocks() {
 
 I also wired this into Zensical's SPA navigation lifecycle, so highlighting still runs after route transitions.
 
-## How I handled theme and CSS
+## theme and CSS notes
 
-For theming, I used Shiki's CSS variables with `defaultColor: false`. That embeds both light and dark token values as variables, so switching theme is instant.
+For theming, I used Shiki's CSS variables with `defaultColor: false`. That embeds both light and dark token values as variables, so theme switching is instant.
 
-I also added a small CSS fix for blank line rendering, because line wrappers can collapse visually if you do not style them explicitly.
+I also added a small CSS fix for blank-line rendering because line wrappers can collapse visually if you do not style them explicitly.
 
 ```css
 .shiki code {
@@ -121,24 +121,24 @@ I also added a small CSS fix for blank line rendering, because line wrappers can
 }
 ```
 
-Nothing fancy here, but this tiny part saved me from weird line spacing and "missing" empty lines.
+Nothing fancy here, but this tiny part saved me from weird line spacing and "missing" blank lines.
 
-## Issues I hit and fixed
+## issues I ran into
 
 These are the issues I hit while wiring this up:
 
-- Kotlin blocks did not re-highlight on client-side navigation until I subscribed to the SPA transition hook
-- Replacing entire `<pre>` broke some existing code block behavior
-- Without `defaultColor: false`, light/dark switching was not as smooth as I wanted
-- I first tried selecting `code.language-kotlin`, then noticed Zensical puts the language class on the wrapper div (`div.language-kotlin.highlight`), so selector targeting matters
-- If I applied Shiki background color vars to `<pre>`, Zensical's code block background looked wrong and copy buttons felt visually detached
-- Shiki wraps lines in `.line` spans, and blank lines collapsed until I forced block rendering with a minimum line height
+- Kotlin blocks did not re-highlight on client-side navigation until I subscribed to the SPA transition hook.
+- Replacing the entire `<pre>` broke some existing code block behavior.
+- Without `defaultColor: false`, light/dark switching was not as smooth as I wanted.
+- I first tried selecting `code.language-kotlin`, then noticed Zensical puts the language class on the wrapper div (`div.language-kotlin.highlight`), so selector targeting matters.
+- If I applied Shiki background color vars to `<pre>`, Zensical's code block background looked wrong and copy buttons felt visually detached.
+- Shiki wraps lines in `.line` spans, and blank lines collapsed until I forced block rendering with a minimum line height.
 
-If you hit similar issues, start by preserving existing DOM wrappers and only replacing the minimum possible HTML.
+If you hit similar issues, start by preserving existing DOM wrappers and replacing only the minimum possible HTML.
 
 > 💡 Tip: Two things gave me the cleanest result - keep Zensical in charge of the code block container styles, and let Shiki handle token colors only.
 
-## How it turned out
+## final result
 
 After this update, Kotlin snippets are much more readable on my docs site, especially for newer syntax and mixed DSL-style code.
 
