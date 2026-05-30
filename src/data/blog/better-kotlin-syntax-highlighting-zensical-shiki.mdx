@@ -7,30 +7,22 @@ featured: false
 draft: true
 ---
 
-Recently, I used Zensical for my new Compose Highlight library and noticed Kotlin syntax highlighting was not fully accurate. I did a quick search to see whether I could change the highlighting pipeline on a Zensical site, but I could not find much documentation. Then I asked in the Discord community, and someone shared a helpful clue in this thread: [Shiki highlighting discussion](https://discord.com/channels/1289187620659789824/1506439799500701768/1506439799500701768). That pointed me to a Shiki-based JavaScript approach that worked really well.
+Recently, I used Zensical for my new Compose Highlight library and noticed Kotlin syntax highlighting was not fully accurate. 
+I did a quick search to see whether I could change the highlighting pipeline on a Zensical site, but I could not find much documentation. 
+Then I asked in the Discord community, and someone shared a helpful clue in this thread: [Shiki highlighting discussion](https://discord.com/channels/1289187620659789824/1506439799500701768/1506439799500701768). 
+That pointed me to a Shiki-based JavaScript approach that worked really well.
 
-My site already had build-time highlighting with Pygments, so this was not a "nothing works" problem. It was more of a "this works, but Kotlin deserves better" situation. You can see the live docs site here: [android-compose-highlight docs](https://hossain-khan.github.io/android-compose-highlight/).
+The Zensical site already had build-time highlighting with Pygments which for most Kotlin code blocks was good enough, 
+but I wanted to see if I could improve it without breaking the existing setup.
 
 In this post, I will share how I added Shiki support for Kotlin code blocks without breaking Zensical's existing code block UI.
 
 > [!IMPORTANT]
 > Zensical is still in an early stage. At the time of writing this post, the current release is `0.0.43`. There may be a native way to handle this in a future release, so treat this approach as a practical workaround for now.
 
-## what felt off
+## The highlighting overhaul
 
-Pygments is fast and reliable for static builds, but its Kotlin lexer is regex-based. I noticed it sometimes misses context that matters for accurate Kotlin highlighting.
-
-Things I wanted to improve:
-
-- Better distinction between types, variables, and keywords
-- Better support for modern Kotlin syntax
-- Consistent colors between light and dark themes
-
-I did not want to replace everything. I only wanted to improve Kotlin blocks and keep the rest of the site behavior unchanged.
-
-## what I tried
-
-I took a hybrid approach:
+Based on the hint proivided on the Discord site, I took a hybrid approach:
 
 1. Keep Pygments as the default highlighter for all languages at build time.
 2. Re-highlight only Kotlin blocks on the client side with Shiki.
@@ -40,24 +32,20 @@ That gave me better Kotlin tokenization while keeping the stability of the curre
 
 > 💡 Tip: If your docs site already has working build-time highlighting, this incremental approach is much safer than swapping the whole highlighting system in one go.
 
-## what changed in the repo
 
-I changed only three files:
+
+### Technical details
+
+Here are key changes done to achive the new highlighting on top of Pygments:
 
 - `docs/javascripts/shiki-kotlin.js` (new)
 - `docs/stylesheets/shiki-kotlin.css` (new)
 - `zensical.toml` (updated to load both assets)
 
-The related issue and PR are here:
-
-- Issue [#128](https://github.com/hossain-khan/android-compose-highlight/issues/128)
-- PR [#129](https://github.com/hossain-khan/android-compose-highlight/pull/129)
-
-## how the script works
-
 The script scans code blocks, detects Kotlin blocks, asks Shiki to render highlighted HTML, and then swaps only the inner `<code>` content.
 
-That "swap only inner HTML" decision mattered a lot because Zensical's existing wrappers handle extra UI behavior (like copy actions). Replacing the whole block would have been risky.
+That "swap only inner HTML" decision mattered a lot because Zensical's existing wrappers handle extra UI behavior (like copy actions). 
+Replacing the whole block would have been risky.
 
 Here is a simplified version of the core flow:
 
@@ -105,7 +93,12 @@ function highlightKotlinBlocks() {
 
 I also wired this into Zensical's SPA navigation lifecycle, so highlighting still runs after route transitions.
 
-## theme and CSS notes
+The related issue and PR are here:
+
+- Issue [#128](https://github.com/hossain-khan/android-compose-highlight/issues/128)
+- PR [#129](https://github.com/hossain-khan/android-compose-highlight/pull/129)
+
+## Theme and CSS notes
 
 For theming, I used Shiki's CSS variables with `defaultColor: false`. That embeds both light and dark token values as variables, so theme switching is instant.
 
@@ -123,9 +116,9 @@ I also added a small CSS fix for blank-line rendering because line wrappers can 
 
 Nothing fancy here, but this tiny part saved me from weird line spacing and "missing" blank lines.
 
-## issues I ran into
+#### Few issues I ran into
 
-These are the issues I hit while wiring this up:
+Sharing some issues I encountered during this process in case it help in your journey to do the same using AI Agents
 
 - Kotlin blocks did not re-highlight on client-side navigation until I subscribed to the SPA transition hook.
 - Replacing the entire `<pre>` broke some existing code block behavior.
@@ -138,7 +131,7 @@ If you hit similar issues, start by preserving existing DOM wrappers and replaci
 
 > 💡 Tip: Two things gave me the cleanest result - keep Zensical in charge of the code block container styles, and let Shiki handle token colors only.
 
-## final result
+## Final result
 
 After this update, Kotlin snippets are much more readable on my docs site, especially for newer syntax and mixed DSL-style code.
 
@@ -147,6 +140,5 @@ The nice part is I got this improvement without rewriting my full docs rendering
 > [!WARNING]
 > Add before and after screenshots here so readers can quickly see what improved.
 
-If you want to see the exact implementation details and notes, check issue [#128](https://github.com/hossain-khan/android-compose-highlight/issues/128) and PR [#129](https://github.com/hossain-khan/android-compose-highlight/pull/129).
-
-If you find any issue, open a GitHub issue. Hope it helps somebody. ✌️
+Overall, I am very happy with the outcome even if there is split second of "flash" when the page loads and Shiki re-highlights.
+Let me know if you do try this approach or have any questions about the implementation! Cheers ✌️
