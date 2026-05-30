@@ -7,12 +7,12 @@ featured: false
 draft: false
 ---
 
-Recently, I used Zensical for my new Compose Highlight library and noticed Kotlin syntax highlighting was not fully accurate. 
+Recently, I used [Zensical](https://zensical.org/) for my new Compose Highlight library and noticed Kotlin syntax highlighting was not fully accurate. 
 I did a quick search to see whether I could change the highlighting pipeline on a Zensical site, but I could not find much documentation. 
 Then I asked in the Discord community, and someone shared a helpful clue in this thread: [Shiki highlighting discussion](https://discord.com/channels/1289187620659789824/1506439799500701768/1506439799500701768). 
 That pointed me to a Shiki-based JavaScript approach that worked really well.
 
-The Zensical site already had build-time highlighting with Pygments which for most Kotlin code blocks was good enough, 
+My Zensical based [docs site](https://hossain-khan.github.io/android-compose-highlight/) already had build-time highlighting with Pygments which for most Kotlin code blocks was good enough, 
 but I wanted to see if I could improve it without breaking the existing setup.
 
 In this post, I will share how I added Shiki support for Kotlin code blocks without breaking Zensical's existing code block UI.
