@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "wrangler types && astro check && astro build && pagefind --site dist/client && cp -r dist/client/pagefind public/",
+    "build": "wrangler types && astro check && astro build && pagefind --site dist/client && cp -r dist/client/pagefind public/ && node --import tsx scripts/publishToAtmosphere.ts",
+    "sync:atmosphere": "node --import tsx scripts/publishToAtmosphere.ts",
     "preview": "astro preview",
     "sync": "astro sync",
     "astro": "astro",
@@ -20,6 +21,8 @@
     "@astrojs/mdx": "^5.0.6",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
+    "@mastrojs/atproto": "jsr:^0.1.3",
+    "@mastrojs/markdown": "jsr:^0.1.5",
     "@resvg/resvg-wasm": "^2.6.2",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.3.7",
@@ -51,6 +54,7 @@
     "prettier": "^3.8.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
+    "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.4",
     "vitest": "^4.1.7"

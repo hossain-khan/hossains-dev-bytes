@@ -32,4 +32,13 @@ export const SITE = {
     label: "INTRO.MP3", // display label in the player
     duration: 30, // duration in seconds (for the fixed progress bar)
   },
+  standardSite: {
+    enabled: true, // enable/disable Standard.site sync to ATmosphere (Bluesky)
+    handle: "hossain.dev", // Bluesky handle used for login and DID resolution
+    did: "did:plc:sek23f2vucrxxyaaud2emnxe", // hardcoded DID (resolve via https://bsky.social/xrpc/com.atproto.identity.resolveHandle?handle=hossain.dev)
+    publicationName: "Hossain's Dev Bytes", // publication name shown in Bluesky "View publication" card
+    publicationDesc:
+      "Thoughts and dev bytes on Android, coding, AI, and software engineering", // short description for the publication
+    iconUrl: "https://hossain.dev/web-app-manifest-512x512.webp", // publication icon (downloaded at build time)
+  },
 } as const;

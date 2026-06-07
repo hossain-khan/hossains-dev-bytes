@@ -16,6 +16,7 @@ type Props = {
   pubDatetime?: Date;
   modDatetime?: Date | null;
   scrollSmooth?: boolean;
+  standardSiteLink?: string;
 };
 
 const {
@@ -28,6 +29,7 @@ const {
   pubDatetime,
   modDatetime,
   scrollSmooth = false,
+  standardSiteLink,
 } = Astro.props;
 
 const socialImageURL = new URL(ogImage, Astro.url);
@@ -135,6 +137,10 @@ const showGrain = SITE.backdropEffects.grain;
       title={SITE.title}
       href={new URL("rss.xml", Astro.site)}
     />
+
+    {standardSiteLink && (
+      <link rel="site.standard.document" href={standardSiteLink} />
+    )}
 
 
     {
