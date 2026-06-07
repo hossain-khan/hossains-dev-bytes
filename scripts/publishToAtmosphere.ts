@@ -49,6 +49,13 @@ const BLOG_DIR = "src/data/blog";
 /** Base URL path for all blog posts */
 const POST_BASE_PATH = "/posts";
 
+// ─── Skip in GitHub Actions CI (sync only runs on Cloudflare Pages) ─────────
+
+if (process.env.GITHUB_ACTIONS === "true" && !process.env.CF_PAGES_BRANCH) {
+  console.log("Skipping atmosphere sync (GitHub Actions CI — sync runs on Cloudflare Pages only)");
+  process.exit(0);
+}
+
 // ─── Validate ATPROTO_PASSWORD ───────────────────────────────────────────────
 
 const password = process.env.ATPROTO_PASSWORD;
