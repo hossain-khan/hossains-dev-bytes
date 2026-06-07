@@ -43,6 +43,8 @@ import { SITE } from "../src/config";
 
 /* eslint-disable no-console */
 
+console.log("🚀 Starting atmosphere sync...");
+
 /** Directory where blog posts are stored (relative to project root) */
 const BLOG_DIR = "src/data/blog";
 
@@ -128,6 +130,7 @@ await createOrUpdateStandardSite(session, publication, docs, {
 });
 
 console.log("Atmosphere sync complete");
+console.log("✅ Atmosphere sync complete — records published to ATmosphere");
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
