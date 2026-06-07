@@ -29,6 +29,10 @@
  *
  * Environment variables:
  *   ATPROTO_PASSWORD  - Bluesky app-specific password (https://bsky.app/settings/app-passwords)
+ * 
+ * Additional references:
+ *   - https://mastrojs.github.io/blog/2026-06-05-how-to-add-standard-site-support-to-your-website/
+ *   - https://github.com/mastrojs/atproto
  */
 
 import path from "node:path";
@@ -42,6 +46,8 @@ import {
 import { SITE } from "../src/config";
 
 /* eslint-disable no-console */
+
+console.log("🚀 Starting atmosphere sync...");
 
 /** Directory where blog posts are stored (relative to project root) */
 const BLOG_DIR = "src/data/blog";
@@ -128,6 +134,7 @@ await createOrUpdateStandardSite(session, publication, docs, {
 });
 
 console.log("Atmosphere sync complete");
+console.log("✅ Atmosphere sync complete — records published to ATmosphere");
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
