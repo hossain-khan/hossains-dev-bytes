@@ -88,7 +88,7 @@ const posts = await readMarkdownFiles(`${BLOG_DIR}/**/*.md`);
 const docs: Document[] = posts
   .filter((p) => {
     const draft = p.meta.draft;
-    return draft !== "true" && draft !== true;
+    return draft !== "true";
   })
   .map((p) => {
     // Convert file path to URL path (e.g., src/data/blog/my-post.md → /posts/my-post)
