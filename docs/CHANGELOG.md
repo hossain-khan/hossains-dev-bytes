@@ -4,6 +4,9 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Jun 06, 2026** - `<pending>`: feat: add Standard.site support for Bluesky "View publication" button
+  > *Integrated `@mastrojs/atproto` to sync blog posts to the ATmosphere (ATproto network). Each post page now includes a `<link rel="site.standard.document">` tag, and a build-time script creates/updates Standard.site records on Bluesky. When links are shared on Bluesky, readers see a "View publication" button with rich metadata. rkeys are derived from URL paths so no frontmatter changes are needed.*
+
 - **Apr 26, 2026** - `44cf8b1`: feat: add remark-github-alerts support with styled callouts
   > *Installed `remark-github-alerts` and wired it into `astro.config.ts` so all `.md` and `.mdx` posts support GitHub-style alert syntax (`> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`, `> [!IMPORTANT]`, `> [!CAUTION]`). Added themed CSS in `global.css` using site CSS variables with full dark/light mode support.*
 
