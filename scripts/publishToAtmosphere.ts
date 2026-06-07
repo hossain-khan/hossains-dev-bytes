@@ -97,7 +97,7 @@ const publication: Publication = {
 
 // ─── Read and map blog posts to Standard.site Document format ────────────────
 
-const posts = await readMarkdownFiles(`${BLOG_DIR}/**/*.md`);
+const posts = await readMarkdownFiles(`${BLOG_DIR}/**/*.{md,mdx}`);
 const docs: Document[] = posts
   .filter((p) => {
     const draft = p.meta.draft;

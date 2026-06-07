@@ -11,7 +11,7 @@ This site uses the `@mastrojs/atproto` package to sync blog posts to the ATmosph
 ### How It Works
 
 ```
-main push → Cloudflare build → astro build → pagefind → sync:atmosphere → deploy
+main push → Cloudflare build → sync:atmosphere → astro build → pagefind → deploy
 ```
 
 1. **HTML `<link>` tag**: Each post page includes a `<link rel="site.standard.document">` tag pointing to an AT-URI
@@ -46,17 +46,20 @@ The DID is hardcoded in `src/config.ts` under `SITE.standardSite.did`.
 
 #### 2. Sync Script (`scripts/publishToAtmosphere.ts`)
 
-Reads all blog posts from `src/data/blog/`, maps them to the Standard.site `Document` format, and syncs to the ATmosphere:
+Reads all blog posts from `src/data/blog/` (both `.md` and `.mdx`), maps them to the Standard.site `Document` format, and syncs to the ATmosphere:
 
 - **First run**: Generates `public/.well-known/site.standard.publication` (requires manual confirmation)
 - **Subsequent runs**: Diffs existing records, creates new ones, updates changed ones
-- **Branch gating**: Only runs on `main` branch (checks `CF_PAGES_BRANCH` / `GITHUB_REF_NAME`)
+- **GitHub Actions skip**: Gracefully exits in CI validation (only runs on Cloudflare Pages)
+- **Branch gating**: Only runs on `main` branch (checks `CF_PAGES_BRANCH`)
 
-The script is invoked as part of the build process:
+The script runs before `astro build` in the build chain:
 
 ```json
-"build": "... && node --import tsx scripts/publishToAtmosphere.ts"
+"build": "wrangler types && astro check && node --import tsx scripts/publishToAtmosphere.ts && astro build && ..."
 ```
+
+This ordering ensures sync logs are visible in Cloudflare build output and the `.well-known` file gets included in `dist/client/` naturally.
 
 #### 3. Configuration (`src/config.ts`)
 
@@ -67,7 +70,7 @@ standardSite: {
   did: "did:plc:sek23f2vucrxxyaaud2emnxe",
   publicationName: "Hossain's Dev Bytes",
   publicationDesc: "Thoughts and dev bytes...",
-  iconUrl: "https://hossain.dev/favicon.svg",
+  iconUrl: "https://hossain.dev/web-app-manifest-512x512.webp",
 }
 ```
 
@@ -76,9 +79,9 @@ standardSite: {
 | Step | What Happens |
 |------|-------------|
 | 1 | Cloudflare clones repo on `main` push |
-| 2 | `astro build` generates HTML with `<link>` tags |
-| 3 | `pagefind` generates search index |
-| 4 | `scripts/publishToAtmosphere.ts` syncs posts to ATmosphere + generates `.well-known` into `dist/client/` |
+| 2 | `scripts/publishToAtmosphere.ts` syncs posts to ATmosphere (runs before `astro build` so logs are visible) |
+| 3 | `astro build` generates HTML with `<link>` tags and copies `.well-known` to `dist/client/` |
+| 4 | `pagefind` generates search index |
 | 5 | Cloudflare deploys `dist/client/` to Workers |
 
 ## Setup
@@ -119,6 +122,8 @@ Then update `SITE.standardSite.did` in `src/config.ts`.
 ## Verification
 
 Use the [Standard.site validator](https://site-validator.fly.dev) to verify your publication and document records.
+
+> **Note**: The validator enforces TID-based record keys, but Bluesky's resolver accepts path-derived rkeys (Record Key Type: `any`). The validator may show "Invalid" for the record key check, but the "View publication" button will still work on Bluesky.
 
 After sharing a post link on Bluesky, you should see a **"View publication"** button appear in the post card.
 
