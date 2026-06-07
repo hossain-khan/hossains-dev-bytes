@@ -29,6 +29,10 @@
  *
  * Environment variables:
  *   ATPROTO_PASSWORD  - Bluesky app-specific password (https://bsky.app/settings/app-passwords)
+ * 
+ * Additional references:
+ *   - https://mastrojs.github.io/blog/2026-06-05-how-to-add-standard-site-support-to-your-website/
+ *   - https://github.com/mastrojs/atproto
  */
 
 import path from "node:path";
