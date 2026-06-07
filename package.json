@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "wrangler types && astro check && astro build && pagefind --site dist/client && cp -r dist/client/pagefind public/ && node --import tsx scripts/publishToAtmosphere.ts",
+    "build": "wrangler types && astro check && node --import tsx scripts/publishToAtmosphere.ts && astro build && pagefind --site dist/client && cp -r dist/client/pagefind public/",
     "sync:atmosphere": "node --import tsx scripts/publishToAtmosphere.ts",
     "preview": "astro preview",
     "sync": "astro sync",
