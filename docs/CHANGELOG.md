@@ -4,6 +4,9 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Jun 12, 2026** - `35e4312`: fix: normalize logo SVG text alignment across browsers
+  > *Replaced the `bytes` portion of the logo from a `tspan` using `baseline-shift` to a plain SVG text node with explicit coordinates. This avoids Firefox's inconsistent SVG baseline handling and keeps the header logo aligned the same way as Chrome during normal and hover states.*
+
 - **Jun 06, 2026** - `<pending>`: feat: add Standard.site support for Bluesky "View publication" button
   > *Integrated `@mastrojs/atproto` to sync blog posts to the ATmosphere (ATproto network). Each post page now includes a `<link rel="site.standard.document">` tag, and a build-time script creates/updates Standard.site records on Bluesky. When links are shared on Bluesky, readers see a "View publication" button with rich metadata. rkeys are derived from URL paths so no frontmatter changes are needed.*
 
