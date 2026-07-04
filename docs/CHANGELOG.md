@@ -4,6 +4,9 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Jul 04, 2026** - `<pending>`: ci: upgrade workflow actions to resolve Node.js deprecation warnings
+  > *Updated GitHub Actions workflow configuration by upgrading `pnpm/action-setup` to `@v6` to run natively on the Node 24 runtime and resolve Node.js 20 deprecation warnings.*
+
 - **Jun 12, 2026** - `35e4312`: fix: normalize logo SVG text alignment across browsers
   > *Replaced the `bytes` portion of the logo from a `tspan` using `baseline-shift` to a plain SVG text node with explicit coordinates. This avoids Firefox's inconsistent SVG baseline handling and keeps the header logo aligned the same way as Chrome during normal and hover states.*
 
