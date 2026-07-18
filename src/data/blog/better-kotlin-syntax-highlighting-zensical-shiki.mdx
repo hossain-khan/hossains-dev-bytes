@@ -7,12 +7,12 @@ featured: false
 draft: false
 ---
 
-Recently, I used [Zensical](https://zensical.org/) for my [new Compose Highlight library](/posts/syntax-highlighting-on-android-highlight-js-native-compose-engine/) and noticed Kotlin syntax highlighting was not fully accurate. 
-I did a quick search to see whether I could change the highlighting pipeline on a Zensical site, but I could not find much documentation. 
-Then I asked in the Discord community, and someone shared a helpful clue in this thread: [Shiki highlighting discussion](https://discord.com/channels/1289187620659789824/1506439799500701768/1506439799500701768). 
+Recently, I used [Zensical](https://zensical.org/) for my [new Compose Highlight library](/posts/syntax-highlighting-on-android-highlight-js-native-compose-engine/) and noticed Kotlin syntax highlighting was not fully accurate.
+I did a quick search to see whether I could change the highlighting pipeline on a Zensical site, but I could not find much documentation.
+Then I asked in the Discord community, and someone shared a helpful clue in this thread: [Shiki highlighting discussion](https://discord.com/channels/1289187620659789824/1506439799500701768/1506439799500701768).
 That pointed me to a Shiki-based JavaScript approach that worked really well.
 
-My Zensical based [docs site](https://hossain-khan.github.io/android-compose-highlight/) already had build-time highlighting with Pygments which for most Kotlin code blocks was good enough, 
+My Zensical based [docs site](https://hossain-khan.github.io/android-compose-highlight/) already had build-time highlighting with Pygments which for most Kotlin code blocks was good enough,
 but I wanted to see if I could improve it without breaking the existing setup.
 
 In this post, I will share how I added Shiki support for Kotlin code blocks without breaking Zensical's existing code block UI.
@@ -22,7 +22,7 @@ In this post, I will share how I added Shiki support for Kotlin code blocks with
 
 ## The highlighting overhaul
 
-Based on the hint proivided on the Discord site, I took a hybrid approach:
+Based on the hint provided on the Discord site, I took a hybrid approach:
 
 1. Keep Pygments as the default highlighter for all languages at build time.
 2. Re-highlight only Kotlin blocks on the client side with Shiki.
@@ -32,11 +32,9 @@ That gave me better Kotlin tokenization while keeping the stability of the curre
 
 > 💡 Tip: If your docs site already has working build-time highlighting, this incremental approach is much safer than swapping the whole highlighting system in one go.
 
-
-
 ### Technical details
 
-Here are key changes done to achive the new highlighting on top of Pygments:
+Here are the key changes made to achieve the new highlighting on top of Pygments:
 
 - `docs/javascripts/shiki-kotlin.js` (new)
 - `docs/stylesheets/shiki-kotlin.css` (new)
@@ -44,54 +42,88 @@ Here are key changes done to achive the new highlighting on top of Pygments:
 
 The script scans code blocks, detects Kotlin blocks, asks Shiki to render highlighted HTML, and then swaps only the inner `<code>` content.
 
-That "swap only inner HTML" decision mattered a lot because Zensical's existing wrappers handle extra UI behavior (like copy actions). 
+That "swap only inner HTML" decision mattered a lot because Zensical's existing wrappers handle extra UI behavior (like copy actions).
 Replacing the whole block would have been risky.
 
-Here is a simplified version of the core flow:
+Here is the complete implementation of the highlighting script:
 
 ```js
-import { createHighlighter } from "shiki";
+import { codeToHtml } from "https://esm.sh/shiki@4.1.0";
 
-const highlighter = await createHighlighter({
-  langs: ["kotlin"],
-  themes: ["one-light", "one-dark-pro"],
-});
+// Finds Kotlin code blocks rendered by Pygments and re-highlights them with Shiki.
+// Only swaps inner <code> content - preserves the <pre> and wrapper <div> so that
+// Zensical's copy buttons, positioning, and background styling remain intact.
+async function highlightKotlinBlocks() {
+  const wrappers = document.querySelectorAll(
+    "div.language-kotlin.highlight, div.language-kt.highlight"
+  );
 
-function highlightKotlinBlocks() {
-  const blocks = document.querySelectorAll("pre code");
+  if (wrappers.length === 0) return;
 
-  for (const block of blocks) {
-    if (!block.classList.contains("language-kotlin")) continue;
+  for (const wrapper of wrappers) {
+    if (wrapper.hasAttribute("data-shiki-done")) continue;
 
-    const source = block.textContent ?? "";
-    const html = highlighter.codeToHtml(source, {
-      lang: "kotlin",
-      themes: {
-        light: "one-light",
-        dark: "one-dark-pro",
-      },
-      defaultColor: false,
-    });
+    const pre = wrapper.querySelector("pre");
+    if (!pre) continue;
 
-    const temp = document.createElement("div");
-    temp.innerHTML = html;
+    const block = pre.querySelector("code");
+    if (!block) continue;
 
-    const shikiPre = temp.querySelector("pre");
-    const shikiCode = temp.querySelector("code");
-    const existingPre = block.closest("pre");
+    const code = block.textContent;
 
-    if (!shikiPre || !shikiCode || !existingPre) continue;
+    try {
+      const html = await codeToHtml(code, {
+        lang: "kotlin",
+        themes: {
+          light: "one-light",
+          dark: "one-dark-pro",
+        },
+        defaultColor: false,
+      });
 
-    block.innerHTML = shikiCode.innerHTML;
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = html;
 
-    const shikiStyle = shikiPre.getAttribute("style") || "";
-    const cssVars = shikiStyle.match(/--shiki[^;]+;?/g) || [];
-    existingPre.style.cssText += cssVars.join("");
+      const shikiPre = tempDiv.querySelector("pre");
+      if (!shikiPre) continue;
+
+      const shikiCode = shikiPre.querySelector("code");
+      if (!shikiCode) continue;
+
+      // Swap just the code innerHTML and apply Shiki's CSS variables to existing elements.
+      block.innerHTML = shikiCode.innerHTML;
+
+      // Apply Shiki's CSS custom properties to the pre without removing existing styles
+      const shikiStyle = shikiPre.getAttribute("style") || "";
+      const cssVars = shikiStyle.match(/--shiki[^;]+;?/g) || [];
+      pre.style.cssText += cssVars.join("");
+      pre.setAttribute("data-shiki", "true");
+
+      wrapper.setAttribute("data-shiki-done", "true");
+    } catch (e) {
+      console.warn("[shiki-kotlin] Failed to highlight block:", e);
+    }
   }
+}
+
+// Run on initial page load
+highlightKotlinBlocks();
+
+// Re-run on SPA navigation (Zensical/Material instant navigation)
+if (typeof document$ !== "undefined") {
+  document$.subscribe(() => highlightKotlinBlocks());
+} else {
+  const waitForDocStream = setInterval(() => {
+    if (typeof document$ !== "undefined") {
+      document$.subscribe(() => highlightKotlinBlocks());
+      clearInterval(waitForDocStream);
+    }
+  }, 200);
+  setTimeout(() => clearInterval(waitForDocStream), 10000);
 }
 ```
 
-I also wired this into Zensical's SPA navigation lifecycle, so highlighting still runs after route transitions.
+I also wired this into Zensical's SPA navigation lifecycle, using a robust subscription check to ensure highlighting still runs reliably after route transitions.
 
 The related issue and PR are here:
 
@@ -102,23 +134,33 @@ The related issue and PR are here:
 
 For theming, I used Shiki's CSS variables with `defaultColor: false`. That embeds both light and dark token values as variables, so theme switching is instant.
 
-I also added a small CSS fix for blank-line rendering because line wrappers can collapse visually if you do not style them explicitly.
+I also added a CSS fix for light/dark mode and blank-line rendering. The line wrappers can collapse visually if you do not style them explicitly:
 
 ```css
-.shiki code {
-  display: grid;
+/* Shiki-highlighted Kotlin code blocks */
+
+/* Ensure Shiki's line spans render as blocks so blank lines are visible */
+pre[data-shiki] code .line {
+  display: block;
+  min-height: 1.45em;
 }
 
-.shiki code > span {
-  min-height: 1.4em;
+/* Light mode: use --shiki-light colors on spans */
+[data-md-color-scheme="default"] pre[data-shiki] span {
+  color: var(--shiki-light) !important;
+}
+
+/* Dark mode: use --shiki-dark colors on spans */
+[data-md-color-scheme="slate"] pre[data-shiki] span {
+  color: var(--shiki-dark) !important;
 }
 ```
 
-Nothing fancy here, but this tiny part saved me from weird line spacing and "missing" blank lines.
+Nothing fancy here, but this CSS snippet handles both line spacing and theme integration seamlessly.
 
-#### Few issues I ran into
+#### A few issues I ran into
 
-Sharing some issues I encountered during this process in case it help in your journey to do the same using AI Agents
+Sharing some issues I encountered during this process in case they help in your journey to do the same using AI Agents
 
 - Kotlin blocks did not re-highlight on client-side navigation until I subscribed to the SPA transition hook.
 - Replacing the entire `<pre>` broke some existing code block behavior.
@@ -139,5 +181,5 @@ Here is a demo of the new highlighting in action:
 
 ![Zensical syntax highlight using shiki](../../assets/images/shiki-code-highlight-on-zensical.png)
 
-Overall, I am very happy with the outcome even if there is split second of "flash" when the page loads and Shiki re-highlights.
+Overall, I am very happy with the outcome, even if there is a split second of "flash" when the page loads and Shiki re-highlights.
 Let me know if you do try this approach or have any questions about the implementation! Cheers ✌️
