@@ -56,7 +56,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !("featured" in data && dat
         <h1
           class="hero-title mb-3 text-5xl leading-[1.1] font-bold tracking-tight sm:text-6xl lg:text-7xl"
         >
-          {SITE.title}
+          {SITE.title}{" "}
           <a
             target="_blank"
             href="/rss.xml"
@@ -94,7 +94,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !("featured" in data && dat
         </p>
         <div class="mt-8 flex flex-col sm:flex-row sm:items-center gap-4">
           <p class="text-sm opacity-50 flex-shrink-0">
-            Written by
+            Written by{" "}
             <LinkButton
               class="font-medium underline decoration-dashed underline-offset-4 hover:text-accent"
               href={SITE.profile}
