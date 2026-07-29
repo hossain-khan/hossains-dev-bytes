@@ -2,8 +2,6 @@ import {
   defineConfig,
   envField,
   fontProviders,
-  logHandlers,
-  svgoOptimizer,
 } from "astro/config";
 
 // https://docs.astro.build/en/guides/integrations-guide/mdx/
@@ -13,6 +11,7 @@ import tailwindcss from "@tailwindcss/vite";
 // https://docs.astro.build/en/guides/integrations-guide/sitemap/
 import sitemap from "@astrojs/sitemap";
 
+import { unified } from "@astrojs/markdown-remark";
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
 import { remarkReadingTime } from "./src/utils/remark-reading-time";
@@ -45,12 +44,14 @@ export default defineConfig({
   ],
 
   markdown: {
-    remarkPlugins: [
-      remarkReadingTime,
-      remarkGithubAlerts,
-      remarkToc,
-      [remarkCollapse, { test: "Table of contents" }],
-    ],
+    processor: unified({
+      remarkPlugins: [
+        remarkReadingTime,
+        remarkGithubAlerts,
+        remarkToc,
+        [remarkCollapse, { test: "Table of contents" }],
+      ],
+    }),
     shikiConfig: {
       // For more themes, visit https://shiki.style/themes
       themes: { light: "min-light", dark: "github-dark-default" },
@@ -157,14 +158,4 @@ export default defineConfig({
     // Production deployments on Cloudflare Workers do not use this proxy, so AI still works in prod.
     remoteBindings: process.env.CI !== "true",
   }),
-
-  experimental: {
-    // JSON logging for structured observability (useful for Cloudflare Analytics)
-    logger: logHandlers.json({
-      pretty: process.env.NODE_ENV === "development",
-      level: "info",
-    }),
-    // SVG optimization for smaller icon/asset file sizes
-    svgOptimizer: svgoOptimizer(),
-  },
 });
