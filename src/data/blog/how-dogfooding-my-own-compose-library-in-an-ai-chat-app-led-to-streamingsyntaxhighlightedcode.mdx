@@ -1,0 +1,138 @@
+---
+title: "How Dogfooding My Own Compose Library in an AI Chat App Led to StreamingSyntaxHighlightedCode"
+pubDatetime: 2026-09-04T12:00:00Z
+description: "How building an AI coding tutor chat app exposed the limits of static syntax highlighting in Jetpack Compose, and how span-transfer snapshots solved it."
+tags: ["android", "jetpack-compose", "syntax-highlighting", "ai", "open-source"]
+featured: false
+draft: true
+---
+
+import GitHubEmbed from "@/components/GitHubEmbed.astro";
+
+I've been building a project called **Code with AI**, an Android app designed to help people learn programming languages through an interactive AI chat tutor.
+
+<GitHubEmbed repo="hossain-khan/android-code-with-ai" />
+
+Because it's a coding tutor app, the AI responses are packed with code snippets: Kotlin functions, Python snippets, SQL queries, and terminal commands. Plain monospaced text wasn't going to cut it. I wanted those code blocks to look sharp, with real syntax highlighting, line numbers, and a clean copy button.
+
+A few months ago, I built and published [`compose-highlight`](/posts/syntax-highlighting-on-android-highlight-js-native-compose-engine), a Jetpack Compose library that runs Highlight.js inside a hidden WebView and maps the output into native `AnnotatedString` spans. Naturally, I thought: _great, I can just drop my own library into my new chat app._
+
+That decision led to an intense lesson in dogfooding.
+
+## the initial integration
+
+Replacing the old markdown code renderer was straightforward. In [PR #222](https://github.com/hossain-khan/android-code-with-ai/pull/222), I added `dev.hossain:compose-highlight:0.33.0` to the project.
+
+In `MarkdownMessage.kt`, I inspected the markdown AST nodes to extract language tags and code content, wrapped `MainActivity` in `HighlightThemeProvider` so all chat bubbles would share a single background engine instance, and rendered the code blocks with `SyntaxHighlightedCode`:
+
+```kotlin
+SyntaxHighlightedCode(
+    code = codeBlockContent,
+    language = languageTag,
+    showLineNumbers = true,
+)
+```
+
+I ran the app with static sample data and past chat sessions. It looked fantastic. Token boundaries were crisp, colors matched system light and dark themes, and copy actions worked as expected.
+
+Then I connected the live streaming LLM.
+
+## when static highlighting meets 30 tokens a second
+
+When an LLM generates a response, it doesn't give you a finished paragraph. It streams tokens piece by piece at 15 to 40 Hz. In Compose, that means the `codeBlockContent` string property updates multiple times every second.
+
+`SyntaxHighlightedCode` was designed under the assumption of static or occasionally updated snippets. When you feed it a rapid stream, bad things happen:
+
+1. Every new token changed the input string, which cancelled the in-flight highlighting coroutine and started a fresh one.
+2. Because tokens arrived faster than the WebView could round-trip the highlight call, the engine suffered from continuous job starvation.
+3. If an intermediate highlight job did finish, the composable's default cross-fade animation would kick in, creating an unreadable visual flicker.
+4. In worst-case runs, the code block would stay completely unstyled until the model finished the entire message, only to abruptly pop into color at the very end.
+
+I wanted the streaming experience to feel like ChatGPT or Claude on Android: new code appears instantly on screen, while lines that are already typed out stay nicely colored.
+
+Clearly, I couldn't just patch this with a clumsy `delay()` in my chat app. The highlighter itself needed first-class streaming support.
+
+## the span-transfer snapshot pipeline
+
+I went back to [`android-compose-highlight`](https://github.com/hossain-khan/android-compose-highlight) to design a composable tailored specifically for streaming: `StreamingSyntaxHighlightedCode`.
+
+<GitHubEmbed repo="hossain-khan/android-compose-highlight" />
+
+The fundamental problem with streaming code is that you have two competing goals:
+
+- **Zero latency for new tokens:** The user shouldn't wait even 10 milliseconds to see the character the model just generated.
+- **Heavy parsing takes time:** Sending a growing multi-line string through a JavaScript engine and converting HTML spans into `AnnotatedString` takes real work.
+
+The answer was separating the display from the parser using **span-transfer snapshots**:
+
+```
+ Stream Update: New token arrives (15-40 Hz)
+       │
+       ├───────────────────────────────┬───────────────────────────────┐
+       ▼                                                               ▼
+1. Instant UI Render (0 ms lag)         2. Background Engine (Debounced)
+   Render text immediately with            Coalesce tokens and execute WebView
+   spans transferred from the              highlight when the stream pauses or
+   previous snapshot.                      hits a newline.
+```
+
+When a new token arrives:
+
+- We immediately emit an `AnnotatedString` containing the entire current text.
+- We copy the syntax style spans from our previous highlight snapshot and apply them to the unchanged prefix.
+- The newly arrived characters render as unstyled text for a split second, but all preceding lines remain fully highlighted. There is zero visual reset and zero flicker.
+
+## the newline insight
+
+Originally, my plan was simple: debounce the highlight call by 200 ms. When the model takes a breath or finishes, the engine highlights the whole block and updates the snapshot.
+
+That worked, but it felt slightly delayed for long multiline code blocks. While the model was writing line 5, lines 1 through 4 were still waiting on that debounce timer.
+
+Then the obvious clicked: **code is structured by lines**.
+
+When an LLM emits a newline character (`\n`), the previous line is structurally complete. Keywords, variable names, and string literals on that line aren't going to change anymore.
+
+In [PR #441](https://github.com/hossain-khan/android-compose-highlight/pull/441), I added newline-aware triggering with progressive backfilling:
+
+```kotlin
+// When triggerOnNewline is true (default):
+// 1. Seeing a '\n' immediately schedules a background highlight run.
+// 2. minThrottleMs (150ms) prevents overloading the engine during rapid bursts.
+// 3. debounceMs (200ms) handles pauses mid-line.
+```
+
+As the model streams code:
+
+- New characters appear instantly on the active line.
+- The moment the model hits Enter, that completed line gets queued for syntax highlighting.
+- By the time the reader looks up at the previous line, it has already snapped into full syntax colors, even while the cursor is busily generating the next line below it.
+
+I also had to fix horizontal scrolling. If a long line streams past the visible edge, standard Compose layout measurements can yank the horizontal scroll position. `StreamingSyntaxHighlightedCode` locks scroll stability so the reader can actually read while text streams in.
+
+## bringing it back into the chat app
+
+With `compose-highlight` 0.34.0 published, I returned to **Code with AI** in [PR #223](https://github.com/hossain-khan/android-code-with-ai/pull/223) to swap out the composable:
+
+```kotlin
+StreamingSyntaxHighlightedCode(
+    code = codeBlockContent,
+    language = languageTag,
+    showLineNumbers = true,
+    debounceMs = 200L,
+    triggerOnNewline = true,
+)
+```
+
+The difference was night and day. No frame drops, no flickering re-renders, and no unstyled text waiting around until the response ends. Code streams in smoothly at 60 fps, with prior lines progressively colored in the background.
+
+> 💡 **Tip:** If you're using this inside a virtualized list like `LazyColumn` for chat history, ensure your parent screen is wrapped in a single `HighlightThemeProvider`. Sharing one `HighlightEngine` across all message bubbles keeps memory low and avoids spinning up multiple background WebView instances.
+
+## wrapping up
+
+Dogfooding your own libraries in real applications is humbling. On paper, `SyntaxHighlightedCode` did everything I originally set out to build. But the moment I put it in a real-world scenario with streaming AI text, its architectural assumptions fell apart.
+
+`StreamingSyntaxHighlightedCode` is now available in `dev.hossain:compose-highlight:0.34.0+` under the `@ExperimentalHighlightApi` annotation while I continue to refine the API surface.
+
+If you're building an AI chat client, a developer tool, or any Compose app that deals with streaming code blocks, check out the [streaming documentation](https://hossain-khan.github.io/android-compose-highlight/reference/streaming-syntax-highlighted-code/) and give it a try.
+
+If you test it or run into edge cases, feel free to [open an issue on GitHub](https://github.com/hossain-khan/android-compose-highlight/issues). Happy coding! ✌️
