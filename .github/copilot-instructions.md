@@ -1,6 +1,6 @@
 # Copilot Instructions - Hossain's Dev Bytes
 
-**Project**: Astro v6 blog with TypeScript, Tailwind CSS, and Cloudflare deployment
+**Project**: Astro v7 blog with TypeScript, Tailwind CSS, and Cloudflare deployment
 **Package Manager**: pnpm (required)
 **Node Version**: 22.x or 24.x (from CI/CD)
 
@@ -393,7 +393,7 @@ docs: update README with gallery instructions
 
 ## Useful Links
 
-- [Astro v6 Docs](https://docs.astro.build)
+- [Astro Docs](https://docs.astro.build)
 - [Tailwind CSS](https://tailwindcss.com)
 - [Prettier Docs](https://prettier.io)
 - [ESLint Docs](https://eslint.org)
@@ -401,5 +401,5 @@ docs: update README with gallery instructions
 
 ---
 
-**Last updated**: April 24, 2026
+**Last updated**: September 3, 2026
 **Maintainer**: Hossain Khan (@hossain-khan)
