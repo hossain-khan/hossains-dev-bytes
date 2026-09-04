@@ -4,6 +4,9 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Sep 03, 2026** - `<pending>`: chore: upgrade production dependencies and companion tooling
+  > *Upgraded Astro to v7.3.1, `@astrojs/mdx` to v8.0.0, `@astrojs/cloudflare` to v14.3.0, Tailwind CSS to v4.3.3, and updated companion build tools including Wrangler and ESLint.*
+
 - **Jul 04, 2026** - `<pending>`: ci: upgrade workflow actions to resolve Node.js deprecation warnings
   > *Updated GitHub Actions workflow configuration by upgrading `pnpm/action-setup` to `@v6` to run natively on the Node 24 runtime and resolve Node.js 20 deprecation warnings.*
 
