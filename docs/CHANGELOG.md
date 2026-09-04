@@ -4,7 +4,10 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
-- **Sep 03, 2026** - `<pending>`: chore: upgrade production dependencies and companion tooling
+- **Sep 03, 2026** - `<pending>`: fix(ui): preserve space between year and site title in footer copyright
+  > *Added explicit inline whitespace `{" "}` between `{currentYear}` and `{SITE.title}` in the footer component to avoid Astro compiler whitespace collapsing.*
+
+- **Sep 03, 2026** - `ea98725`: chore: upgrade production dependencies and companion tooling
   > *Upgraded Astro to v7.3.1, `@astrojs/mdx` to v8.0.0, `@astrojs/cloudflare` to v14.3.0, Tailwind CSS to v4.3.3, and updated companion build tools including Wrangler and ESLint.*
 
 - **Jul 04, 2026** - `<pending>`: ci: upgrade workflow actions to resolve Node.js deprecation warnings
