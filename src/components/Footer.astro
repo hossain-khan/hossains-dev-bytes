@@ -79,8 +79,7 @@ const { noMarginTop = false, class: className, ...attrs } = Astro.props;
       class="mt-4 flex flex-col items-center justify-between gap-2 sm:flex-row"
     >
       <p class="font-cartograph text-[11px] tracking-wide opacity-35">
-        &copy; {currentYear}
-        {SITE.title}. All rights reserved.
+        &copy; {currentYear}{" "}{SITE.title}. All rights reserved.
       </p>
       <p class="font-cartograph text-[11px] tracking-wide opacity-30">
         Made with <span class="text-accent">&#9829;</span> and coffee
