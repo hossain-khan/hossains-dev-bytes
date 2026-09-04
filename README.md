@@ -22,7 +22,7 @@ pnpm run preview
 
 ## What's Inside
 
-- **24+ blog posts** on Android, Kotlin, Node.js, TypeScript, Docker, and more
+- **30+ blog posts** on Android, Kotlin, Node.js, TypeScript, Docker, and more
 - **Global search** powered by Pagefind (⌘K / Ctrl+K)
 - **Image galleries** with lightbox and optimization
 - **Dynamic OG images** generated at build time
@@ -82,7 +82,7 @@ src/data/galleries/my-gallery/
 
 Use reusable components to embed rich content in blog posts (GitHub repos, videos, etc).
 
-For a comprehensive guide on creating and using embeds, see [**EMBEDS.md**](EMBEDS.md).
+For a comprehensive guide on creating and using embeds, see [**EMBEDS.md**](./docs/EMBEDS.md).
 
 **Quick example:**
 
@@ -94,7 +94,7 @@ Check out this project:
 <GitHubEmbed repo="username/repo-name" />
 ```
 
-See [TEMPLATE_README.md](TEMPLATE_README.md) for full feature documentation.
+See [TEMPLATE_README.md](./docs/TEMPLATE_README.md) for full feature documentation.
 
 ## Configuration
 
@@ -108,11 +108,11 @@ Edit `src/config.ts` to customize:
 
 ## Tech Stack
 
-- **Framework:** Astro v6
+- **Framework:** Astro v7
 - **Styling:** Tailwind CSS
 - **Search:** Pagefind
 - **OG Images:** Satori
-- **AI:** Cloudflare Workers AI (`@cf/google/gemma-4-26b-a4b-it`) — per-post summarization and Q&A
+- **AI:** Cloudflare Workers AI (`@cf/google/gemma-4-26b-a4b-it`) - per-post summarization and Q&A
 - **Deployment:** Cloudflare Workers
 - **Package Manager:** pnpm
 
@@ -121,9 +121,11 @@ Edit `src/config.ts` to customize:
 For more detailed information about the site, check out:
 
 - **[AI Summary Feature](./docs/AI_SUMMARY_FEATURE_ANALYSIS.md)** - How the TL;DR AI assistant is implemented
+- **[Android AI Integration](./docs/ANDROID_AI_INTEGRATION.md)** - Code with AI Android API endpoint guide
 - **[Customizations](./docs/CUSTOMIZATIONS.md)** - All custom features and modifications
 - **[Embeds](./docs/EMBEDS.md)** - GitHub, Google Play, and custom embed components
 - **[Image Galleries](./docs/GALLERIES.md)** - Photo gallery feature and usage
+- **[Standard.site](./docs/STANDARD_SITE.md)** - ATmosphere (Bluesky) publication integration
 - **[Changelog](./docs/CHANGELOG.md)** - Version history and feature releases
 - **[Original Template](./docs/TEMPLATE_README.md)** - Base Astro Paper template docs
 
