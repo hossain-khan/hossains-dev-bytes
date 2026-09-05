@@ -10,9 +10,11 @@ draft: true
 I've been experimenting with on-device LLM that can help with different programming languages that provides code-snippets along with explanations.
 So, naturally I wanted to plug-in my [`compose-highlight`](/posts/syntax-highlighting-on-android-highlight-js-native-compose-engine) library to render code snippets in my AI Chat App.
 
-## the initial integration
+## Initial integration
 
-Replacing the old markdown code renderer was straightforward. In [PR #222](https://github.com/hossain-khan/android-code-with-ai/pull/222), I added `dev.hossain:compose-highlight:0.33.0` to the project.
+I was using Mike Penz's [multiplatform-markdown-renderer](https://github.com/mikepenz/multiplatform-markdown-renderer) to render streaming markdown, with code rendering plugin.
+
+Replacing the markdown code renderer was straightforward. In [PR #222](https://github.com/hossain-khan/android-code-with-ai/pull/222), I added the `dev.hossain:compose-highlight:0.33.0` to the project.
 
 In `MarkdownMessage.kt`, I inspected the markdown AST nodes to extract language tags and code content, wrapped `MainActivity` in `HighlightThemeProvider` so all chat bubbles would share a single background engine instance, and rendered the code blocks with `SyntaxHighlightedCode`:
 
@@ -20,28 +22,17 @@ In `MarkdownMessage.kt`, I inspected the markdown AST nodes to extract language 
 SyntaxHighlightedCode(
     code = codeBlockContent,
     language = languageTag,
-    showLineNumbers = true,
 )
 ```
 
-I ran the app with static sample data and past chat sessions. It looked fantastic. Token boundaries were crisp, colors matched system light and dark themes, and copy actions worked as expected.
+I ran the app and the highlighting worked, with some caveats 😅
 
-Then I connected the live streaming LLM.
+## when static highlighting meets ~20 tokens a second
 
-## when static highlighting meets 30 tokens a second
+When an LLM generates a response, it streams tokens piece by piece at 10 to 30 tokens/sec. In Compose, that means the `codeBlockContent` string property updates multiple times every second.
 
-When an LLM generates a response, it doesn't give you a finished paragraph. It streams tokens piece by piece at 15 to 40 Hz. In Compose, that means the `codeBlockContent` string property updates multiple times every second.
+The `SyntaxHighlightedCode` was designed under the assumption of static or occasionally updated snippets. So, clearly the initial attempt failed with flashing highlighting almost every 100ms. Not a great experience as seen below:
 
-`SyntaxHighlightedCode` was designed under the assumption of static or occasionally updated snippets. When you feed it a rapid stream, bad things happen:
-
-1. Every new token changed the input string, which cancelled the in-flight highlighting coroutine and started a fresh one.
-2. Because tokens arrived faster than the WebView could round-trip the highlight call, the engine suffered from continuous job starvation.
-3. If an intermediate highlight job did finish, the composable's default cross-fade animation would kick in, creating an unreadable visual flicker.
-4. In worst-case runs, the code block would stay completely unstyled until the model finished the entire message, only to abruptly pop into color at the very end.
-
-I wanted the streaming experience to feel like ChatGPT or Claude on Android: new code appears instantly on screen, while lines that are already typed out stay nicely colored.
-
-Clearly, I couldn't just patch this with a clumsy `delay()` in my chat app. The highlighter itself needed first-class streaming support.
 
 ## the span-transfer snapshot pipeline
 
