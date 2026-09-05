@@ -1,5 +1,5 @@
 ---
-title: "How dogfooding my own library led to building new StreamingSyntaxHighlightedCode composable"
+title: "Extending Syntax Highlighting library to support streaming response by LLMs"
 pubDatetime: 2026-09-04T12:00:00Z
 description: "How building an AI coding tutor chat app exposed the limits of static syntax highlighting in Jetpack Compose, and how span-transfer snapshots solved it."
 tags: ["android", "jetpack-compose", "syntax-highlighting", "ai", "open-source"]
@@ -27,12 +27,13 @@ SyntaxHighlightedCode(
 
 I ran the app and the highlighting worked, with some caveats 😅
 
-## when static highlighting meets ~20 tokens a second
+## When static highlighting meets ~20 tokens a second
 
 When an LLM generates a response, it streams tokens piece by piece at 10 to 30 tokens/sec. In Compose, that means the `codeBlockContent` string property updates multiple times every second.
 
 The `SyntaxHighlightedCode` was designed under the assumption of static or occasionally updated snippets. So, clearly the initial attempt failed with flashing highlighting almost every 100ms. Not a great experience as seen below:
 
+<img src="../../assets/images/demo-SyntaxHighlightedCode-streaming-flash-issue.gif" alt="Demo showing SyntaxHighlightedCode streaming flash issue" />
 
 ## the span-transfer snapshot pipeline
 
