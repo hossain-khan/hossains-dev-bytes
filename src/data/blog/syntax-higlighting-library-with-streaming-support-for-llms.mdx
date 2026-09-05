@@ -18,9 +18,9 @@ So, naturally I wanted to plug in my [`compose-highlight`](/posts/syntax-highlig
   class="sm:float-right sm:ml-6 mb-4 w-full sm:max-w-[240px] rounded-xl shadow-md"
 />
 
-I was using Mike Penz's [multiplatform-markdown-renderer](https://github.com/mikepenz/multiplatform-markdown-renderer) to render streaming markdown, along with its code rendering plugin.
+I was using Mike Penz's [multiplatform-markdown-renderer](https://github.com/mikepenz/multiplatform-markdown-renderer) to render streaming markdown content, along with its code rendering plugin.
 
-Replacing the markdown code renderer was straightforward, starting with replacing `multiplatform-markdown-renderer-code` with `dev.hossain:compose-highlight:0.33.0` to the project. 
+Replacing the markdown code renderer was straightforward, starting with replacing `multiplatform-markdown-renderer-code` plugin with `dev.hossain:compose-highlight:0.33.0` to the project. 
 And then I [updated](https://github.com/hossain-khan/android-code-with-ai/pull/222) some glue code so that the `SyntaxHighlightedCode` is used for syntax highlighting.
 
 ```kotlin
