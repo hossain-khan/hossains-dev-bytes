@@ -4,7 +4,7 @@ pubDatetime: 2026-09-04T12:00:00Z
 description: "How building an AI coding tutor chat app exposed the limits of static syntax highlighting in Jetpack Compose, and how span-transfer snapshots solved it."
 tags: ["android", "jetpack-compose", "syntax-highlighting", "ai", "open-source"]
 featured: false
-draft: true
+draft: false
 ---
 
 I've been experimenting with an on-device LLM that can help with different programming languages and provide code snippets along with explanations.
@@ -14,15 +14,21 @@ So, naturally I wanted to plug in my [`compose-highlight`](/posts/syntax-highlig
 
 I was using Mike Penz's [multiplatform-markdown-renderer](https://github.com/mikepenz/multiplatform-markdown-renderer) to render streaming markdown, along with its code rendering plugin.
 
-Replacing the markdown code renderer was straightforward. In [PR #222](https://github.com/hossain-khan/android-code-with-ai/pull/222), I added `dev.hossain:compose-highlight:0.33.0` to the project.
-
-In `MarkdownMessage.kt`, I inspected the markdown AST nodes to extract language tags and code content, wrapped `MainActivity` in `HighlightThemeProvider` so all chat bubbles would share a single background engine instance, and rendered the code blocks with `SyntaxHighlightedCode`:
+Replacing the markdown code renderer was straightforward, starting with replacing `multiplatform-markdown-renderer-code` with `dev.hossain:compose-highlight:0.33.0` to the project. 
+And then I [updated](https://github.com/hossain-khan/android-code-with-ai/pull/222) some glue code so that the `SyntaxHighlightedCode` is used for syntax highlighting.
 
 ```kotlin
-SyntaxHighlightedCode(
-    code = codeBlockContent,
-    language = languageTag,
-)
+@Composable
+private fun ChatMarkdownCodeFence(
+    content: String,
+    node: ASTNode,
+) {
+    val (languageTag, codeBlockContent) = extractCodeFenceInfo(content, node)
+    SyntaxHighlightedCode(
+        code = codeBlockContent,
+        language = languageTag.ifEmpty { "text" },
+    )
+}
 ```
 
 I ran the app and the highlighting kinda worked, with some caveats 😅
@@ -33,7 +39,7 @@ When an LLM generates a response, it streams tokens piece by piece at 10 to 30 t
 
 The `SyntaxHighlightedCode` was designed under the assumption of static or occasionally updated snippets. So, clearly the initial attempt failed with flashing highlighting almost every 100ms. Not a great experience as seen below:
 
-<img src="../../assets/images/demo-SyntaxHighlightedCode-streaming-flash-issue.gif" alt="Demo showing SyntaxHighlightedCode streaming flash issue" />
+![Demo showing SyntaxHighlightedCode streaming flash issue](/images/demo-SyntaxHighlightedCode-streaming-flash-issue.gif)
 
 ## Borrowing an idea from the text editor
 
