@@ -25,7 +25,7 @@ SyntaxHighlightedCode(
 )
 ```
 
-I ran the app and the highlighting worked, with some caveats 😅
+I ran the app and the highlighting kinda worked, with some caveats 😅
 
 ## When static highlighting meets ~20 tokens a second
 
@@ -79,6 +79,7 @@ I also had to fix horizontal scrolling. If a long line streams past the visible 
 With `compose-highlight` 0.34.0 published, I returned to **CodeMateX** app in [PR #223](https://github.com/hossain-khan/android-code-with-ai/pull/223) to swap out the composable:
 
 ```kotlin
+@OptIn(ExperimentalHighlightApi::class)
 StreamingSyntaxHighlightedCode(
     code = codeBlockContent,
     language = languageTag,
