@@ -49,13 +49,13 @@ Instead of inventing something complex from scratch for streaming text, I ported
 
 ## The newline insight
 
-Originally, my plan was simple: debounce the highlight call by 200 ms. When the model takes a breath or finishes, the engine highlights the whole block and updates the snapshot.
+Originally, the plan was simple: debounce the highlight call by 200 ms, expecting the engine to highlight when the model pauses or takes a breath.
 
-That worked, but it felt slightly delayed for long multiline code blocks. While the model was writing line 5, lines 1 through 4 were still waiting on that debounce timer.
+In practice, that **didn't work**. The LLM streams tokens so continuously (every 30 to 50 ms) that the 200 ms debounce timer was constantly reset. Because the idle threshold was never reached during active generation, highlighting only happened at the very end when the code block closed.
 
 Then the obvious clicked: **code is structured by lines**.
 
-When an LLM emits a newline character (`\n`), the previous line is structurally complete. Keywords, variable names, and string literals on that line aren't going to change anymore.
+Even while tokens stream continuously, a newline character (`\n`) signals that a previous line is structurally complete. Keywords, variable names, and string literals on that line aren't going to change anymore.
 
 In [PR #441](https://github.com/hossain-khan/android-compose-highlight/pull/441), I added newline-aware triggering with progressive backfilling:
 
@@ -74,9 +74,9 @@ As the model streams code:
 
 I also had to fix horizontal scrolling. If a long line streams past the visible edge, standard Compose layout measurements can yank the horizontal scroll position. `StreamingSyntaxHighlightedCode` locks scroll stability so the reader can actually read while text streams in.
 
-## bringing it back into the chat app
+## Bringing it back into the chat app
 
-With `compose-highlight` 0.34.0 published, I returned to **Code with AI** in [PR #223](https://github.com/hossain-khan/android-code-with-ai/pull/223) to swap out the composable:
+With `compose-highlight` 0.34.0 published, I returned to **CodeMateX** app in [PR #223](https://github.com/hossain-khan/android-code-with-ai/pull/223) to swap out the composable:
 
 ```kotlin
 StreamingSyntaxHighlightedCode(
@@ -90,9 +90,7 @@ StreamingSyntaxHighlightedCode(
 
 The difference was night and day. No frame drops, no flickering re-renders, and no unstyled text waiting around until the response ends. Code streams in smoothly at 60 fps, with prior lines progressively colored in the background.
 
-> 💡 **Tip:** If you're using this inside a virtualized list like `LazyColumn` for chat history, ensure your parent screen is wrapped in a single `HighlightThemeProvider`. Sharing one `HighlightEngine` across all message bubbles keeps memory low and avoids spinning up multiple background WebView instances.
-
-## wrapping up
+## Wrapping up
 
 Dogfooding your own libraries in real applications is humbling. On paper, `SyntaxHighlightedCode` did everything I originally set out to build. But the moment I put it in a real-world scenario with streaming AI text, its architectural assumptions fell apart.
 
