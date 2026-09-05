@@ -1,5 +1,5 @@
 ---
-title: "How Dogfooding My Own Compose Library in an AI Chat App Led to StreamingSyntaxHighlightedCode"
+title: "How dogfooding my own library led to building new StreamingSyntaxHighlightedCode composable"
 pubDatetime: 2026-09-04T12:00:00Z
 description: "How building an AI coding tutor chat app exposed the limits of static syntax highlighting in Jetpack Compose, and how span-transfer snapshots solved it."
 tags: ["android", "jetpack-compose", "syntax-highlighting", "ai", "open-source"]
@@ -7,17 +7,8 @@ featured: false
 draft: true
 ---
 
-import GitHubEmbed from "@/components/GitHubEmbed.astro";
-
-I've been building a project called **Code with AI**, an Android app designed to help people learn programming languages through an interactive AI chat tutor.
-
-<GitHubEmbed repo="hossain-khan/android-code-with-ai" />
-
-Because it's a coding tutor app, the AI responses are packed with code snippets: Kotlin functions, Python snippets, SQL queries, and terminal commands. Plain monospaced text wasn't going to cut it. I wanted those code blocks to look sharp, with real syntax highlighting, line numbers, and a clean copy button.
-
-A few months ago, I built and published [`compose-highlight`](/posts/syntax-highlighting-on-android-highlight-js-native-compose-engine), a Jetpack Compose library that runs Highlight.js inside a hidden WebView and maps the output into native `AnnotatedString` spans. Naturally, I thought: _great, I can just drop my own library into my new chat app._
-
-That decision led to an intense lesson in dogfooding.
+I've been experimenting with on-device LLM that can help with different programming languages that provides code-snippets along with explanations.
+So, naturally I wanted to plug-in my [`compose-highlight`](/posts/syntax-highlighting-on-android-highlight-js-native-compose-engine) library to render code snippets in my AI Chat App.
 
 ## the initial integration
 
