@@ -83,29 +83,29 @@ As the model streams code:
   class="sm:float-right sm:ml-6 mb-4 w-full sm:max-w-[240px] rounded-xl shadow-md"
 />
 
-With `compose-highlight` 0.34.0 published, I returned to **CodeMateX** app in [PR #223](https://github.com/hossain-khan/android-code-with-ai/pull/223) to swap out the composable:
+With `compose-highlight` 0.35.0 published, I returned to the AI Chat app and [swaped](https://github.com/hossain-khan/android-code-with-ai/pull/223) out the composable:
 
 ```kotlin
 @OptIn(ExperimentalHighlightApi::class)
 StreamingSyntaxHighlightedCode(
     code = codeBlockContent,
     language = languageTag,
-    debounceMs = 200L, 
+    debounceMs = 200L, // Debouce for regular update in the code block
     triggerOnNewline = true, // By default all consumer will get this treatment
-    minThrottleMs = 150L // Prevents overloading the engine during rapid bursts.
+    minThrottleMs = 150L // Prevents overloading the engine during rapid bursts of new-lines.
 )
 ```
 
-The difference was night and day. No frame drops, no flickering re-renders, and no unstyled text waiting around until the response ends. Code streams in smoothly at 60 fps, with prior lines progressively colored in the background.
+With this change the syntax highlighting worked as expected. No frame drops, no flickering re-renders, and no unstyled text waiting around until the response ends. Code streams in smoothly, with prior lines progressively colored in the background.
 
 <div class="clear-both"></div>
 
 ## Wrapping up
 
-Dogfooding your own libraries in real applications is humbling. On paper, `SyntaxHighlightedCode` did everything I originally set out to build. But the moment I plugged it into a real-world streaming AI scenario, its architectural assumptions fell apart.
+Dogfooding my own library in real applications is humbling. On paper, `SyntaxHighlightedCode` did work for static code snippets. But the moment I plugged it into a streaming AI scenario, its architectural assumptions fell apart.
 
-`StreamingSyntaxHighlightedCode` is available starting in `dev.hossain:compose-highlight:0.35.0` under the `@ExperimentalHighlightApi` annotation.
+With the release of `StreamingSyntaxHighlightedCode` now compose highlight can be used for streaming code snippets as well! 🙌🏽
 
 If you're building an AI chat app or any Compose interface that streams formatted code, check out the [streaming documentation](https://hossain-khan.github.io/android-compose-highlight/reference/streaming-syntax-highlighted-code/) and give it a spin. If you run into edge cases or have feedback, please [open an issue on GitHub](https://github.com/hossain-khan/android-compose-highlight/issues).
 
-Happy coding! ✌️
+🌈 Happy highlighting!
