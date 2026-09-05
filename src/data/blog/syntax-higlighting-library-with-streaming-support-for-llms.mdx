@@ -35,37 +35,19 @@ The `SyntaxHighlightedCode` was designed under the assumption of static or occas
 
 <img src="../../assets/images/demo-SyntaxHighlightedCode-streaming-flash-issue.gif" alt="Demo showing SyntaxHighlightedCode streaming flash issue" />
 
-## the span-transfer snapshot pipeline
+## Borrowing an idea from the text editor
 
-I went back to [`android-compose-highlight`](https://github.com/hossain-khan/android-compose-highlight) to design a composable tailored specifically for streaming: `StreamingSyntaxHighlightedCode`.
+While staring at the flashing code blocks, I remembered that I had already dealt with a very similar problem earlier when building [`SyntaxHighlightedTextEditor`](https://hossain-khan.github.io/android-compose-highlight/reference/syntax-highlighted-text-editor/).
 
-<GitHubEmbed repo="hossain-khan/android-compose-highlight" />
+In an interactive code editor, you can't run full syntax highlighting on every single keystroke. The editor solved this by snapshotting the styled spans: as you type, new keystrokes render immediately, while previously styled text keeps its spans until debounce pass catches up.
 
-The fundamental problem with streaming code is that you have two competing goals:
+Instead of inventing something complex from scratch for streaming text, I ported that snapshotting concept over to create `StreamingSyntaxHighlightedCode`:
 
-- **Zero latency for new tokens:** The user shouldn't wait even 10 milliseconds to see the character the model just generated.
-- **Heavy parsing takes time:** Sending a growing multi-line string through a JavaScript engine and converting HTML spans into `AnnotatedString` takes real work.
+- As each new token arrives, the text updates on screen immediately with 0 ms UI delay.
+- The highlighting pass is run only when the debounce delay passes.
+- The previous lines retain their syntax coloring from the last snapshot, so there's zero visual reset or flash back to plain text.
 
-The answer was separating the display from the parser using **span-transfer snapshots**:
-
-```
- Stream Update: New token arrives (15-40 Hz)
-       │
-       ├───────────────────────────────┬───────────────────────────────┐
-       ▼                                                               ▼
-1. Instant UI Render (0 ms lag)         2. Background Engine (Debounced)
-   Render text immediately with            Coalesce tokens and execute WebView
-   spans transferred from the              highlight when the stream pauses or
-   previous snapshot.                      hits a newline.
-```
-
-When a new token arrives:
-
-- We immediately emit an `AnnotatedString` containing the entire current text.
-- We copy the syntax style spans from our previous highlight snapshot and apply them to the unchanged prefix.
-- The newly arrived characters render as unstyled text for a split second, but all preceding lines remain fully highlighted. There is zero visual reset and zero flicker.
-
-## the newline insight
+## The newline insight
 
 Originally, my plan was simple: debounce the highlight call by 200 ms. When the model takes a breath or finishes, the engine highlights the whole block and updates the snapshot.
 
