@@ -12,6 +12,12 @@ So, naturally I wanted to plug in my [`compose-highlight`](/posts/syntax-highlig
 
 ## Initial integration
 
+<img
+  src="/images/demo-SyntaxHighlightedCode-streaming-flash-issue.gif"
+  alt="Demo showing SyntaxHighlightedCode streaming flash issue"
+  class="sm:float-right sm:ml-6 mb-4 w-full sm:max-w-[240px] rounded-xl shadow-md"
+/>
+
 I was using Mike Penz's [multiplatform-markdown-renderer](https://github.com/mikepenz/multiplatform-markdown-renderer) to render streaming markdown, along with its code rendering plugin.
 
 Replacing the markdown code renderer was straightforward, starting with replacing `multiplatform-markdown-renderer-code` with `dev.hossain:compose-highlight:0.33.0` to the project. 
@@ -33,13 +39,13 @@ private fun ChatMarkdownCodeFence(
 
 I ran the app and the highlighting kinda worked, with some caveats 😅
 
-## When static highlighting meets ~20 tokens a second
+### When static highlighting meets ~20 tokens a second
 
 When an LLM generates a response, it streams tokens piece by piece at 10 to 30 tokens/sec. In Compose, that means the `codeBlockContent` string property updates multiple times every second.
 
-The `SyntaxHighlightedCode` was designed under the assumption of static or occasionally updated snippets. So, clearly the initial attempt failed with flashing highlighting almost every 100ms. Not a great experience as seen below:
+The `SyntaxHighlightedCode` was designed under the assumption of static or occasionally updated snippets. So, clearly the initial attempt failed with flashing highlighting almost every 100ms. Not a great experience.
 
-![Demo showing SyntaxHighlightedCode streaming flash issue](/images/demo-SyntaxHighlightedCode-streaming-flash-issue.gif)
+<div class="clear-both"></div>
 
 ## Borrowing an idea from the text editor
 
@@ -82,6 +88,12 @@ I also had to fix horizontal scrolling. If a long line streams past the visible 
 
 ## Bringing it back into the chat app
 
+<img
+  src="/images/demo-StreamingSyntaxHighlightedCode.gif"
+  alt="Demo of StreamingSyntaxHighlightedCode"
+  class="sm:float-right sm:ml-6 mb-4 w-full sm:max-w-[240px] rounded-xl shadow-md"
+/>
+
 With `compose-highlight` 0.34.0 published, I returned to **CodeMateX** app in [PR #223](https://github.com/hossain-khan/android-code-with-ai/pull/223) to swap out the composable:
 
 ```kotlin
@@ -96,6 +108,8 @@ StreamingSyntaxHighlightedCode(
 ```
 
 The difference was night and day. No frame drops, no flickering re-renders, and no unstyled text waiting around until the response ends. Code streams in smoothly at 60 fps, with prior lines progressively colored in the background.
+
+<div class="clear-both"></div>
 
 ## Wrapping up
 
