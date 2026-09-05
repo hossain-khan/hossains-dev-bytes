@@ -83,15 +83,15 @@ As the model streams code:
   class="sm:float-right sm:ml-6 mb-4 w-full sm:max-w-[240px] rounded-xl shadow-md"
 />
 
-With `compose-highlight` 0.35.0 published, I returned to the AI Chat app and [swaped](https://github.com/hossain-khan/android-code-with-ai/pull/223) out the composable:
+With `compose-highlight` 0.35.0 published, I returned to the AI Chat app and [swapped](https://github.com/hossain-khan/android-code-with-ai/pull/223) out the composable:
 
 ```kotlin
 @OptIn(ExperimentalHighlightApi::class)
 StreamingSyntaxHighlightedCode(
     code = codeBlockContent,
     language = languageTag,
-    debounceMs = 200L, // Debouce for regular update in the code block
-    triggerOnNewline = true, // By default all consumer will get this treatment
+    debounceMs = 200L, // Debounce for regular update in the code block
+    triggerOnNewline = true, // By default all consumers will get this treatment
     minThrottleMs = 150L // Prevents overloading the engine during rapid bursts of new-lines.
 )
 ```
@@ -104,7 +104,7 @@ With this change the syntax highlighting worked as expected. No frame drops, no 
 
 Dogfooding my own library in real applications is humbling. On paper, `SyntaxHighlightedCode` did work for static code snippets. But the moment I plugged it into a streaming AI scenario, its architectural assumptions fell apart.
 
-With the release of `StreamingSyntaxHighlightedCode` now compose highlight can be used for streaming code snippets as well! 🙌🏽
+With the release of `StreamingSyntaxHighlightedCode`, now compose-highlight can be used for streaming code snippets as well! 🙌🏽
 
 If you're building an AI chat app or any Compose interface that streams formatted code, check out the [streaming documentation](https://hossain-khan.github.io/android-compose-highlight/reference/streaming-syntax-highlighted-code/) and give it a spin. If you run into edge cases or have feedback, please [open an issue on GitHub](https://github.com/hossain-khan/android-compose-highlight/issues).
 
