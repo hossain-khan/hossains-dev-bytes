@@ -7,14 +7,14 @@ featured: false
 draft: true
 ---
 
-I've been experimenting with on-device LLM that can help with different programming languages that provides code-snippets along with explanations.
-So, naturally I wanted to plug-in my [`compose-highlight`](/posts/syntax-highlighting-on-android-highlight-js-native-compose-engine) library to render code snippets in my AI Chat App.
+I've been experimenting with an on-device LLM that can help with different programming languages and provide code snippets along with explanations.
+So, naturally I wanted to plug in my [`compose-highlight`](/posts/syntax-highlighting-on-android-highlight-js-native-compose-engine) library to render code snippets in my AI Chat App.
 
 ## Initial integration
 
-I was using Mike Penz's [multiplatform-markdown-renderer](https://github.com/mikepenz/multiplatform-markdown-renderer) to render streaming markdown, with code rendering plugin.
+I was using Mike Penz's [multiplatform-markdown-renderer](https://github.com/mikepenz/multiplatform-markdown-renderer) to render streaming markdown, along with its code rendering plugin.
 
-Replacing the markdown code renderer was straightforward. In [PR #222](https://github.com/hossain-khan/android-code-with-ai/pull/222), I added the `dev.hossain:compose-highlight:0.33.0` to the project.
+Replacing the markdown code renderer was straightforward. In [PR #222](https://github.com/hossain-khan/android-code-with-ai/pull/222), I added `dev.hossain:compose-highlight:0.33.0` to the project.
 
 In `MarkdownMessage.kt`, I inspected the markdown AST nodes to extract language tags and code content, wrapped `MainActivity` in `HighlightThemeProvider` so all chat bubbles would share a single background engine instance, and rendered the code blocks with `SyntaxHighlightedCode`:
 
@@ -92,10 +92,10 @@ The difference was night and day. No frame drops, no flickering re-renders, and 
 
 ## Wrapping up
 
-Dogfooding your own libraries in real applications is humbling. On paper, `SyntaxHighlightedCode` did everything I originally set out to build. But the moment I put it in a real-world scenario with streaming AI text, its architectural assumptions fell apart.
+Dogfooding your own libraries in real applications is humbling. On paper, `SyntaxHighlightedCode` did everything I originally set out to build. But the moment I plugged it into a real-world streaming AI scenario, its architectural assumptions fell apart.
 
-`StreamingSyntaxHighlightedCode` is now available in `dev.hossain:compose-highlight:0.34.0+` under the `@ExperimentalHighlightApi` annotation while I continue to refine the API surface.
+`StreamingSyntaxHighlightedCode` is available starting in `dev.hossain:compose-highlight:0.35.0` under the `@ExperimentalHighlightApi` annotation.
 
-If you're building an AI chat client, a developer tool, or any Compose app that deals with streaming code blocks, check out the [streaming documentation](https://hossain-khan.github.io/android-compose-highlight/reference/streaming-syntax-highlighted-code/) and give it a try.
+If you're building an AI chat app or any Compose interface that streams formatted code, check out the [streaming documentation](https://hossain-khan.github.io/android-compose-highlight/reference/streaming-syntax-highlighted-code/) and give it a spin. If you run into edge cases or have feedback, please [open an issue on GitHub](https://github.com/hossain-khan/android-compose-highlight/issues)—I'd love to hear how it works in your setup.
 
-If you test it or run into edge cases, feel free to [open an issue on GitHub](https://github.com/hossain-khan/android-compose-highlight/issues). Happy coding! ✌️
+Happy coding! ✌️
