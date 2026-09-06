@@ -271,8 +271,6 @@ engine.highlight(textToHighlight, language, theme)
 
 ---
 
-## Wrapping up
-
 Building live editors and streaming UI in Jetpack Compose has been a great learning experience. When the underlying engine is asynchronous, what you show *between* updates matters just as much as the final rendering.
 
 By treating syntax highlights as an evolving snapshot that we reconcile across edits, we get responsive background highlighting while keeping typing smooth without dropping frames.
