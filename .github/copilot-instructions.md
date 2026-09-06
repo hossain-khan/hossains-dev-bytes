@@ -241,6 +241,13 @@ When choosing a tool or approach, say why you chose it. "Since Firebase has a fr
 **Use "I" naturally**
 Write in first person throughout. "I noticed", "I wanted to avoid", "I just wanted to focus on" - not passive voice or third person.
 
+**Avoid dramatic or hyperbolic phrasing**
+Keep explanations realistic, grounded, and conversational. Avoid exaggerated metaphors, theatrical drama, or sensational phrases:
+- Instead of "introduce an entirely different beast" -> "brings a unique challenge"
+- Instead of "flicker like a strobe light" -> "UI will flash frequently"
+- Instead of "melt the CPU and drain the battery" -> "causes heavy load on the CPU and drains battery"
+- Instead of "total disaster" or "bulletproof" -> "didn't work as expected" or "worked well"
+
 **Section titles - short and lowercase**
 
 - Good: "What it does", "The API endpoint", "Keeping it free", "Seeing it in the dashboard"
