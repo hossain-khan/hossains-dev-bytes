@@ -75,7 +75,7 @@ As the model streams code:
 - The moment the model hits newline character (`\n`), that completed line gets queued for syntax highlighting.
 - By the time the reader looks up at the previous line, it has already snapped into full syntax colors, even while the cursor is busily generating the next line below it.
 
-## Bringing it back into the chat app
+## Bringing it back into the AI chat app
 
 <img
   src="/images/demo-StreamingSyntaxHighlightedCode.gif"
@@ -83,7 +83,7 @@ As the model streams code:
   class="sm:float-right sm:ml-6 mb-4 w-full sm:max-w-[240px] rounded-xl shadow-md"
 />
 
-With `compose-highlight` 0.35.0 published, I returned to the AI Chat app and [swapped](https://github.com/hossain-khan/android-code-with-ai/pull/223) out the composable:
+With new version of `compose-highlight` published, I [swapped](https://github.com/hossain-khan/android-code-with-ai/pull/223) out the old composable with new steaming supported highlighting:
 
 ```kotlin
 @OptIn(ExperimentalHighlightApi::class)
@@ -96,7 +96,7 @@ StreamingSyntaxHighlightedCode(
 )
 ```
 
-With this change the syntax highlighting worked as expected. No frame drops, no flickering re-renders, and no unstyled text waiting around until the response ends. Code streams in smoothly, with prior lines progressively colored in the background.
+After this change the syntax highlighting worked as expected. No frame drops, no flickering re-renders, and no unstyled text waiting around until the response ends. Code streams in smoothly, with prior lines progressively colored in the background.
 
 <div class="clear-both"></div>
 
@@ -108,4 +108,6 @@ With the release of `StreamingSyntaxHighlightedCode`, now compose-highlight can 
 
 If you're building an AI chat app or any Compose interface that streams formatted code, check out the [streaming documentation](https://hossain-khan.github.io/android-compose-highlight/reference/streaming-syntax-highlighted-code/) and give it a spin. If you run into edge cases or have feedback, please [open an issue on GitHub](https://github.com/hossain-khan/android-compose-highlight/issues).
 
-🌈 Happy highlighting!
+🎨 Happy highlighting!
+
+<GitHubEmbed repo="hossain-khan/android-compose-highlight" />
