@@ -39,7 +39,6 @@ import path from "node:path";
 import { readMarkdownFiles } from "@mastrojs/markdown";
 import {
   createOrUpdateStandardSite,
-  CredentialSession,
   type Publication,
   type Document,
 } from "@mastrojs/atproto";
@@ -107,14 +106,14 @@ const docs: Document[] = posts
     // Convert file path to URL path (e.g., src/data/blog/my-post.md → /posts/my-post)
     const relativePath = path
       .relative(BLOG_DIR, p.path)
-      .replace(/\.md$/, "")
+      .replace(/\.mdx?$/, "")
       .replace(/\\/g, "/");
     const postPath = `${POST_BASE_PATH}/${relativePath}`;
     return {
       title: p.meta.title!,
       description: p.meta.description || "",
       publishedAt: new Date(p.meta.pubDatetime!),
-      path: postPath,
+      url: new URL(postPath, SITE.website),
     };
   })
   .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
@@ -123,15 +122,17 @@ console.log(`Found ${docs.length} posts to sync`);
 
 // ─── Login and sync to ATmosphere ────────────────────────────────────────────
 
-const session = new CredentialSession(new URL("https://bsky.social"));
-await session.login({
-  identifier: SITE.standardSite.handle,
-  password,
-});
-
-await createOrUpdateStandardSite(session, publication, docs, {
-  baseFolder: "public",
-});
+await createOrUpdateStandardSite(
+  {
+    identifier: SITE.standardSite.handle,
+    password,
+  },
+  publication,
+  docs,
+  {
+    baseFolder: "public",
+  },
+);
 
 console.log("Atmosphere sync complete");
 console.log("✅ Atmosphere sync complete — records published to ATmosphere");

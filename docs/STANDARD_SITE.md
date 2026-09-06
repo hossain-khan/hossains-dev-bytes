@@ -20,14 +20,13 @@ main push → Cloudflare build → sync:atmosphere → astro build → pagefind 
 
 ### rkey Derivation (No Frontmatter Changes)
 
-Instead of storing generated rkeys in frontmatter, rkeys are **derived from URL paths**:
+Instead of storing generated rkeys in frontmatter, rkeys are **derived from URL paths** as valid **TIDs** (Timestamp Identifiers) per the AT Protocol `site.standard.document` lexicon:
 
-| Post URL | Derived rkey |
-|----------|-------------|
-| `https://hossain.dev/posts/my-post/` | `self-postsmy-post` |
-| `https://hossain.dev/posts/subdir/another/` | `self-postssubdiranother` |
+| Post URL | Derived rkey (TID) |
+|----------|-------------------|
+| `https://hossain.dev/posts/my-post/` | `3...` (13-char base-32 TID) |
 
-The `rkeyFromPath()` function from `@mastrojs/atproto` normalizes paths by stripping non-alphanumeric characters (except `.`, `_`, `~`, `-`).
+The `rkeyFromUrl()` function from `@mastrojs/atproto` generates deterministic TIDs based on URL paths.
 
 **Tradeoff**: URLs cannot change after publishing to the ATmosphere. This is good practice anyway.
 
@@ -39,7 +38,7 @@ Each post page renders a `<link>` tag in the `<head>`:
 
 ```html
 <link rel="site.standard.document"
-  href="at://did:plc:sek23f2vucrxxyaaud2emnxe/site.standard.document/self-postsmy-post" />
+  href="at://did:plc:sek23f2vucrxxyaaud2emnxe/site.standard.document/3igs2bkublgkf" />
 ```
 
 The DID is hardcoded in `src/config.ts` under `SITE.standardSite.did`.

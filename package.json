@@ -22,7 +22,7 @@
     "@astrojs/mdx": "^8.0.0",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
-    "@mastrojs/atproto": "jsr:^0.1.3",
+    "@mastrojs/atproto": "jsr:^0.2.5",
     "@mastrojs/markdown": "jsr:^0.1.5",
     "@resvg/resvg-wasm": "^2.6.2",
     "@tailwindcss/vite": "^4.3.3",
