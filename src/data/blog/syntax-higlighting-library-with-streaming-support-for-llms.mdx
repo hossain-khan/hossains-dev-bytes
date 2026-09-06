@@ -7,6 +7,8 @@ featured: false
 draft: false
 ---
 
+import GitHubEmbed from "@/components/GitHubEmbed.astro";
+
 I've been experimenting with an on-device LLM that can help with different programming languages and provide code snippets along with explanations.
 So, naturally I wanted to plug in my [`compose-highlight`](/posts/syntax-highlighting-on-android-highlight-js-native-compose-engine) library to render code snippets in my AI Chat App.
 
@@ -83,7 +85,7 @@ As the model streams code:
   class="sm:float-right sm:ml-6 mb-4 w-full sm:max-w-[240px] rounded-xl shadow-md"
 />
 
-With new version of `compose-highlight` published, I [swapped](https://github.com/hossain-khan/android-code-with-ai/pull/223) out the old composable with new steaming supported highlighting:
+With new version of `compose-highlight` published, I [swapped](https://github.com/hossain-khan/android-code-with-ai/pull/223) out the old composable with new streaming supported highlighting:
 
 ```kotlin
 @OptIn(ExperimentalHighlightApi::class)
