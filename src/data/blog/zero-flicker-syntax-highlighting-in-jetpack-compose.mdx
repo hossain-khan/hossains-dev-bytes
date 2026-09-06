@@ -23,7 +23,7 @@ Here is the story of how I stumbled through three broken attempts, landed on a z
 
 Highlighting code isn't free. Parsing syntax with grammars or regex on large documents takes anywhere from 5ms to 30ms off the main thread.
 
-When someone is actively typing in `SyntaxHighlightedTextEditor` at 60 FPS, or an LLM is pushing tokens into `StreamingSyntaxHighlightedCode` at 30 tokens a second, you can't run a full highlight pass on every single keystroke. You'd melt the CPU and drain the battery.
+When someone is actively typing in `SyntaxHighlightedTextEditor` (easily 5 to 10 keystrokes a second), or an LLM is pushing tokens into `StreamingSyntaxHighlightedCode` at 20 to 30 tokens a second, you can't run a full highlight pass on every single keystroke. You'd melt the CPU and drain the battery.
 
 Naturally, you debounce: wait until typing pauses for, say, 150ms before asking the engine to highlight again.
 
@@ -275,7 +275,7 @@ engine.highlight(textToHighlight, language, theme)
 
 Building live editors and streaming UI in Jetpack Compose is humbling. When the underlying engine is asynchronous, what you show *between* updates matters just as much as the final rendering.
 
-By treating syntax highlights as an evolving snapshot that we reconcile across edits, we get the best of both worlds: full background highlighting without sacrificing 60 FPS typing responsiveness.
+By treating syntax highlights as an evolving snapshot that we reconcile across edits, we get the best of both worlds: full background highlighting while keeping typing buttery smooth without dropping frames.
 
 You can check out the full implementation and unit tests in the repository:
 
