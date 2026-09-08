@@ -1,27 +1,29 @@
-Image File Name: open-graph-base-background.png
-PNG image data, 2752 x 1536, 8-bit/color RGB, non-interlaced
+Image File Name: open-graph-base-background-refined.png
+PNG image data, 1678 x 937, 8-bit/color RGB, non-interlaced
+
+(Previous file: open-graph-base-background.png, 2752 x 1536)
 
 
 ## Computer Monitor Display Area
 
 Safe drawing area for blog title inside image (using pixspy.com)
 
-- Top Left: 640, 90
-- Top Right: 2070, 90
-- Bottom Left: 640, 880
-- Bottom Right: 2070, 880
+- Top Left: 390, 55
+- Top Right: 1260, 55
+- Bottom Left: 390, 537
+- Bottom Right: 1260, 537
 
-(Ignore these for now - use full rectangular area for safe drawing)
-Bottom-right last line safe end - top: 1780, 670
-Bottom-right last line safe end - bottom: 1780, 880
+(Scaled to 1200x630 target OG output: x: 287, y: 45, width: 606, height: 308)
 
 
 ## Sticky Note Display Area
 
-- Top Left: 200, 170
-- Top Right: 520, 170
-- Bottom Left: 200, 340
-- Bottom Right: 520, 340
+- Top Left: 122, 104
+- Top Right: 316, 104
+- Bottom Left: 122, 206
+- Bottom Right: 316, 206
+
+(Scaled to 1200x630 target OG output: x: 89, y: 72, width: 135, height: 65)
 
 
 ---
