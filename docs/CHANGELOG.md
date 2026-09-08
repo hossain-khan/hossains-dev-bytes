@@ -4,6 +4,9 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Sep 08, 2026** - `<pending>`: feat(og): update post OG background with refined artwork and safe area coordinates
+  > *Replaced `open-graph-base-background.png` with refined 1678x937 artwork featuring an updated red ladybug and rounded Android emblem. Recalculated and updated monitor and sticky note safe drawing coordinates for the 1200x630 OG canvas.*
+
 - **Sep 03, 2026** - `<pending>`: fix(ui): preserve space between year and site title in footer copyright
   > *Added explicit inline whitespace `{" "}` between `{currentYear}` and `{SITE.title}` in the footer component to avoid Astro compiler whitespace collapsing.*
 

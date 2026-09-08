@@ -4,13 +4,13 @@
  * Generates dynamic 1200x630px OG images for blog posts using Satori + Resvg.
  * Uses a custom background image with a defined safe drawing area for the title.
  *
- * Background image native size: 2752x1536
+ * Background image native size: 1678x937
  * Safe drawing area (native coords):
- *   Top-Left:     (640,  90)
- *   Bottom-Right: (2070, 880)
+ *   Top-Left:     (390,  55)
+ *   Bottom-Right: (1260, 537)
  *
- * Scaled to 1200x630 output (scale X=1200/2752~=0.436, scale Y=630/1536~=0.410):
- *   x: 279  y: 37  width: 623  height: 324
+ * Scaled to 1200x630 output (scale X=1200/1678~=0.715, scale Y=630/937~=0.672):
+ *   x: 287  y: 45  width: 606  height: 308
  *
  * Font: Jersey 10 (Google Fonts) - dynamic size to fill safe area.
  */
@@ -21,21 +21,21 @@ import fs from "node:fs";
 import path from "node:path";
 
 // Safe drawing area at 1200x630 output size
-// (scaled from native 2752x1536 coordinates: TL=640,90 BR=2070,880)
+// (scaled from native 1678x937 coordinates: TL=390,55 BR=1260,537)
 const MARGIN = 8; // small margin to prevent text from touching edges
-const SAFE_X = Math.round(640 * (1200 / 2752)) + MARGIN;   // 281
-const SAFE_Y = Math.round(90 * (630 / 1536)) + MARGIN;     // 39
-const SAFE_W = Math.round((2070 - 640) * (1200 / 2752)) - MARGIN * 2; // 620
-const SAFE_H = Math.round((880 - 90) * (630 / 1536)) - MARGIN * 2;   // 320
+const SAFE_X = Math.round(390 * (1200 / 1678)) + MARGIN; // 287
+const SAFE_Y = Math.round(55 * (630 / 937)) + MARGIN; // 45
+const SAFE_W = Math.round((1260 - 390) * (1200 / 1678)) - MARGIN * 2; // 606
+const SAFE_H = Math.round((537 - 55) * (630 / 937)) - MARGIN * 2; // 308
 const LINE_HEIGHT = 1.15;
 
 // Sticky note display area at 1200x630 output size
-// (scaled from native 2752x1536 coordinates: TL=200,170 BR=520,340)
+// (scaled from native 1678x937 coordinates: TL=122,104 BR=316,206)
 const TAG_MARGIN = 2;
-const TAG_X = Math.round(200 * (1200 / 2752)) + TAG_MARGIN;  // 91
-const TAG_Y = Math.round(170 * (630 / 1536)) + TAG_MARGIN;   // 74
-const TAG_W = Math.round((520 - 200) * (1200 / 2752)) - TAG_MARGIN * 2; // 132
-const TAG_H = Math.round((340 - 170) * (630 / 1536)) - TAG_MARGIN * 2;  // 62
+const TAG_X = Math.round(122 * (1200 / 1678)) + TAG_MARGIN; // 89
+const TAG_Y = Math.round(104 * (630 / 937)) + TAG_MARGIN; // 72
+const TAG_W = Math.round((316 - 122) * (1200 / 1678)) - TAG_MARGIN * 2; // 135
+const TAG_H = Math.round((206 - 104) * (630 / 937)) - TAG_MARGIN * 2; // 65
 /**
  * Estimate appropriate font size so the longest tag fits on one line within the sticky note width.
  * Uses Jersey 10 char-width heuristic: avg char ~= 0.55 x fontSize.
@@ -69,14 +69,15 @@ function getTitleFontSize(title) {
 export default async post => {
   const bgPath = path.join(
     process.cwd(),
-    "src/assets/images/open-graph-base-background.png"
+    "src/assets/images/open-graph-base-background-refined.png"
   );
   const bgBase64 = `data:image/png;base64,${fs.readFileSync(bgPath).toString("base64")}`;
 
   const title = post.data.title;
   const fontSize = getTitleFontSize(title);
   const lineClamp = Math.floor(SAFE_H / (fontSize * LINE_HEIGHT));
-  const tags = (post.data.tags ?? []).slice(0, 2).map(t => `#${t}`);  const tagFontSize = tags.length > 0 ? getTagFontSize(tags) : 20;
+  const tags = (post.data.tags ?? []).slice(0, 2).map(t => `#${t}`);
+  const tagFontSize = tags.length > 0 ? getTagFontSize(tags) : 20;
   return satori(
     {
       type: "div",
