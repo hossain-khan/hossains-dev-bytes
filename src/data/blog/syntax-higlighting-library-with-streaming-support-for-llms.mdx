@@ -3,7 +3,7 @@ title: "Extending Syntax Highlighting Library to Support Streaming Responses fro
 pubDatetime: 2026-09-04T12:00:00Z
 description: "Extending the Compose Highlight library to support real-time streaming LLM responses with snapshot span preservation and newline-based highlight triggers."
 tags: ["android", "jetpack-compose", "syntax-highlighting", "ai", "open-source"]
-featured: false
+featured: true
 draft: false
 ---
 
@@ -104,7 +104,7 @@ After this change the syntax highlighting worked as expected. No frame drops, no
 
 ## Wrapping up
 
-Dogfooding my own library in real applications is humbling. On paper, `SyntaxHighlightedCode` did work for static code snippets. But the moment I plugged it into a streaming AI scenario, its architectural assumptions fell apart.
+Dogfooding my own library in real applications is humbling. On paper, `SyntaxHighlightedCode` did work for static code snippets. But the moment I plugged it into a streaming AI scenario, it presented new challenges! 🤓
 
 With the release of `StreamingSyntaxHighlightedCode`, now compose-highlight can be used for streaming code snippets as well! 🙌🏽
 
