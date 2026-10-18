@@ -4,6 +4,9 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Oct 18, 2026** - `<pending>`: chore: update all dependencies to latest stable
+  > *Updated Astro to v7.4.0, `@astrojs/cloudflare`, `@astrojs/mdx`, Satori to v0.62.0, Vitest to v5, ESLint, Wrangler, `@mastrojs/markdown` to v0.2.2 and other packages. TypeScript stays on 6.x because `astro check` and typescript-eslint don't support TypeScript 7 yet. Tightened frontmatter typing in `publishToAtmosphere.ts` for the new `@mastrojs/markdown` types.*
+
 - **Oct 18, 2026** - `<pending>`: ci: integrate JetBrains Junie GitHub Action for automated reviews and agent tasks
   > *Added JetBrains Junie GitHub workflows (`junie.yml` and `junie-code-review.yml`) with OpenRouter BYOK authentication, linked project guidelines via `.junie/guidelines.md`, and documented configuration in `docs/JUNIE_AUTOMATION.md`.*
 

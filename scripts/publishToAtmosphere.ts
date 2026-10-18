@@ -100,7 +100,7 @@ const posts = await readMarkdownFiles(`${BLOG_DIR}/**/*.{md,mdx}`);
 const docs: Document[] = posts
   .filter((p) => {
     const draft = p.meta.draft;
-    return draft !== "true";
+    return draft !== true && draft !== "true";
   })
   .map((p) => {
     // Convert file path to URL path (e.g., src/data/blog/my-post.md → /posts/my-post)
@@ -110,9 +110,9 @@ const docs: Document[] = posts
       .replace(/\\/g, "/");
     const postPath = `${POST_BASE_PATH}/${relativePath}`;
     return {
-      title: p.meta.title!,
-      description: p.meta.description || "",
-      publishedAt: new Date(p.meta.pubDatetime!),
+      title: String(p.meta.title),
+      description: p.meta.description ? String(p.meta.description) : "",
+      publishedAt: new Date(p.meta.pubDatetime as string | number | Date),
       url: new URL(postPath, SITE.website),
     };
   })
