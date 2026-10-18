@@ -106,6 +106,10 @@ Edit `src/config.ts` to customize:
 - Gallery and archive visibility
 - Edit links on posts
 
+## AI Automation 🤖
+
+This repository uses [JetBrains Junie](https://github.com/JetBrains/junie-github-action) powered by OpenRouter for automated PR code reviews and interactive issue/PR assistance. See [`docs/JUNIE_AUTOMATION.md`](docs/JUNIE_AUTOMATION.md) for full setup and usage details.
+
 ## Tech Stack
 
 - **Framework:** Astro v7
@@ -125,6 +129,7 @@ For more detailed information about the site, check out:
 - **[Customizations](./docs/CUSTOMIZATIONS.md)** - All custom features and modifications
 - **[Embeds](./docs/EMBEDS.md)** - GitHub, Google Play, and custom embed components
 - **[Image Galleries](./docs/GALLERIES.md)** - Photo gallery feature and usage
+- **[Junie Automation](./docs/JUNIE_AUTOMATION.md)** - JetBrains Junie GitHub Actions setup and usage guide
 - **[Standard.site](./docs/STANDARD_SITE.md)** - ATmosphere (Bluesky) publication integration
 - **[Changelog](./docs/CHANGELOG.md)** - Version history and feature releases
 - **[Original Template](./docs/TEMPLATE_README.md)** - Base Astro Paper template docs

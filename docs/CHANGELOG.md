@@ -4,6 +4,9 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Oct 18, 2026** - `<pending>`: ci: integrate JetBrains Junie GitHub Action for automated reviews and agent tasks
+  > *Added JetBrains Junie GitHub workflows (`junie.yml` and `junie-code-review.yml`) with OpenRouter BYOK authentication, linked project guidelines via `.junie/guidelines.md`, and documented configuration in `docs/JUNIE_AUTOMATION.md`.*
+
 - **Sep 08, 2026** - `<pending>`: feat(og): update post OG background with refined artwork and safe area coordinates
   > *Replaced `open-graph-base-background.png` with refined 1678x937 artwork featuring an updated red ladybug and rounded Android emblem. Recalculated and updated monitor and sticky note safe drawing coordinates for the 1200x630 OG canvas.*
 

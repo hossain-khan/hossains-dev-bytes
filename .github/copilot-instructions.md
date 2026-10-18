@@ -243,6 +243,7 @@ Write in first person throughout. "I noticed", "I wanted to avoid", "I just want
 
 **Avoid dramatic or hyperbolic phrasing**
 Keep explanations realistic, grounded, and conversational. Avoid exaggerated metaphors, theatrical drama, or sensational phrases:
+
 - Instead of "introduce an entirely different beast" -> "brings a unique challenge"
 - Instead of "flicker like a strobe light" -> "UI will flash frequently"
 - Instead of "melt the CPU and drain the battery" -> "causes heavy load on the CPU and drains battery"
@@ -355,6 +356,15 @@ const greeting = "hello";
 4. Run `pnpm run build` - Full build test (Astro + pagefind)
 
 All checks must pass before merging to `main`. This acts as a safety gate before code reaches production.
+
+### JetBrains Junie GitHub Action
+
+The repository integrates [JetBrains Junie](https://github.com/JetBrains/junie-github-action) with OpenRouter BYOK for automated code reviews and `@junie-agent` interactive tasks.
+
+- Details & usage: See [`docs/JUNIE_AUTOMATION.md`](../docs/JUNIE_AUTOMATION.md)
+- Workflows: `.github/workflows/junie.yml` (interactive agent) and `.github/workflows/junie-code-review.yml` (PR code review)
+- Guidelines: `.junie/guidelines.md` symlinked to `.github/copilot-instructions.md`
+- Important: Junie model identifiers must omit the provider prefix (e.g. use `claude-sonnet-5-5`, not `anthropic/claude-sonnet-5.5`).
 
 **Cloudflare Pages** (Build & Deploy)
 **Triggered**: Automatically when commits reach `main` branch
