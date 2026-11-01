@@ -13,10 +13,13 @@ export const POST: APIRoute = async ({ request }) => {
   // Only accept JSON
   const contentType = request.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) {
-    return new Response(JSON.stringify({ error: "Expected application/json" }), {
-      status: 400,
-      headers: { "content-type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: "Expected application/json" }),
+      {
+        status: 400,
+        headers: { "content-type": "application/json" },
+      }
+    );
   }
 
   let body: { content?: unknown; messages?: unknown };
@@ -32,17 +35,23 @@ export const POST: APIRoute = async ({ request }) => {
   const { content, messages } = body;
 
   if (typeof content !== "string" || !content.trim()) {
-    return new Response(JSON.stringify({ error: "Missing required field: content" }), {
-      status: 400,
-      headers: { "content-type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: "Missing required field: content" }),
+      {
+        status: 400,
+        headers: { "content-type": "application/json" },
+      }
+    );
   }
 
   if (!Array.isArray(messages) || messages.length === 0) {
-    return new Response(JSON.stringify({ error: "Missing required field: messages" }), {
-      status: 400,
-      headers: { "content-type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: "Missing required field: messages" }),
+      {
+        status: 400,
+        headers: { "content-type": "application/json" },
+      }
+    );
   }
 
   // Validate message shape
@@ -91,7 +100,8 @@ ${trimmedContent}
     //   - Pricing (as of Apr 2026): $0.10 per M input tokens, $0.30 per M output tokens
     // See available models: https://developers.cloudflare.com/workers-ai/models/
     // See pricing: https://developers.cloudflare.com/workers-ai/platform/pricing/
-    const model = (env.AI_MODEL ?? "@cf/google/gemma-4-26b-a4b-it") as Parameters<typeof env.AI.run>[0];
+    const model = (env.AI_MODEL ??
+      "@cf/google/gemma-4-26b-a4b-it") as Parameters<typeof env.AI.run>[0];
 
     // Route through AI Gateway for rate limiting, caching, and observability.
     // Configure rate limits at: Cloudflare Dashboard > AI > AI Gateway > Settings > Rate Limiting
@@ -106,7 +116,7 @@ ${trimmedContent}
         stream: true,
         max_tokens: 1024,
       },
-      gatewayOptions,
+      gatewayOptions
     );
 
     // TypeScript 6.0 requires casting through `unknown` first because the AI.run()
@@ -128,10 +138,9 @@ ${trimmedContent}
     if (errMsg.includes("429") || errMsg.toLowerCase().includes("rate limit")) {
       return new Response(
         JSON.stringify({
-          error:
-            "Daily AI usage limit reached. Please try again tomorrow.",
+          error: "Daily AI usage limit reached. Please try again tomorrow.",
         }),
-        { status: 429, headers: { "content-type": "application/json" } },
+        { status: 429, headers: { "content-type": "application/json" } }
       );
     }
 

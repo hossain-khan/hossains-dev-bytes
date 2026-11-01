@@ -9,7 +9,7 @@ draft: false
 
 import GitHubEmbed from "@/components/GitHubEmbed.astro";
 
-After setting up my blog on [Astro](https://astro.build/) and [Cloudflare Workers](https://workers.cloudflare.com/) [recently](https://hossain.dev/posts/moving-away-from-medium-for-good/), I was wondering what else I can tinker with for my new blog that I have full control over 😆. 
+After setting up my blog on [Astro](https://astro.build/) and [Cloudflare Workers](https://workers.cloudflare.com/) [recently](https://hossain.dev/posts/moving-away-from-medium-for-good/), I was wondering what else I can tinker with for my new blog that I have full control over 😆.
 I was aware that Cloudflare has free daily quota for AI models, so thought it would be fun to build a little AI assistant directly into the blog posts - something that could summarize the post and answer questions about it, all powered by Workers AI.
 
 This post walks through how I added an AI summarizer and Q&A panel directly into each blog post using **Cloudflare Workers AI**, and how I used **AI Gateway** to make sure I never get an unexpected bill.
@@ -67,10 +67,11 @@ ${content.slice(0, 8_000)}
 ---`,
   };
 
-  const stream = await env.AI.run(
-    "@cf/meta/llama-3.1-8b-instruct-fp8",
-    { messages: [systemMessage, ...messages], stream: true, max_tokens: 1024 }
-  );
+  const stream = await env.AI.run("@cf/meta/llama-3.1-8b-instruct-fp8", {
+    messages: [systemMessage, ...messages],
+    stream: true,
+    max_tokens: 1024,
+  });
 
   return new Response(stream, {
     headers: {

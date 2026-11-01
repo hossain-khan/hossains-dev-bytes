@@ -84,100 +84,98 @@ const gridClass = {
 }[cols];
 ---
 
-{
-  !entry ? (
-    <div class="ge-error">
-      ⚠️ Gallery <code>{slug}</code> not found. Make sure{" "}
-      <code>src/data/galleries/{slug}/index.md</code> exists.
+{!entry ? (
+  <div class="ge-error">
+    ⚠️ Gallery <code>{slug}</code> not found. Make sure{" "}
+    <code>src/data/galleries/{slug}/index.md</code> exists.
+  </div>
+) : (
+  <figure class="gallery-embed not-prose" data-gallery-embed={slug}>
+    {/* ncabezado de la galería embebida */}
+    <div class="ge-header">
+      <svg
+        class="ge-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="3" y="3" width="7" height="7" rx="1" />
+        <rect x="14" y="3" width="7" height="7" rx="1" />
+        <rect x="3" y="14" width="7" height="7" rx="1" />
+        <rect x="14" y="14" width="7" height="7" rx="1" />
+      </svg>
+      <span class="ge-title">{entry.data.title}</span>
+      {remaining > 0 && <span class="ge-count">+{remaining} more</span>}
     </div>
-  ) : (
-    <figure class="gallery-embed not-prose" data-gallery-embed={slug}>
-      {/* ncabezado de la galería embebida */}
-      <div class="ge-header">
-        <svg
-          class="ge-icon"
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <rect x="3" y="3" width="7" height="7" rx="1" />
-          <rect x="14" y="3" width="7" height="7" rx="1" />
-          <rect x="3" y="14" width="7" height="7" rx="1" />
-          <rect x="14" y="14" width="7" height="7" rx="1" />
-        </svg>
-        <span class="ge-title">{entry.data.title}</span>
-        {remaining > 0 && <span class="ge-count">+{remaining} more</span>}
-      </div>
 
-      {/* Grid de imágenes */}
-      {visibleImages.length > 0 ? (
-        <ul
-          class:list={["ge-grid", gridClass]}
-          role="list"
-          aria-label={`Gallery: ${entry.data.title}`}
-        >
-          {visibleImages.map((img, idx) => (
-            <li>
-              <button
-                class="ge-item group"
-                data-lb={lbId}
-                data-index={idx}
-                aria-label={`Ver imagen: ${img.alt}`}
-                type="button"
-              >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  class="ge-img"
-                  loading={idx < 4 ? "eager" : "lazy"}
-                  widths={[300, 600]}
-                  sizes={`(max-width: 640px) ${cols === 2 ? "50vw" : "33vw"}, ${cols === 4 ? "25vw" : cols === 2 ? "40vw" : "30vw"}`}
-                />
-                <div class="ge-overlay">
-                  <span class="ge-alt">{img.alt}</span>
-                </div>
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p class="ge-empty">This gallery has no images yet.</p>
-      )}
-
-      {/* Pie: descripción + enlace a la galería completa */}
-      <figcaption class="ge-footer">
-        {entry.data.description && (
-          <span class="ge-desc">{entry.data.description}</span>
-        )}
-        {showLink && (
-          <a href={`/galleries/${slug}`} class="ge-link">
-            View full gallery
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+    {/* Grid de imágenes */}
+    {visibleImages.length > 0 ? (
+      <ul
+        class:list={["ge-grid", gridClass]}
+        role="list"
+        aria-label={`Gallery: ${entry.data.title}`}
+      >
+        {visibleImages.map((img, idx) => (
+          <li>
+            <button
+              class="ge-item group"
+              data-lb={lbId}
+              data-index={idx}
+              aria-label={`Ver imagen: ${img.alt}`}
+              type="button"
             >
-              <line x1="7" y1="17" x2="17" y2="7" />
-              <polyline points="7 7 17 7 17 17" />
-            </svg>
-          </a>
-        )}
-      </figcaption>
-    </figure>
-  )
-}
+              <Image
+                src={img.src}
+                alt={img.alt}
+                class="ge-img"
+                loading={idx < 4 ? "eager" : "lazy"}
+                widths={[300, 600]}
+                sizes={`(max-width: 640px) ${cols === 2 ? "50vw" : "33vw"}, ${cols === 4 ? "25vw" : cols === 2 ? "40vw" : "30vw"}`}
+              />
+              <div class="ge-overlay">
+                <span class="ge-alt">{img.alt}</span>
+              </div>
+            </button>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="ge-empty">This gallery has no images yet.</p>
+    )}
+
+    {/* Pie: descripción + enlace a la galería completa */}
+    <figcaption class="ge-footer">
+      {entry.data.description && (
+        <span class="ge-desc">{entry.data.description}</span>
+      )}
+      {showLink && (
+        <a href={`/galleries/${slug}`} class="ge-link">
+          View full gallery
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="7" y1="17" x2="17" y2="7" />
+            <polyline points="7 7 17 7 17 17" />
+          </svg>
+        </a>
+      )}
+    </figcaption>
+  </figure>
+)}
 
 <!-- Lightbox propio de este embed -->
 <dialog

@@ -11,9 +11,7 @@ import { SITE } from "@/config";
 
 const [blogPosts, galleryPosts] = await Promise.all([
   getCollection("blog"),
-  SITE.showGalleriesInIndex
-    ? getCollection("galleries")
-    : Promise.resolve([]),
+  SITE.showGalleriesInIndex ? getCollection("galleries") : Promise.resolve([]),
 ]);
 const posts = [...blogPosts, ...galleryPosts];
 
@@ -45,51 +43,45 @@ const maxCount = Math.max(...tagsWithCount.map(t => t.count));
           Explore all blog topics. Each tag is a universe of content.
         </p>
         <div class="mt-4 flex items-center gap-2 text-sm text-foreground/50">
-          <span class="hero-badge">
-            {tagsWithCount.length} tags
-          </span>
-          <span class="hero-badge">
-            {posts.length} posts
-          </span>
+          <span class="hero-badge">{tagsWithCount.length} tags</span>
+          <span class="hero-badge">{posts.length} posts</span>
         </div>
       </div>
     </div>
 
     <div class="tags-grid">
-      {
-        tagsWithCount.map(({ tag, tagName, count }) => {
-          const intensity = count / maxCount;
-          return (
-            <a
-              href={`/tags/${tag}/`}
-              transition:name={tag}
-              class="tag-card group"
-              data-tag-card
-            >
-              <div class="tag-aurora" data-tag-aurora />
-              <div class="tag-border-glow" data-tag-border />
-              <div class="tag-content">
-                <div class="flex items-center gap-1.5">
-                  <IconHash class="size-5 text-accent opacity-60 transition-opacity group-hover:opacity-100" />
-                  <span class="tag-name">{tagName}</span>
-                </div>
-                <div class="tag-count">
-                  <span class="tag-count-number">{count}</span>
-                  <span class="tag-count-label">
-                    {count === 1 ? "post" : "posts"}
-                  </span>
-                </div>
+      {tagsWithCount.map(({ tag, tagName, count }) => {
+        const intensity = count / maxCount;
+        return (
+          <a
+            href={`/tags/${tag}/`}
+            transition:name={tag}
+            class="tag-card group"
+            data-tag-card
+          >
+            <div class="tag-aurora" data-tag-aurora />
+            <div class="tag-border-glow" data-tag-border />
+            <div class="tag-content">
+              <div class="flex items-center gap-1.5">
+                <IconHash class="size-5 text-accent opacity-60 transition-opacity group-hover:opacity-100" />
+                <span class="tag-name">{tagName}</span>
               </div>
-              <div class="tag-bar">
-                <div
-                  class="tag-bar-fill"
-                  style={`width: ${Math.max(intensity * 100, 8)}%`}
-                />
+              <div class="tag-count">
+                <span class="tag-count-number">{count}</span>
+                <span class="tag-count-label">
+                  {count === 1 ? "post" : "posts"}
+                </span>
               </div>
-            </a>
-          );
-        })
-      }
+            </div>
+            <div class="tag-bar">
+              <div
+                class="tag-bar-fill"
+                style={`width: ${Math.max(intensity * 100, 8)}%`}
+              />
+            </div>
+          </a>
+        );
+      })}
     </div>
   </main>
   <Footer />

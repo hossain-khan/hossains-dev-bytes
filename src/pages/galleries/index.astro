@@ -73,38 +73,36 @@ const galleries = rawGalleries
           Collections of images to share moments and projects.
         </p>
         <div class="mt-4 flex flex-wrap items-center gap-2">
-          <span class="hero-badge"
-            >{galleries.length}
-            {galleries.length === 1 ? "gallery" : "galleries"}</span
-          >
+          <span class="hero-badge">
+            {galleries.length}
+            {galleries.length === 1 ? "gallery" : "galleries"}
+          </span>
         </div>
       </div>
     </div>
 
     <!-- Grid de galerías -->
-    {
-      galleries.length === 0 ? (
-        <p class="mt-12 text-center text-foreground/50 italic">
-          No galleries published yet.
-        </p>
-      ) : (
-        <ul
-          class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
-          role="list"
-        >
-          {galleries.map(({ gallery, slug, fallbackImage, imageCount }) => (
-            <li>
-              <GalleryCard
-                gallery={gallery}
-                slug={slug}
-                fallbackImage={fallbackImage}
-                imageCount={imageCount}
-              />
-            </li>
-          ))}
-        </ul>
-      )
-    }
+    {galleries.length === 0 ? (
+      <p class="mt-12 text-center text-foreground/50 italic">
+        No galleries published yet.
+      </p>
+    ) : (
+      <ul
+        class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        role="list"
+      >
+        {galleries.map(({ gallery, slug, fallbackImage, imageCount }) => (
+          <li>
+            <GalleryCard
+              gallery={gallery}
+              slug={slug}
+              fallbackImage={fallbackImage}
+              imageCount={imageCount}
+            />
+          </li>
+        ))}
+      </ul>
+    )}
   </main>
   <Footer />
 </Layout>

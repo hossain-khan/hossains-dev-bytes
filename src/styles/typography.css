@@ -10,15 +10,15 @@
     h3,
     h4,
     th {
-      @apply mb-3 text-foreground leading-tight;
+      @apply mb-3 leading-tight text-foreground;
     }
 
     h1 {
-      @apply text-3xl sm:text-4xl font-bold tracking-tight;
+      @apply text-3xl font-bold tracking-tight sm:text-4xl;
     }
 
     h2 {
-      @apply text-2xl sm:text-3xl font-bold tracking-wide;
+      @apply text-2xl font-bold tracking-wide sm:text-3xl;
     }
 
     h3 {
@@ -36,12 +36,16 @@
     figcaption,
     table,
     code {
-      @apply text-foreground leading-relaxed;
+      @apply leading-relaxed text-foreground;
     }
 
     a {
-      @apply relative font-medium text-accent/80 no-underline transition-all duration-200 wrap-break-word;
-      background-image: linear-gradient(to right, color-mix(in srgb, var(--accent) 40%, transparent), color-mix(in srgb, var(--accent) 40%, transparent));
+      @apply relative font-medium wrap-break-word text-accent/80 no-underline transition-all duration-200;
+      background-image: linear-gradient(
+        to right,
+        color-mix(in srgb, var(--accent) 40%, transparent),
+        color-mix(in srgb, var(--accent) 40%, transparent)
+      );
       background-position: 0 100%;
       background-size: 100% 1px;
       background-repeat: no-repeat;
@@ -96,7 +100,7 @@
     }
 
     code {
-      @apply rounded-md bg-accent/12 px-1.5 py-0.5 wrap-break-word font-cartograph text-sm text-foreground shadow-sm shadow-black/5 before:content-none after:content-none;
+      @apply rounded-md bg-accent/12 px-1.5 py-0.5 font-cartograph text-sm wrap-break-word text-foreground shadow-sm shadow-black/5 before:content-none after:content-none;
     }
 
     .astro-code {
@@ -108,7 +112,7 @@
     }
 
     blockquote {
-      @apply rounded-r-xl border-s-[3px] border-accent/80 bg-accent/5 py-4 pr-5 pl-6 font-lora text-[1.05rem] text-foreground/90 opacity-90 shadow-sm shadow-accent/5 wrap-break-word leading-relaxed;
+      @apply rounded-r-xl border-s-[3px] border-accent/80 bg-accent/5 py-4 pr-5 pl-6 font-lora text-[1.05rem] leading-relaxed wrap-break-word text-foreground/90 opacity-90 shadow-sm shadow-accent/5;
     }
 
     blockquote em,
@@ -243,7 +247,7 @@
     }
 
     pre {
-      @apply rounded-lg p-0 overflow-x-auto focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
+      @apply overflow-x-auto rounded-lg p-0 focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
     }
   }
 

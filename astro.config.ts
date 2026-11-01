@@ -1,8 +1,4 @@
-import {
-  defineConfig,
-  envField,
-  fontProviders,
-} from "astro/config";
+import { defineConfig, envField, fontProviders } from "astro/config";
 
 // https://docs.astro.build/en/guides/integrations-guide/mdx/
 import mdx from "@astrojs/mdx";
