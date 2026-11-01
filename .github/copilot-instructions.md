@@ -219,7 +219,7 @@ Set these in **Cloudflare Dashboard → Workers & Pages → hossains-dev-bytes �
 Runs on Node 22.x and 24.x when pushing to `main`:
 
 - Checks ESLint rules
-- Validates Prettier formatting (currently commented out)
+- Validates Prettier formatting (`pnpm run format:check`)
 - Runs full build to catch errors early
 - All checks must pass before merging
 
@@ -342,6 +342,7 @@ const greeting = "hello";
 | **GitHubEmbed component fails locally**                        | Create `.env` file from `.env.example` and add your GitHub Personal Access Token                                                                                                              |
 | **AI assistant shows "Daily AI usage limit reached"**          | Rate limit on AI Gateway triggered. Wait until midnight UTC for daily reset, or raise the limit at **Cloudflare Dashboard → AI → AI Gateway → hossains-dev-bytes → Settings → Rate Limiting** |
 | **AI assistant not routing through gateway / no gateway logs** | Ensure the gateway named `hossains-dev-bytes` exists in the Cloudflare Dashboard under AI → AI Gateway. The `AI_GATEWAY_ID` var in `wrangler.jsonc` must match the gateway name exactly       |
+| **Workers Builds fails with `binding AI ... [code: 10021]`**   | Build API token lacks Workers AI permissions. Regenerate the Build Token under **Workers & Pages → hossains-dev-bytes → Settings → Build** (or deploy via `pnpm exec wrangler deploy`)        |
 
 ## CI/CD Pipeline
 
@@ -352,7 +353,7 @@ const greeting = "hello";
 
 1. Install dependencies with `pnpm install --frozen-lockfile`
 2. Run `pnpm run lint` - ESLint code quality checks
-3. Run `pnpm run format:check` - Prettier formatting validation (currently disabled)
+3. Run `pnpm run format:check` - Prettier formatting validation
 4. Run `pnpm run build` - Full build test (Astro + pagefind)
 
 All checks must pass before merging to `main`. This acts as a safety gate before code reaches production.
