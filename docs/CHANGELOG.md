@@ -4,7 +4,10 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
-- **Oct 31, 2026** - `<pending>`: fix(styles): add color-scheme to theme selectors and define --muted-foreground token
+- **Oct 31, 2026** - `<pending>`: feat(a11y): migrate SearchModal to native <dialog> element with focus trapping
+  > *Converted `SearchModal.astro` from a custom `<div role="dialog">` to a native `<dialog closedby="any">` opened via `showModal()`, providing top-layer rendering, automatic keyboard focus containment, native `Escape` and light-dismiss handling, and CSS `overscroll-behavior: contain` on `:modal` and `::backdrop`.*
+
+- **Oct 31, 2026** - `d344ed5`: fix(styles): add color-scheme to theme selectors and define --muted-foreground token
   > *Added `color-scheme: light` and `color-scheme: dark` on the root theme selectors in `global.css` for native browser UI theming, and defined `--muted-foreground` (`#64748b` light / `#94a3b8` dark) plus its `@theme inline` Tailwind token used by `Header.astro`, `Footer.astro`, and `posts/[...page].astro`.*
 
 - **Oct 31, 2026** - `acd297d`: fix(perf): prevent scroll and astro:after-swap event listener leaks in PostDetails.astro
