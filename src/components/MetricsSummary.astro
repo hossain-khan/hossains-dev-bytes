@@ -53,11 +53,15 @@ const { title, subtitle, metrics } = Astro.props;
 
 function valueColor(intent?: ColorIntent): string {
   switch (intent) {
-    case "DANGER":  return "text-red-700/75 dark:text-red-300/75";
-    case "WARN":    return "text-amber-700/75 dark:text-amber-300/75";
-    case "OK":      return "text-emerald-700/75 dark:text-emerald-300/75";
+    case "DANGER":
+      return "text-red-700/75 dark:text-red-300/75";
+    case "WARN":
+      return "text-amber-700/75 dark:text-amber-300/75";
+    case "OK":
+      return "text-emerald-700/75 dark:text-emerald-300/75";
     case "NEUTRAL":
-    default:        return "text-sky-700/75 dark:text-sky-300/75";
+    default:
+      return "text-sky-700/75 dark:text-sky-300/75";
   }
 }
 
@@ -94,7 +98,7 @@ const gridCols =
         <div class="flex flex-col items-center justify-center rounded-lg bg-white/70 px-4 py-4 text-center dark:bg-slate-700/30">
           <span
             class:list={[
-              "text-2xl font-bold tabular-nums leading-tight",
+              "text-2xl leading-tight font-bold tabular-nums",
               valueColor(metric.intent),
             ]}
           >

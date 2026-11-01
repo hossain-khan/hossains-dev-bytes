@@ -2,7 +2,15 @@
 title: "Zero-Flicker Syntax Highlighting in Jetpack Compose: How Snapshot Span Preservation Works"
 pubDatetime: 2026-09-06T01:37:29Z
 description: "A deep dive into the snapshot span preservation algorithm in compose-highlight that enables zero-flicker live code editing and streaming LLM responses in Jetpack Compose."
-tags: ["android", "jetpack-compose", "syntax-highlighting", "algorithms", "performance", "open-source"]
+tags:
+  [
+    "android",
+    "jetpack-compose",
+    "syntax-highlighting",
+    "algorithms",
+    "performance",
+    "open-source",
+  ]
 featured: false
 draft: false
 ---
@@ -39,12 +47,13 @@ That 150ms gap is where the challenge lies. What should the user see while the e
 ## Three things I tried first
 
 ### 1. Just clear the styles
+
 My first thought was simple: just show plain text until the new spans come back.
 
 ```kotlin
 // Bad: Flashes to plain text on every keystroke
 val annotatedString = if (isHighlightPending) {
-    AnnotatedString(currentText) 
+    AnnotatedString(currentText)
 } else {
     highlightedResult
 }
@@ -53,7 +62,8 @@ val annotatedString = if (isHighlightPending) {
 The result was constant flashing. Every single keystroke reset the entire document back to plain monochrome text until I paused typing. It was distracting and unpolished.
 
 ### 2. Clamp old spans with `coerceAtMost`
-Next, I thought: *why not just keep the previous spans and clamp their ends to the new text length?*
+
+Next, I thought: _why not just keep the previous spans and clamp their ends to the new text length?_
 
 ```kotlin
 // Bad: Corrupts character positions for mid-text edits
@@ -63,11 +73,12 @@ snapshotSpans.forEach { span ->
 }
 ```
 
-That worked fine if I only typed at the very end of the file. But then I tested editing something on line 5 of a 50-line file. 
+That worked fine if I only typed at the very end of the file. But then I tested editing something on line 5 of a 50-line file.
 
 That broke immediately. Because new characters were inserted, every token after the cursor shifted to the right. But the old spans were anchored to fixed character indices. A keyword span that used to cover characters `4..8` was still styling characters `4..8`, which now contained completely different text. Keyword colors landed on variable names, and string colors painted over curly braces.
 
 ### 3. Only keep colors before the cursor
+
 In [PR #220](https://github.com/hossain-khan/android-compose-highlight/pull/220), I tried computing the common prefix between the old and new text, only keeping spans that ended before the edit point:
 
 ```kotlin
@@ -99,12 +110,12 @@ New text: [ Unchanged Prefix ] [ New Edited Region ] [ Unchanged Suffix ]
 
 With these boundaries, we can categorize every existing span:
 
-| Span Location | What Happens | Why |
-| :--- | :--- | :--- |
-| **Entirely in Prefix** (`end <= prefixLen`) | Apply as-is (`start .. end`) | Coordinates have not moved. |
-| **Entirely in Suffix** (`start >= oldChangedEnd`) | Shift by `delta` (`start + delta .. end + delta`) | Keeps all lines *below* the edit colored. |
-| **Starts in Changed Region** | Drop | Positions are invalid until fresh highlight arrives. |
-| **Starts in Prefix, Ends in Changed Region** | Clip to `prefixLen` | Unedited leading part of the token stays colored. |
+| Span Location                                     | What Happens                                      | Why                                                  |
+| :------------------------------------------------ | :------------------------------------------------ | :--------------------------------------------------- |
+| **Entirely in Prefix** (`end <= prefixLen`)       | Apply as-is (`start .. end`)                      | Coordinates have not moved.                          |
+| **Entirely in Suffix** (`start >= oldChangedEnd`) | Shift by `delta` (`start + delta .. end + delta`) | Keeps all lines _below_ the edit colored.            |
+| **Starts in Changed Region**                      | Drop                                              | Positions are invalid until fresh highlight arrives. |
+| **Starts in Prefix, Ends in Changed Region**      | Clip to `prefixLen`                               | Unedited leading part of the token stays colored.    |
 
 ---
 
@@ -113,10 +124,11 @@ With these boundaries, we can categorize every existing span:
 This 3-region logic worked well until I opened a file with a multi-line block comment (`/* ... */`) and started typing inside it.
 
 Imagine a block comment spanning lines 10 through 25:
+
 - The span starts at index 200 (in the prefix) and ends at index 800 (deep in the suffix).
 - You type a single character inside the comment at index 350 (the changed region).
 
-Because the edit is in the middle, the span didn't fit neatly into "strictly prefix" or "strictly suffix". Under my original 3-region rules, it was treated as ending in the changed region, so it got clipped to `prefixLen`. 
+Because the edit is in the middle, the span didn't fit neatly into "strictly prefix" or "strictly suffix". Under my original 3-region rules, it was treated as ending in the changed region, so it got clipped to `prefixLen`.
 
 Lines 15 through 25 of the comment lost their color until the next debounce pass.
 
@@ -127,7 +139,7 @@ In [PR #231](https://github.com/hossain-khan/android-compose-highlight/pull/231)
 range.start < prefixLen && range.end > oldChangedEnd -> {
     // 1. Keep the prefix tail with original coordinates
     builder.addStyle(range.item, range.start, prefixLen)
-    
+
     // 2. Keep the suffix tail shifted by delta
     val suffixStart = oldChangedEnd + delta
     val suffixEnd = (range.end + delta).coerceAtMost(currentText.length)
@@ -214,6 +226,7 @@ return value.copy(annotatedString = annotated)
 ```
 
 When you type mid-line:
+
 1. Lines above the cursor stay styled.
 2. Lines below the cursor stay styled and shift down smoothly if you press Enter.
 3. Only the token currently being typed remains temporarily unstyled.
@@ -226,6 +239,7 @@ When you type mid-line:
 When I started building `StreamingSyntaxHighlightedCode` for AI chat, I realized it's a specialized case of the exact same problem. As tokens stream in, text grows monotonically at the end of the document.
 
 In streaming:
+
 - `suffixLen` is always `0`.
 - `prefixLen` is always equal to `oldText.length`.
 - `applySnapshotSpans` carries over **100% of previous line styles with zero coordinate math**.
@@ -233,6 +247,7 @@ In streaming:
 To make streaming feel natural, I added two adjustments in [PR #441](https://github.com/hossain-khan/android-compose-highlight/pull/441):
 
 ### 1. Newline-aware progressive highlighting
+
 If you only use an idle debounce timer, a model generating a continuous 40-line code block won't trigger highlighting until the entire stream finishes. The user would watch uncolored text stream in for 10 seconds.
 
 I added newline detection using Compose's `snapshotFlow`:
@@ -253,7 +268,8 @@ if (currentTriggerOnNewline && hasNewNewline) {
 As soon as the LLM completes a line (`\n`), a highlight cycle triggers in the background. Completed lines snap into full color progressively while the cursor generates the next line.
 
 ### 2. Monotonic run IDs
-Because coroutines execute concurrently, a slow highlight run on an older text snapshot could theoretically finish *after* a faster run on newer text.
+
+Because coroutines execute concurrently, a slow highlight run on an older text snapshot could theoretically finish _after_ a faster run on newer text.
 
 To prevent stale runs from overwriting newer snapshots, every execution receives a monotonic ID:
 
@@ -271,7 +287,7 @@ engine.highlight(textToHighlight, language, theme)
 
 ---
 
-Building live editors and streaming UI in Jetpack Compose has been a great learning experience. When the underlying engine is asynchronous, what you show *between* updates matters just as much as the final rendering.
+Building live editors and streaming UI in Jetpack Compose has been a great learning experience. When the underlying engine is asynchronous, what you show _between_ updates matters just as much as the final rendering.
 
 By treating syntax highlights as an evolving snapshot that we reconcile across edits, we get responsive background highlighting while keeping typing smooth without dropping frames.
 

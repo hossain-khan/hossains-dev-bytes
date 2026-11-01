@@ -111,7 +111,7 @@ export const POST: APIRoute = async ({ request }) => {
     if (
       !Array.isArray(conversationHistory) ||
       !conversationHistory.every(
-        (msg) =>
+        msg =>
           typeof msg === "object" &&
           msg !== null &&
           typeof msg.role === "string" &&

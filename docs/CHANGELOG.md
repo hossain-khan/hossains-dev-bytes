@@ -4,7 +4,10 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
-- **Oct 31, 2026** - `<pending>`: feat(a11y): migrate SearchModal to native <dialog> element with focus trapping
+- **Oct 31, 2026** - `<pending>`: chore(tooling): ignore worker-configuration.d.ts in ESLint and fix Prettier Astro parser errors
+  > *Added `worker-configuration.d.ts` to ESLint ignores, fixed JSX comment and conditional `<script>` syntax in `DataTable.astro`, `index.astro`, and `Layout.astro` so Prettier succeeds across the entire codebase, formatted all files, and re-enabled `pnpm run format:check` in CI.*
+
+- **Oct 31, 2026** - `3b57bb2`: feat(a11y): migrate SearchModal to native <dialog> element with focus trapping
   > *Converted `SearchModal.astro` from a custom `<div role="dialog">` to a native `<dialog closedby="any">` opened via `showModal()`, providing top-layer rendering, automatic keyboard focus containment, native `Escape` and light-dismiss handling, and CSS `overscroll-behavior: contain` on `:modal` and `::backdrop`.*
 
 - **Oct 31, 2026** - `d344ed5`: fix(styles): add color-scheme to theme selectors and define --muted-foreground token

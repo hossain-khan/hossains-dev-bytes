@@ -19,7 +19,7 @@ I was curious to know how much does it cost to use Kotlin in Android, but wasn�
 
 APK with Kotlin - Method Count
 
-Here is a snapshot of methods count from sample app [https://github.com/googlesamples/android-NotificationChannels](https://github.com/googlesamples/android-NotificationChannels) comparing Kotlin vs. non-Kotlin APK *(both APKs were built using* `*./gradlew assembleDebug*` _from their respective project root)_.
+Here is a snapshot of methods count from sample app [https://github.com/googlesamples/android-NotificationChannels](https://github.com/googlesamples/android-NotificationChannels) comparing Kotlin vs. non-Kotlin APK _(both APKs were built using_ `*./gradlew assembleDebug*` _from their respective project root)_.
 
 \* Kotlin App Method Count: **24,218** _(using version_ [_1.1.2–4_](https://github.com/googlesamples/android-NotificationChannels/blob/master/kotlinApp/Application/build.gradle#L5)_)_  
 \* Non-Kotlin App Method Count: **18,047**  
