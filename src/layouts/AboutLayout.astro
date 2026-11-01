@@ -109,14 +109,22 @@ const aiToolkit = [
           <span class="name-glow">{SITE.author}</span>
         </h1>
         <p class="hero-meta">
-          📍 Toronto, Canada <span class="meta-dot">·</span> Senior Software Engineer
-          @ <strong>Slack</strong>
+          📍 Toronto, Canada <span class="meta-dot">·</span> Senior Software
+          Engineer @ <strong>Slack</strong>
         </p>
         <div class="hero-badges">
-          <span class="badge" data-badge>🚀 Engineer</span>
-          <span class="badge" data-badge>🧪 Vibe Coder</span>
-          <span class="badge" data-badge>🍔 Foodie</span>
-          <span class="badge" data-badge>📸 Photographer</span>
+          <span class="badge" data-badge>
+            🚀 Engineer
+          </span>
+          <span class="badge" data-badge>
+            🧪 Vibe Coder
+          </span>
+          <span class="badge" data-badge>
+            🍔 Foodie
+          </span>
+          <span class="badge" data-badge>
+            📸 Photographer
+          </span>
         </div>
       </div>
     </div>
@@ -149,45 +157,42 @@ const aiToolkit = [
         </header>
 
         <div class="projects-grid">
-          {
-            featuredProjects.map(project => (
-              <article class="project-mini-card">
-                <header class="project-mini-header">
-                  <h3 class="project-mini-title">
-                    <span aria-hidden="true">{project.emoji}</span>{" "}
-                    {project.name}
-                  </h3>
-                  <span class="project-mini-tag">{project.tag}</span>
-                </header>
-                <p class="project-mini-summary">{project.summary}</p>
-                <footer class="project-mini-footer">
-                  <ul class="project-mini-stack" aria-label="Technologies">
-                    {project.stack.map(tech => (
-                      <li>{tech}</li>
-                    ))}
-                  </ul>
-                  <div class="project-mini-links">
-                    <a
-                      href={project.primaryUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {project.primaryLabel}
-                      <span class="sr-only"> for {project.name}</span> ↗
-                    </a>
-                    <a
-                      href={project.secondaryUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {project.secondaryLabel}
-                      <span class="sr-only"> for {project.name}</span> ↗
-                    </a>
-                  </div>
-                </footer>
-              </article>
-            ))
-          }
+          {featuredProjects.map(project => (
+            <article class="project-mini-card">
+              <header class="project-mini-header">
+                <h3 class="project-mini-title">
+                  <span aria-hidden="true">{project.emoji}</span> {project.name}
+                </h3>
+                <span class="project-mini-tag">{project.tag}</span>
+              </header>
+              <p class="project-mini-summary">{project.summary}</p>
+              <footer class="project-mini-footer">
+                <ul class="project-mini-stack" aria-label="Technologies">
+                  {project.stack.map(tech => (
+                    <li>{tech}</li>
+                  ))}
+                </ul>
+                <div class="project-mini-links">
+                  <a
+                    href={project.primaryUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {project.primaryLabel}
+                    <span class="sr-only"> for {project.name}</span> ↗
+                  </a>
+                  <a
+                    href={project.secondaryUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {project.secondaryLabel}
+                    <span class="sr-only"> for {project.name}</span> ↗
+                  </a>
+                </div>
+              </footer>
+            </article>
+          ))}
         </div>
       </article>
 
@@ -204,17 +209,17 @@ const aiToolkit = [
           <div>
             <h3 class="stack-group-label">Android & Architecture</h3>
             <ul class="pill-list">
-              {
-                androidStack.map(item => (
-                  <li class="pill pill-accent">{item}</li>
-                ))
-              }
+              {androidStack.map(item => (
+                <li class="pill pill-accent">{item}</li>
+              ))}
             </ul>
           </div>
           <div>
             <h3 class="stack-group-label">AI Workflow & Edge</h3>
             <ul class="pill-list">
-              {aiToolkit.map(item => <li class="pill">{item}</li>)}
+              {aiToolkit.map(item => (
+                <li class="pill">{item}</li>
+              ))}
             </ul>
           </div>
         </div>

@@ -91,203 +91,199 @@ const formatInstalls = (installs: string | null): string | null => {
 };
 ---
 
-{
-  error ? (
-    <div class="not-prose my-4 rounded-xl border border-slate-300/50 bg-slate-100/40 p-4 dark:border-slate-700/50 dark:bg-slate-900/40">
-      <div class="mb-2 flex items-center gap-2">
-        <svg
-          class="h-4 w-4 flex-shrink-0"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-        >
-          <path d="m11.9999 13.4141 2.9468 2.9467-9.6967 5.5984c-.52631077.3038769-1.12187787.2479243-1.56801531-.041699l-.10829469-.077201zm-8.9999-8.99995 7.5857 7.58575-7.5857 7.5857zm13.7398 4.26009 3.5102 2.02666c1 .5773 1 2.0207 0 2.598l-3.5102 2.0266-3.3256-3.3256zm-11.4898-6.63364 9.6966 5.59836-2.9467 2.94674-8.42619-8.42626c.45468-.3549 1.10612-.44803 1.67629-.11884z" />
-        </svg>
-        <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">
-          Available on Google Play
-        </span>
-      </div>
-      <p class="mb-3 text-xs text-slate-500 dark:text-slate-400">
-        App details couldn't be loaded right now.
-      </p>
-      <a
-        href={playStoreUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+{error ? (
+  <div class="not-prose my-4 rounded-xl border border-slate-300/50 bg-slate-100/40 p-4 dark:border-slate-700/50 dark:bg-slate-900/40">
+    <div class="mb-2 flex items-center gap-2">
+      <svg
+        class="h-4 w-4 flex-shrink-0"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="currentColor"
       >
-        View on Google Play
-        <svg
-          class="h-3 w-3"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-          />
-        </svg>
-      </a>
+        <path d="m11.9999 13.4141 2.9468 2.9467-9.6967 5.5984c-.52631077.3038769-1.12187787.2479243-1.56801531-.041699l-.10829469-.077201zm-8.9999-8.99995 7.5857 7.58575-7.5857 7.5857zm13.7398 4.26009 3.5102 2.02666c1 .5773 1 2.0207 0 2.598l-3.5102 2.0266-3.3256-3.3256zm-11.4898-6.63364 9.6966 5.59836-2.9467 2.94674-8.42619-8.42626c.45468-.3549 1.10612-.44803 1.67629-.11884z" />
+      </svg>
+      <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+        Available on Google Play
+      </span>
     </div>
-  ) : appData ? (
+    <p class="mb-3 text-xs text-slate-500 dark:text-slate-400">
+      App details couldn't be loaded right now.
+    </p>
     <a
-      href={appData.url ?? playStoreUrl}
+      href={playStoreUrl}
       target="_blank"
       rel="noopener noreferrer"
-      class:list={[
-        "google-play-embed not-prose my-6 block rounded-xl p-5",
-        "border border-slate-200/60 bg-gradient-to-br from-slate-50 to-slate-100/50",
-        "transition-all duration-300 ease-out",
-        "hover:border-green-400/70 hover:shadow-lg hover:shadow-green-500/15",
-        "hover:from-slate-100 hover:to-slate-200/70",
-        "dark:border-slate-700/60 dark:bg-gradient-to-br dark:from-slate-900/60 dark:to-slate-800/40",
-        "dark:hover:border-green-400/50 dark:hover:shadow-xl dark:hover:shadow-green-500/20",
-        "dark:hover:from-slate-800 dark:hover:to-slate-700/60",
-        "group",
-      ]}
+      class="inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
     >
-      <div class="flex items-start justify-between gap-4">
-        {/* Left: App Info */}
-        <div class="flex min-w-0 flex-1 gap-4">
-          {/* App Icon */}
-          {iconDataUrl && (
-            <img
-              src={iconDataUrl}
-              alt={`${appData.title} icon`}
-              width="56"
-              height="56"
-              class="h-14 w-14 flex-shrink-0 rounded-xl object-cover shadow-sm"
-            />
+      View on Google Play
+      <svg
+        class="h-3 w-3"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+        />
+      </svg>
+    </a>
+  </div>
+) : appData ? (
+  <a
+    href={appData.url ?? playStoreUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class:list={[
+      "google-play-embed not-prose my-6 block rounded-xl p-5",
+      "border border-slate-200/60 bg-gradient-to-br from-slate-50 to-slate-100/50",
+      "transition-all duration-300 ease-out",
+      "hover:border-green-400/70 hover:shadow-lg hover:shadow-green-500/15",
+      "hover:from-slate-100 hover:to-slate-200/70",
+      "dark:border-slate-700/60 dark:bg-gradient-to-br dark:from-slate-900/60 dark:to-slate-800/40",
+      "dark:hover:border-green-400/50 dark:hover:shadow-xl dark:hover:shadow-green-500/20",
+      "dark:hover:from-slate-800 dark:hover:to-slate-700/60",
+      "group",
+    ]}
+  >
+    <div class="flex items-start justify-between gap-4">
+      {/* Left: App Info */}
+      <div class="flex min-w-0 flex-1 gap-4">
+        {/* App Icon */}
+        {iconDataUrl && (
+          <img
+            src={iconDataUrl}
+            alt={`${appData.title} icon`}
+            width="56"
+            height="56"
+            class="h-14 w-14 flex-shrink-0 rounded-xl object-cover shadow-sm"
+          />
+        )}
+
+        <div class="min-w-0 flex-1">
+          {/* App Name */}
+          <h3 class="m-0 mb-1 truncate text-base font-bold text-slate-900 transition-colors group-hover:text-green-600 dark:text-white dark:group-hover:text-green-400">
+            {appData.title}
+          </h3>
+
+          {/* Developer */}
+          {appData.developer && (
+            <p class="mb-2 text-xs text-slate-500 dark:text-slate-400">
+              {appData.developer}
+            </p>
           )}
 
-          <div class="min-w-0 flex-1">
-            {/* App Name */}
-            <h3 class="m-0 mb-1 truncate text-base font-bold text-slate-900 transition-colors group-hover:text-green-600 dark:text-white dark:group-hover:text-green-400">
-              {appData.title}
-            </h3>
+          {/* Summary */}
+          {appData.summary && (
+            <p class="mb-3 line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+              {appData.summary}
+            </p>
+          )}
 
-            {/* Developer */}
-            {appData.developer && (
-              <p class="mb-2 text-xs text-slate-500 dark:text-slate-400">
-                {appData.developer}
-              </p>
-            )}
-
-            {/* Summary */}
-            {appData.summary && (
-              <p class="mb-3 line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                {appData.summary}
-              </p>
-            )}
-
-            {/* Metadata: Rating, Downloads, Version */}
-            <div class="flex flex-wrap items-center gap-3 text-xs font-medium">
-              {/* Rating */}
-              {appData.score !== null && appData.score !== undefined && (
-                <div class="flex items-center gap-1.5 rounded-full bg-amber-100/60 px-2.5 py-1 dark:bg-amber-900/30">
-                  <svg
-                    class="h-3.5 w-3.5 text-amber-500 dark:text-amber-400"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2l-2.81 6.63L2 9.24l5.46 4.73L5.82 21z" />
-                  </svg>
-                  <span class="text-amber-800 dark:text-amber-300">
-                    {appData.scoreText ?? appData.score.toFixed(1)}
-                  </span>
-                </div>
-              )}
-
-              {/* Downloads */}
-              {appData.installs && (
-                <div class="flex items-center gap-1.5 rounded-full bg-green-100/60 px-2.5 py-1 dark:bg-green-900/30">
-                  <svg
-                    class="h-3.5 w-3.5 text-green-600 dark:text-green-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                    />
-                  </svg>
-                  <span class="text-green-800 dark:text-green-300">
-                    {formatInstalls(appData.installs)}
-                  </span>
-                </div>
-              )}
-
-              {/* Version */}
-              {appData.version && appData.version !== "Varies with device" && (
-                <div class="flex items-center gap-1.5 rounded-full bg-slate-200/60 px-2.5 py-1 dark:bg-slate-700/40">
-                  <svg
-                    class="h-3.5 w-3.5 text-slate-500 dark:text-slate-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 8V5a2 2 0 012-2h2z"
-                    />
-                  </svg>
-                  <span class="text-slate-700 dark:text-slate-300">
-                    v{appData.version}
-                  </span>
-                </div>
-              )}
-
-              {/* Google Play badge */}
-              <div class="flex items-center gap-1.5 rounded-full bg-blue-100/40 px-2.5 py-1 dark:bg-blue-900/20">
+          {/* Metadata: Rating, Downloads, Version */}
+          <div class="flex flex-wrap items-center gap-3 text-xs font-medium">
+            {/* Rating */}
+            {appData.score !== null && appData.score !== undefined && (
+              <div class="flex items-center gap-1.5 rounded-full bg-amber-100/60 px-2.5 py-1 dark:bg-amber-900/30">
                 <svg
-                  class="h-3.5 w-3.5 text-blue-600 dark:text-blue-400"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3.5 w-3.5 text-amber-500 dark:text-amber-400"
                   fill="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <path d="m11.9999 13.4141 2.9468 2.9467-9.6967 5.5984c-.52631077.3038769-1.12187787.2479243-1.56801531-.041699l-.10829469-.077201zm-8.9999-8.99995 7.5857 7.58575-7.5857 7.5857zm13.7398 4.26009 3.5102 2.02666c1 .5773 1 2.0207 0 2.598l-3.5102 2.0266-3.3256-3.3256zm-11.4898-6.63364 9.6966 5.59836-2.9467 2.94674-8.42619-8.42626c.45468-.3549 1.10612-.44803 1.67629-.11884z" />
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2l-2.81 6.63L2 9.24l5.46 4.73L5.82 21z" />
                 </svg>
-                <span class="text-blue-700 dark:text-blue-300">
-                  Google Play
+                <span class="text-amber-800 dark:text-amber-300">
+                  {appData.scoreText ?? appData.score.toFixed(1)}
                 </span>
               </div>
+            )}
+
+            {/* Downloads */}
+            {appData.installs && (
+              <div class="flex items-center gap-1.5 rounded-full bg-green-100/60 px-2.5 py-1 dark:bg-green-900/30">
+                <svg
+                  class="h-3.5 w-3.5 text-green-600 dark:text-green-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+                <span class="text-green-800 dark:text-green-300">
+                  {formatInstalls(appData.installs)}
+                </span>
+              </div>
+            )}
+
+            {/* Version */}
+            {appData.version && appData.version !== "Varies with device" && (
+              <div class="flex items-center gap-1.5 rounded-full bg-slate-200/60 px-2.5 py-1 dark:bg-slate-700/40">
+                <svg
+                  class="h-3.5 w-3.5 text-slate-500 dark:text-slate-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 8V5a2 2 0 012-2h2z"
+                  />
+                </svg>
+                <span class="text-slate-700 dark:text-slate-300">
+                  v{appData.version}
+                </span>
+              </div>
+            )}
+
+            {/* Google Play badge */}
+            <div class="flex items-center gap-1.5 rounded-full bg-blue-100/40 px-2.5 py-1 dark:bg-blue-900/20">
+              <svg
+                class="h-3.5 w-3.5 text-blue-600 dark:text-blue-400"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+              >
+                <path d="m11.9999 13.4141 2.9468 2.9467-9.6967 5.5984c-.52631077.3038769-1.12187787.2479243-1.56801531-.041699l-.10829469-.077201zm-8.9999-8.99995 7.5857 7.58575-7.5857 7.5857zm13.7398 4.26009 3.5102 2.02666c1 .5773 1 2.0207 0 2.598l-3.5102 2.0266-3.3256-3.3256zm-11.4898-6.63364 9.6966 5.59836-2.9467 2.94674-8.42619-8.42626c.45468-.3549 1.10612-.44803 1.67629-.11884z" />
+              </svg>
+              <span class="text-blue-700 dark:text-blue-300">Google Play</span>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Right: Arrow Icon */}
-        <svg
-          class="mt-1 h-5 w-5 flex-shrink-0 text-slate-400 transition-all duration-300 group-hover:translate-x-1 group-hover:text-green-500 dark:text-slate-500 dark:group-hover:text-green-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-          />
-        </svg>
-      </div>
-    </a>
-  ) : (
-    <div class="not-prose my-6 rounded-xl border border-slate-200/60 bg-gradient-to-br from-slate-50 to-slate-100/50 p-5 text-sm text-slate-600 dark:border-slate-700/60 dark:bg-gradient-to-br dark:from-slate-900/60 dark:to-slate-800/40 dark:text-slate-400">
-      <div class="flex items-center gap-2">
-        <div class="h-4 w-4 animate-spin rounded-full border-2 border-slate-300 border-t-green-500 dark:border-slate-600 dark:border-t-green-400" />
-        Loading app data...
-      </div>
+      {/* Right: Arrow Icon */}
+      <svg
+        class="mt-1 h-5 w-5 flex-shrink-0 text-slate-400 transition-all duration-300 group-hover:translate-x-1 group-hover:text-green-500 dark:text-slate-500 dark:group-hover:text-green-400"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+        />
+      </svg>
     </div>
-  )
-}
+  </a>
+) : (
+  <div class="not-prose my-6 rounded-xl border border-slate-200/60 bg-gradient-to-br from-slate-50 to-slate-100/50 p-5 text-sm text-slate-600 dark:border-slate-700/60 dark:bg-gradient-to-br dark:from-slate-900/60 dark:to-slate-800/40 dark:text-slate-400">
+    <div class="flex items-center gap-2">
+      <div class="h-4 w-4 animate-spin rounded-full border-2 border-slate-300 border-t-green-500 dark:border-slate-600 dark:border-t-green-400" />
+      Loading app data...
+    </div>
+  </div>
+)}
 
 <style>
   .google-play-embed {

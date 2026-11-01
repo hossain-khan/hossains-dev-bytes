@@ -47,13 +47,11 @@ const totalPosts = page.total;
         </p>
         <div class="mt-4 flex flex-wrap items-center gap-2">
           <span class="hero-badge">{totalPosts} posts</span>
-          {
-            page.lastPage > 1 && (
-              <span class="hero-badge">
-                Page {page.currentPage}/{page.lastPage}
-              </span>
-            )
-          }
+          {page.lastPage > 1 && (
+            <span class="hero-badge">
+              Page {page.currentPage}/{page.lastPage}
+            </span>
+          )}
         </div>
       </div>
     </div>
@@ -67,37 +65,35 @@ const totalPosts = page.total;
 
     <!-- Posts Grid -->
     <div data-default-posts-container class="w-full">
-      {
-        page.data.length === 0 ? (
-          <div class="empty-state">
-            <div class="empty-icon-wrapper">
-              <svg
-                class="size-12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="9" y1="15" x2="15" y2="15" />
-              </svg>
-            </div>
-            <h3 class="empty-title">No posts yet</h3>
-            <p class="empty-desc">
-              Come back later to read our upcoming articles.
-            </p>
+      {page.data.length === 0 ? (
+        <div class="empty-state">
+          <div class="empty-icon-wrapper">
+            <svg
+              class="size-12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="9" y1="15" x2="15" y2="15" />
+            </svg>
           </div>
-        ) : (
-          <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {page.data.map((data: ContentEntry) => (
-              <Card {...data} />
-            ))}
-          </ul>
-        )
-      }
+          <h3 class="empty-title">No posts yet</h3>
+          <p class="empty-desc">
+            Come back later to read our upcoming articles.
+          </p>
+        </div>
+      ) : (
+        <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {page.data.map((data: ContentEntry) => (
+            <Card {...data} />
+          ))}
+        </ul>
+      )}
 
       <div data-pagination-wrapper>
         <Pagination {page} />

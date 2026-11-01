@@ -24,9 +24,7 @@ if (breadcrumbList[0] === "tags" && !isNaN(Number(breadcrumbList[2]))) {
 ---
 
 <nav class="app-layout mt-6 mb-2" aria-label="breadcrumb">
-  <div
-    class="breadcrumb-bar inline-flex items-center gap-1.5 rounded-full border border-border/20 bg-muted/5 px-3 py-1.5 font-cartograph text-sm backdrop-blur-sm"
-  >
+  <div class="breadcrumb-bar inline-flex items-center gap-1.5 rounded-full border border-border/20 bg-muted/5 px-3 py-1.5 font-cartograph text-sm backdrop-blur-sm">
     {/* Home icon / Root symbol */}
     <a
       href="/"
@@ -36,37 +34,32 @@ if (breadcrumbList[0] === "tags" && !isNaN(Number(breadcrumbList[2]))) {
     >
       ~
     </a>
-    {
-      breadcrumbList.map((breadcrumb, index) => (
-        <>
-          <span
-            class="breadcrumb-sep shrink-0 text-accent/40"
-            aria-hidden="true"
-          >
-            /
-          </span>
+    {breadcrumbList.map((breadcrumb, index) => (
+      <>
+        <span class="breadcrumb-sep shrink-0 text-accent/40" aria-hidden="true">
+          /
+        </span>
 
-          {index + 1 === breadcrumbList.length ? (
-            <span
-              class:list={[
-                "breadcrumb-current truncate px-1.5 py-0.5 text-accent/90 capitalize",
-                { lowercase: index > 0 },
-              ]}
-              aria-current="page"
-            >
-              {decodeURIComponent(breadcrumb)}
-            </span>
-          ) : (
-            <a
-              href={`/${breadcrumb}/`}
-              class="breadcrumb-link shrink-0 rounded-md px-1.5 py-0.5 text-foreground/50 capitalize transition-colors duration-200 hover:bg-muted/10 hover:text-accent"
-            >
-              {decodeURIComponent(breadcrumb)}
-            </a>
-          )}
-        </>
-      ))
-    }
+        {index + 1 === breadcrumbList.length ? (
+          <span
+            class:list={[
+              "breadcrumb-current truncate px-1.5 py-0.5 text-accent/90 capitalize",
+              { lowercase: index > 0 },
+            ]}
+            aria-current="page"
+          >
+            {decodeURIComponent(breadcrumb)}
+          </span>
+        ) : (
+          <a
+            href={`/${breadcrumb}/`}
+            class="breadcrumb-link shrink-0 rounded-md px-1.5 py-0.5 text-foreground/50 capitalize transition-colors duration-200 hover:bg-muted/10 hover:text-accent"
+          >
+            {decodeURIComponent(breadcrumb)}
+          </a>
+        )}
+      </>
+    ))}
   </div>
 </nav>
 

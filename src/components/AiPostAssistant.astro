@@ -34,9 +34,7 @@
         fill="currentColor"
         aria-hidden="true"
       >
-        <path
-          d="M12 2l2.09 6.26L20 10l-5.91 1.74L12 18l-2.09-6.26L4 10l5.91-1.74L12 2z"
-        ></path>
+        <path d="M12 2l2.09 6.26L20 10l-5.91 1.74L12 18l-2.09-6.26L4 10l5.91-1.74L12 2z"></path>
       </svg>
       <span>Ask AI about this post</span>
     </div>
@@ -75,19 +73,15 @@
           fill="currentColor"
           aria-hidden="true"
         >
-          <path
-            d="M12 2l2.09 6.26L20 10l-5.91 1.74L12 18l-2.09-6.26L4 10l5.91-1.74L12 2z"
-          ></path>
+          <path d="M12 2l2.09 6.26L20 10l-5.91 1.74L12 18l-2.09-6.26L4 10l5.91-1.74L12 2z"></path>
         </svg>
-        <span
-          class="font-cartograph text-[10px] tracking-widest text-accent/60 uppercase"
-          >AI Assistant</span
-        >
+        <span class="font-cartograph text-[10px] tracking-widest text-accent/60 uppercase">
+          AI Assistant
+        </span>
       </div>
-      <span
-        class="font-cartograph text-[9px] tracking-wider text-foreground/25 uppercase"
-        >Powered by Cloudflare Workers AI</span
-      >
+      <span class="font-cartograph text-[9px] tracking-wider text-foreground/25 uppercase">
+        Powered by Cloudflare Workers AI
+      </span>
     </div>
 
     <!-- Summarize button -->
@@ -127,8 +121,7 @@
       class="mb-4 hidden space-y-3"
       aria-live="polite"
       aria-label="Conversation"
-    >
-    </div>
+    ></div>
 
     <!-- Loading indicator (hidden by default) -->
     <div
@@ -137,17 +130,13 @@
       class="mb-4 flex items-center gap-2 text-xs text-foreground/40"
     >
       <div class="flex gap-1">
-        <span
-          class="size-1.5 animate-bounce rounded-full bg-accent/50 [animation-delay:0ms]"
-        ></span>
-        <span
-          class="size-1.5 animate-bounce rounded-full bg-accent/50 [animation-delay:150ms]"
-        ></span>
-        <span
-          class="size-1.5 animate-bounce rounded-full bg-accent/50 [animation-delay:300ms]"
-        ></span>
+        <span class="size-1.5 animate-bounce rounded-full bg-accent/50 [animation-delay:0ms]"></span>
+        <span class="size-1.5 animate-bounce rounded-full bg-accent/50 [animation-delay:150ms]"></span>
+        <span class="size-1.5 animate-bounce rounded-full bg-accent/50 [animation-delay:300ms]"></span>
       </div>
-      <span id="ai-loading-text" class="ai-shimmer">Thinking…</span>
+      <span id="ai-loading-text" class="ai-shimmer">
+        Thinking…
+      </span>
     </div>
 
     <!-- Error display -->
@@ -156,14 +145,13 @@
       hidden
       role="alert"
       class="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-400"
-    >
-    </div>
+    ></div>
 
     <!-- Chat input -->
     <form id="ai-form" class="flex items-center gap-2" novalidate>
-      <label for="ai-input" class="sr-only"
-        >Ask a question about this post</label
-      >
+      <label for="ai-input" class="sr-only">
+        Ask a question about this post
+      </label>
       <input
         id="ai-input"
         type="text"
@@ -193,9 +181,7 @@
     </form>
 
     <!-- Disclaimer -->
-    <p
-      class="mt-3 font-cartograph text-[9px] tracking-wide text-foreground/20 uppercase"
-    >
+    <p class="mt-3 font-cartograph text-[9px] tracking-wide text-foreground/20 uppercase">
       AI responses may be inaccurate. Always verify important information.
     </p>
   </div>

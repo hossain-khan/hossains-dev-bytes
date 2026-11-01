@@ -78,66 +78,67 @@ const isActive = (path: string) => {
               <a
                 href="/posts"
                 class:list={["nav-link", { "nav-active": isActive("/posts") }]}
-                >Posts</a
               >
+                Posts
+              </a>
             </li>
             <li>
               <a
                 href="/tags"
                 class:list={["nav-link", { "nav-active": isActive("/tags") }]}
-                >Tags</a
               >
+                Tags
+              </a>
             </li>
             <li>
               <a
                 href="/about"
                 class:list={["nav-link", { "nav-active": isActive("/about") }]}
-                >About</a
               >
+                About
+              </a>
             </li>
             <li class="flex items-center">
               <a
                 href="/search"
                 class:list={["nav-link", { "nav-active": isActive("/search") }]}
-                title="Go to search">Search</a
+                title="Go to search"
               >
+                Search
+              </a>
             </li>
-            {
-              SITE.showArchives && (
-                <li>
-                  <LinkButton
-                    href="/archives"
-                    class:list={[
-                      "nav-link",
-                      { "nav-active": isActive("/archives") },
-                    ]}
-                    title="Archives"
-                    aria-label="archives"
-                  >
-                    <IconArchive class="hidden sm:inline-block" />
-                    <span class="sm:sr-only">Archives</span>
-                  </LinkButton>
-                </li>
-              )
-            }
-            {
-              SITE.showGalleries && (
-                <li>
-                  <LinkButton
-                    href="/galleries"
-                    class:list={[
-                      "nav-link",
-                      { "nav-active": isActive("/galleries") },
-                    ]}
-                    title="Galleries"
-                    aria-label="galleries"
-                  >
-                    <IconGallery class="hidden sm:inline-block" />
-                    <span class="sm:sr-only">Galleries</span>
-                  </LinkButton>
-                </li>
-              )
-            }
+            {SITE.showArchives && (
+              <li>
+                <LinkButton
+                  href="/archives"
+                  class:list={[
+                    "nav-link",
+                    { "nav-active": isActive("/archives") },
+                  ]}
+                  title="Archives"
+                  aria-label="archives"
+                >
+                  <IconArchive class="hidden sm:inline-block" />
+                  <span class="sm:sr-only">Archives</span>
+                </LinkButton>
+              </li>
+            )}
+            {SITE.showGalleries && (
+              <li>
+                <LinkButton
+                  href="/galleries"
+                  class:list={[
+                    "nav-link",
+                    { "nav-active": isActive("/galleries") },
+                  ]}
+                  title="Galleries"
+                  aria-label="galleries"
+                >
+                  <IconGallery class="hidden sm:inline-block" />
+                  <span class="sm:sr-only">Galleries</span>
+                </LinkButton>
+              </li>
+            )}
 
             <!-- Separator -->
             <li class="flex items-center px-1" aria-hidden="true">
@@ -156,22 +157,20 @@ const isActive = (path: string) => {
                 <kbd class="nav-kbd">⌘K</kbd>
               </button>
             </li>
-            {
-              SITE.lightAndDarkMode && (
-                <li class="flex items-center">
-                  <button
-                    id="theme-btn"
-                    class="nav-icon-btn relative"
-                    title="Toggles light & dark"
-                    aria-label="auto"
-                    aria-live="polite"
-                  >
-                    <IconMoon class="absolute top-1/2 left-1/2 -translate-1/2 scale-100 rotate-0 transition-all duration-300 dark:scale-0 dark:-rotate-90" />
-                    <IconSunHigh class="absolute top-1/2 left-1/2 -translate-1/2 scale-0 rotate-90 transition-all duration-300 dark:scale-100 dark:rotate-0" />
-                  </button>
-                </li>
-              )
-            }
+            {SITE.lightAndDarkMode && (
+              <li class="flex items-center">
+                <button
+                  id="theme-btn"
+                  class="nav-icon-btn relative"
+                  title="Toggles light & dark"
+                  aria-label="auto"
+                  aria-live="polite"
+                >
+                  <IconMoon class="absolute top-1/2 left-1/2 -translate-1/2 scale-100 rotate-0 transition-all duration-300 dark:scale-0 dark:-rotate-90" />
+                  <IconSunHigh class="absolute top-1/2 left-1/2 -translate-1/2 scale-0 rotate-90 transition-all duration-300 dark:scale-100 dark:rotate-0" />
+                </button>
+              </li>
+            )}
           </ul>
         </nav>
       </div>
@@ -183,8 +182,7 @@ const isActive = (path: string) => {
   <div
     id="header-border"
     class="header-border-line h-px w-full bg-linear-to-r from-transparent via-border/40 to-transparent opacity-0 transition-opacity duration-300"
-  >
-  </div>
+  ></div>
 </header>
 
 <style>

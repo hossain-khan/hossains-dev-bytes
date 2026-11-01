@@ -39,14 +39,12 @@ const href = getEntryPath({ collection, id, filePath });
   <div
     class="card-glow-effect pointer-events-none absolute inset-0 z-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
     aria-hidden="true"
-  >
-  </div>
+  ></div>
   <!-- Noise dithering -->
   <div
     class="card-noise pointer-events-none absolute inset-0 z-1 rounded-2xl opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
     aria-hidden="true"
-  >
-  </div>
+  ></div>
 
   <div class="relative z-5">
     <a
@@ -57,34 +55,34 @@ const href = getEntryPath({ collection, id, filePath });
       }}
     >
       <Heading class="flex items-center gap-2">
-        {
-          collection === "galleries" && (
-            <span
-              title="Gallery"
-              class="inline-flex items-center justify-center rounded-md bg-accent/10 p-1 text-accent/80 ring-1 ring-accent/20"
-            >
-              <IconGallery class="size-4" />
-            </span>
-          )
-        }
+        {collection === "galleries" && (
+          <span
+            title="Gallery"
+            class="inline-flex items-center justify-center rounded-md bg-accent/10 p-1 text-accent/80 ring-1 ring-accent/20"
+          >
+            <IconGallery class="size-4" />
+          </span>
+        )}
         {title}
       </Heading>
       <!-- Expand clickable area to whole card on top of everything, minus the description -->
-      <span class="absolute -inset-4 z-10 sm:-inset-5" aria-hidden="true"
+      <span
+        class="absolute -inset-4 z-10 sm:-inset-5"
+        aria-hidden="true"
       ></span>
     </a>
 
     <Datetime
       pubDatetime={props.pubDatetime as string | Date}
-      modDatetime={"modDatetime" in props
-        ? (props.modDatetime as string | Date | null | undefined)
-        : null}
+      modDatetime={
+        "modDatetime" in props
+          ? (props.modDatetime as string | Date | null | undefined)
+          : null
+      }
       class="pointer-events-none relative z-20 mt-1.5"
     />
 
-    <p
-      class="pointer-events-auto relative z-20 mt-2 line-clamp-2 text-sm leading-relaxed opacity-65 select-text"
-    >
+    <p class="pointer-events-auto relative z-20 mt-2 line-clamp-2 text-sm leading-relaxed opacity-65 select-text">
       {description}
     </p>
   </div>
