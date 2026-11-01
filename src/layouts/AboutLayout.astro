@@ -9,13 +9,89 @@ import { SITE } from "@/config";
 type Props = MarkdownLayoutProps<{ title: string }>;
 
 const { frontmatter } = Astro.props;
+
+const featuredProjects = [
+  {
+    name: "CodeMateX",
+    emoji: "🤖",
+    tag: "On-Device AI",
+    summary:
+      "100% offline Android coding tutor powered by LiteRT-LM & Gemma with 600+ interactive lessons.",
+    stack: ["LiteRT-LM", "Gemma", "Compose"],
+    primaryUrl:
+      "https://play.google.com/store/apps/details?id=dev.hossain.codematex",
+    primaryLabel: "Google Play",
+    secondaryUrl: "https://github.com/hossain-khan/android-code-with-ai",
+    secondaryLabel: "GitHub",
+  },
+  {
+    name: "Compose Highlight & Shiki",
+    emoji: "🎨",
+    tag: "Open Source",
+    summary:
+      "Native Jetpack Compose syntax highlighting library & edge Shiki token service for Android and iOS.",
+    stack: ["Compose", "Highlight.js", "Shiki"],
+    primaryUrl: "https://github.com/hossain-khan/android-compose-highlight",
+    primaryLabel: "Compose Lib",
+    secondaryUrl: "https://github.com/hossain-khan/shiki-token-service",
+    secondaryLabel: "Shiki Service",
+  },
+  {
+    name: "TRMNL Ecosystem",
+    emoji: "📟",
+    tag: "E-Ink & Plugins",
+    summary:
+      "Android Buddy companion app, display mirror, and custom e-ink plugins (Elements, Quotes, Pickup).",
+    stack: ["Kotlin", "TRMNL", "Liquid"],
+    primaryUrl:
+      "https://play.google.com/store/apps/details?id=ink.trmnl.android.buddy",
+    primaryLabel: "Google Play",
+    secondaryUrl: "https://github.com/hossain-khan/trmnl-android-buddy",
+    secondaryLabel: "GitHub",
+  },
+  {
+    name: "Snippet & Vibe Artifacts",
+    emoji: "⚡",
+    tag: "Rapid Prototyping",
+    summary:
+      "Offline code notebook for Android, Edge Code Playground on Cloudflare Workers, JSON5-Kotlin, and more.",
+    stack: ["Android", "Workers", "Kotlin"],
+    primaryUrl:
+      "https://play.google.com/store/apps/details?id=dev.hossain.codesnippet",
+    primaryLabel: "Snippet App",
+    secondaryUrl: "https://hossainkhan.com/#vibe-artifacts",
+    secondaryLabel: "20+ Artifacts",
+  },
+];
+
+const androidStack = [
+  "Kotlin",
+  "Jetpack Compose",
+  "Circuit (MVI)",
+  "MVVM",
+  "Metro / Dagger",
+  "Coroutines & Flow",
+  "SQLDelight",
+  "Material 3",
+];
+
+const aiToolkit = [
+  "Claude Code",
+  "GitHub Copilot",
+  "Cursor",
+  "Gemini CLI",
+  "LiteRT-LM",
+  "Cloudflare Workers",
+  "OpenAPI",
+  "GitHub Actions",
+];
 ---
 
 <Layout title={`${frontmatter.title} | ${SITE.title}`}>
   <Header />
   <Breadcrumb />
   <main id="main-content" class="app-layout">
-    <!-- Hero con aurora interactiva -->
+    <!-- Hero with interactive aurora -->
     <div class="about-hero" data-about-hero>
       <div class="aurora-orb aurora-orb-1"></div>
       <div class="aurora-orb aurora-orb-2"></div>
@@ -32,21 +108,209 @@ const { frontmatter } = Astro.props;
           <span class="greeting">Hello, I'm</span>
           <span class="name-glow">{SITE.author}</span>
         </h1>
+        <p class="hero-meta">
+          📍 Toronto, Canada <span class="meta-dot">·</span> Senior Software Engineer
+          @ <strong>Slack</strong>
+        </p>
         <div class="hero-badges">
           <span class="badge" data-badge>🚀 Engineer</span>
-          <span class="badge" data-badge>🧪 Tinkerer</span>
+          <span class="badge" data-badge>🧪 Vibe Coder</span>
           <span class="badge" data-badge>🍔 Foodie</span>
           <span class="badge" data-badge>📸 Photographer</span>
         </div>
       </div>
     </div>
 
+    <!-- Brief Bio Intro (from about.md) -->
     <section
       id="about"
-      class="about-content app-prose mb-28 max-w-app prose-img:border-0"
+      class="about-intro app-prose mb-8 max-w-app prose-img:border-0"
     >
       <slot />
     </section>
+
+    <!-- Visual Bento Grid -->
+    <div class="bento-grid mb-24" data-bento-grid>
+      <!-- Bento Card 1: Featured Builds & Vibe-Coded Projects (Full Width) -->
+      <article class="bento-card bento-span-full" data-bento-card>
+        <header class="bento-header">
+          <div class="bento-title-group">
+            <span class="bento-eyebrow">Shipped & Vibe-Coded</span>
+            <h2 class="bento-heading">Featured Builds</h2>
+          </div>
+          <a
+            href="https://hossainkhan.com/#latest-projects"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bento-header-link"
+          >
+            Full portfolio <span class="sr-only">on hossainkhan.com</span> ↗
+          </a>
+        </header>
+
+        <div class="projects-grid">
+          {
+            featuredProjects.map(project => (
+              <article class="project-mini-card">
+                <header class="project-mini-header">
+                  <h3 class="project-mini-title">
+                    <span aria-hidden="true">{project.emoji}</span>{" "}
+                    {project.name}
+                  </h3>
+                  <span class="project-mini-tag">{project.tag}</span>
+                </header>
+                <p class="project-mini-summary">{project.summary}</p>
+                <footer class="project-mini-footer">
+                  <ul class="project-mini-stack" aria-label="Technologies">
+                    {project.stack.map(tech => (
+                      <li>{tech}</li>
+                    ))}
+                  </ul>
+                  <div class="project-mini-links">
+                    <a
+                      href={project.primaryUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {project.primaryLabel}
+                      <span class="sr-only"> for {project.name}</span> ↗
+                    </a>
+                    <a
+                      href={project.secondaryUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {project.secondaryLabel}
+                      <span class="sr-only"> for {project.name}</span> ↗
+                    </a>
+                  </div>
+                </footer>
+              </article>
+            ))
+          }
+        </div>
+      </article>
+
+      <!-- Bento Card 2: Core Stack & AI Toolkit -->
+      <article class="bento-card" data-bento-card>
+        <header class="bento-header">
+          <div class="bento-title-group">
+            <span class="bento-eyebrow">Daily Drivers</span>
+            <h2 class="bento-heading">Stack & AI Toolkit</h2>
+          </div>
+        </header>
+
+        <div class="stack-groups">
+          <div>
+            <h3 class="stack-group-label">Android & Architecture</h3>
+            <ul class="pill-list">
+              {
+                androidStack.map(item => (
+                  <li class="pill pill-accent">{item}</li>
+                ))
+              }
+            </ul>
+          </div>
+          <div>
+            <h3 class="stack-group-label">AI Workflow & Edge</h3>
+            <ul class="pill-list">
+              {aiToolkit.map(item => <li class="pill">{item}</li>)}
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- Bento Card 3: Beyond Code / Off the Clock -->
+      <article class="bento-card" data-bento-card>
+        <header class="bento-header">
+          <div class="bento-title-group">
+            <span class="bento-eyebrow">Off the Clock</span>
+            <h2 class="bento-heading">Beyond the Terminal</h2>
+          </div>
+        </header>
+
+        <dl class="facts-list">
+          <div class="fact-row">
+            <dt>🎧 Coding Fuel</dt>
+            <dd>
+              Ambient sessions — <em>Enigma</em>, <em>Eguana</em>,{" "}
+              <em>Yanni</em> &amp;{" "}
+              <a
+                href="https://www.youtube.com/watch?v=as9BCiK16d0"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Max Payne themes
+              </a>
+            </dd>
+          </div>
+          <div class="fact-row">
+            <dt>📸 Through the Lens</dt>
+            <dd>
+              Capturing moments at{" "}
+              <a
+                href="https://vision.hossainkhan.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                vision.hossainkhan.com
+              </a>{" "}
+              (with a live{" "}
+              <a
+                href="https://play.google.com/store/apps/details?id=com.hossainkhan.vision"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Muzei wallpaper app
+              </a>
+              )
+            </dd>
+          </div>
+          <div class="fact-row">
+            <dt>🗺️ AFK Mode</dt>
+            <dd>
+              Scenic road trips, world travel, video games, and hunting down
+              great food spots.
+            </dd>
+          </div>
+          <div class="fact-row">
+            <dt>🎓 Roots</dt>
+            <dd>BSc in Computer Science, University of Windsor</dd>
+          </div>
+        </dl>
+      </article>
+
+      <!-- Bento Card 4: Compact Connect Strip (Full Width) -->
+      <article class="bento-card bento-span-full bento-connect" data-bento-card>
+        <div class="connect-copy">
+          <h2 class="connect-heading">Let's Connect</h2>
+          <p class="connect-quote">
+            "15+ years of crafting code, one feature at a time."
+          </p>
+        </div>
+        <footer class="connect-actions">
+          <a
+            href="https://hossainkhan.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="connect-btn connect-btn-primary"
+          >
+            Portfolio ↗
+          </a>
+          <a
+            href="https://github.com/hossain-khan"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="connect-btn"
+          >
+            GitHub ↗
+          </a>
+          <a href="mailto:blog@hossain.dev" class="connect-btn">
+            blog@hossain.dev
+          </a>
+        </footer>
+      </article>
+    </div>
   </main>
   <Footer />
 </Layout>
@@ -55,7 +319,6 @@ const { frontmatter } = Astro.props;
   let aboutCleanup: AbortController | null = null;
 
   document.addEventListener("astro:page-load", () => {
-    // Cleanup previous listeners
     if (aboutCleanup) aboutCleanup.abort();
     aboutCleanup = new AbortController();
     const { signal } = aboutCleanup;
@@ -90,18 +353,20 @@ const { frontmatter } = Astro.props;
       );
     }
 
-    // Badge hover ripple
-    const badges = document.querySelectorAll("[data-badge]");
-    badges.forEach(badge => {
-      badge.addEventListener(
+    // Badge & Bento Card hover glow
+    const interactiveEls = document.querySelectorAll(
+      "[data-badge], [data-bento-card]"
+    );
+    interactiveEls.forEach(el => {
+      el.addEventListener(
         "mousemove",
         e => {
           requestAnimationFrame(() => {
-            const rect = (badge as HTMLElement).getBoundingClientRect();
+            const rect = (el as HTMLElement).getBoundingClientRect();
             const x = (e as MouseEvent).clientX - rect.left;
             const y = (e as MouseEvent).clientY - rect.top;
-            (badge as HTMLElement).style.setProperty("--bx", `${x}px`);
-            (badge as HTMLElement).style.setProperty("--by", `${y}px`);
+            (el as HTMLElement).style.setProperty("--bx", `${x}px`);
+            (el as HTMLElement).style.setProperty("--by", `${y}px`);
           });
         },
         { signal }
@@ -115,8 +380,8 @@ const { frontmatter } = Astro.props;
     position: relative;
     overflow: hidden;
     border-radius: 1.5rem;
-    padding: 3rem 2rem;
-    margin-bottom: 3rem;
+    padding: 2.5rem 1.75rem;
+    margin-bottom: 2rem;
     background: color-mix(
       in srgb,
       var(--color-foreground) 3%,
@@ -229,14 +494,14 @@ const { frontmatter } = Astro.props;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 1.25rem;
+    gap: 1rem;
   }
 
   /* Avatar */
   .avatar-ring {
     position: relative;
-    width: 110px;
-    height: 110px;
+    width: 96px;
+    height: 96px;
     border-radius: 50%;
     padding: 3px;
     background: conic-gradient(
@@ -296,25 +561,25 @@ const { frontmatter } = Astro.props;
   }
 
   .avatar-emoji {
-    font-size: 2.8rem;
+    font-size: 2.5rem;
     line-height: 1;
   }
 
   .hero-title {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.15rem;
   }
 
   .greeting {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 400;
     color: var(--color-foreground);
     opacity: 0.7;
   }
 
   .name-glow {
-    font-size: 2rem;
+    font-size: clamp(1.85rem, 1.35rem + 2vw, 2.5rem);
     font-weight: 800;
     background: linear-gradient(
       135deg,
@@ -329,10 +594,21 @@ const { frontmatter } = Astro.props;
     );
   }
 
-  @media (min-width: 640px) {
-    .name-glow {
-      font-size: 2.5rem;
-    }
+  .hero-meta {
+    font-size: 0.9rem;
+    color: var(--color-foreground);
+    opacity: 0.8;
+    margin: -0.25rem 0 0;
+  }
+
+  .hero-meta strong {
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  .meta-dot {
+    margin: 0 0.35rem;
+    opacity: 0.5;
   }
 
   /* Badges with mouse-reactive glow */
@@ -346,9 +622,9 @@ const { frontmatter } = Astro.props;
   .badge {
     position: relative;
     overflow: hidden;
-    padding: 0.45rem 1.1rem;
+    padding: 0.4rem 1rem;
     border-radius: 999px;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 600;
     letter-spacing: 0.02em;
     color: var(--color-foreground);
@@ -399,25 +675,414 @@ const { frontmatter } = Astro.props;
     opacity: 1;
   }
 
-  /* Content styling */
-  .about-content {
-    position: relative;
+  /* Intro prose */
+  .about-intro :global(p) {
+    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+    line-height: 1.75;
+    margin: 0;
+    opacity: 0.9;
   }
 
-  .about-content :global(h2) {
-    position: relative;
-    display: inline-block;
+  /* ── Bento Grid ── */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 
-  .about-content :global(h2::after) {
+  @media (min-width: 768px) {
+    .bento-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .bento-span-full {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .bento-card {
+    container-type: inline-size;
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    background: color-mix(
+      in srgb,
+      var(--color-foreground) 2.5%,
+      var(--color-background)
+    );
+    border: 1px solid color-mix(in srgb, var(--color-border) 28%, transparent);
+    transition:
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .bento-card::before {
     content: "";
     position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, var(--color-accent), transparent);
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-accent) 14%, transparent),
+      transparent 70%
+    );
+    filter: blur(28px);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    transform: translate(
+      calc(var(--bx, 50%) - 130px),
+      calc(var(--by, 50%) - 130px)
+    );
+    z-index: 0;
+  }
+
+  .bento-card:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+    box-shadow: 0 12px 32px -12px
+      color-mix(in srgb, var(--color-accent) 14%, transparent);
+  }
+
+  .bento-card:hover::before {
+    opacity: 1;
+  }
+
+  .bento-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .bento-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.15rem;
+  }
+
+  .bento-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .bento-eyebrow {
+    font-family: var(--font-cartograph);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+    opacity: 0.85;
+  }
+
+  .bento-heading {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--color-foreground);
+  }
+
+  .bento-header-link {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
+  }
+
+  .bento-header-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* Projects Mini Grid inside Bento Card 1 (container-query driven) */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+
+  @container (min-width: 560px) {
+    .projects-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .project-mini-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.65rem;
+    padding: 1.05rem;
+    border-radius: 0.9rem;
+    background: color-mix(in srgb, var(--color-background) 70%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-border) 22%, transparent);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .project-mini-card:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 40%, transparent);
+    transform: translateY(-2px);
+  }
+
+  .project-mini-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .project-mini-title {
+    font-size: 0.98rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--color-foreground);
+  }
+
+  .project-mini-tag {
+    font-family: var(--font-cartograph);
+    font-size: 0.68rem;
+    padding: 0.15rem 0.5rem;
     border-radius: 999px;
-    box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent) 30%, transparent);
+    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    color: var(--color-accent);
+    white-space: nowrap;
+  }
+
+  .project-mini-summary {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0;
+    opacity: 0.78;
+  }
+
+  .project-mini-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-top: 0.45rem;
+    border-top: 1px dashed
+      color-mix(in srgb, var(--color-border) 25%, transparent);
+  }
+
+  .project-mini-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .project-mini-stack li {
+    font-family: var(--font-cartograph);
+    font-size: 0.68rem;
+    opacity: 0.6;
+  }
+
+  .project-mini-stack li:not(:last-child)::after {
+    content: "·";
+    margin-left: 0.35rem;
+  }
+
+  .project-mini-links {
+    display: flex;
+    gap: 0.65rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .project-mini-links a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .project-mini-links a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Stack & AI Toolkit Card */
+  .stack-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .stack-group-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.6;
+    margin: 0 0 0.5rem;
+  }
+
+  .pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .pill {
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0.3rem 0.65rem;
+    border-radius: 0.5rem;
+    background: color-mix(
+      in srgb,
+      var(--color-foreground) 5%,
+      var(--color-background)
+    );
+    border: 1px solid color-mix(in srgb, var(--color-border) 25%, transparent);
+  }
+
+  .pill-accent {
+    background: color-mix(
+      in srgb,
+      var(--color-accent) 10%,
+      var(--color-background)
+    );
+    border-color: color-mix(in srgb, var(--color-accent) 28%, transparent);
+    color: var(--color-foreground);
+  }
+
+  /* Beyond the Terminal Facts List */
+  .facts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+  }
+
+  .fact-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px dashed
+      color-mix(in srgb, var(--color-border) 22%, transparent);
+  }
+
+  .fact-row:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .fact-row dt {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-foreground);
+  }
+
+  .fact-row dd {
+    font-size: 0.84rem;
+    line-height: 1.45;
+    margin: 0;
+    opacity: 0.8;
+  }
+
+  .fact-row a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-underline-offset: 3px;
+  }
+
+  /* Connect Strip */
+  .bento-connect {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  @container (min-width: 560px) {
+    .bento-connect {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  .connect-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .connect-heading {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .connect-quote {
+    font-family: var(--font-lora);
+    font-style: italic;
+    font-size: 0.9rem;
+    margin: 0;
+    opacity: 0.75;
+  }
+
+  .connect-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .connect-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.95rem;
+    border-radius: 0.65rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-foreground);
+    background: color-mix(
+      in srgb,
+      var(--color-foreground) 5%,
+      var(--color-background)
+    );
+    border: 1px solid color-mix(in srgb, var(--color-border) 30%, transparent);
+    transition:
+      border-color 0.2s ease,
+      background 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .connect-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: translateY(-1px);
+  }
+
+  .connect-btn-primary {
+    background: color-mix(
+      in srgb,
+      var(--color-accent) 14%,
+      var(--color-background)
+    );
+    border-color: color-mix(in srgb, var(--color-accent) 40%, transparent);
+    color: var(--color-accent);
+  }
+
+  .connect-btn-primary:hover {
+    background: color-mix(
+      in srgb,
+      var(--color-accent) 22%,
+      var(--color-background)
+    );
   }
 </style>
