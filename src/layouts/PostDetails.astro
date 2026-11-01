@@ -36,7 +36,8 @@ const {
 } = post.data;
 
 const { Content, remarkPluginFrontmatter } = await render(post);
-const readingTime = (remarkPluginFrontmatter?.readingTime as string | undefined) ?? "";
+const readingTime =
+  (remarkPluginFrontmatter?.readingTime as string | undefined) ?? "";
 
 let ogImageUrl: string | undefined;
 
@@ -81,7 +82,9 @@ const currentPostIndex = allPosts.findIndex(a => a.id === post.id);
 
 const prevPost = currentPostIndex !== 0 ? allPosts[currentPostIndex - 1] : null;
 const nextPost =
-  currentPostIndex < allPosts.length - 1 ? allPosts[currentPostIndex + 1] : null;
+  currentPostIndex < allPosts.length - 1
+    ? allPosts[currentPostIndex + 1]
+    : null;
 ---
 
 <Layout {...layoutProps}>
@@ -95,7 +98,9 @@ const nextPost =
     <!-- Post header section -->
     <header class="post-header relative mb-10 text-center">
       <div class="post-hero-bg"></div>
-      <div class="relative z-10 rounded-3xl border border-border/20 bg-muted/5 px-6 py-8 backdrop-blur-md sm:px-10 sm:py-12">
+      <div
+        class="relative z-10 rounded-3xl border border-border/20 bg-muted/5 px-6 py-8 backdrop-blur-md sm:px-10 sm:py-12"
+      >
         <!-- Title -->
         <h1
           transition:name={slugifyStr(title)}
@@ -170,25 +175,25 @@ const nextPost =
           </div>
 
           <!-- Reading time chip -->
-          {readingTime && (
-            <div
-              class="inline-flex items-center gap-1.5 rounded-lg border border-border/25 bg-muted/10 px-2.5 py-1 backdrop-blur-sm"
-            >
-              <svg
-                class="size-3.5 text-accent/70"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-              <span class="text-sm opacity-70">{readingTime}</span>
-            </div>
-          )}
+          {
+            readingTime && (
+              <div class="inline-flex items-center gap-1.5 rounded-lg border border-border/25 bg-muted/10 px-2.5 py-1 backdrop-blur-sm">
+                <svg
+                  class="size-3.5 text-accent/70"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span class="text-sm opacity-70">{readingTime}</span>
+              </div>
+            )
+          }
 
           <!--
             TL;DR AI Summary Shortcut Button
@@ -215,7 +220,7 @@ const nextPost =
             >
               <path
                 d="M12 2l2.09 6.26L20 10l-5.91 1.74L12 18l-2.09-6.26L4 10l5.91-1.74L12 2z"
-              />
+              ></path>
             </svg>
             TL;DR AI Summary
           </button>
@@ -227,8 +232,6 @@ const nextPost =
             class="hidden rounded-lg border border-border/25 bg-muted/10 px-2.5 py-1 opacity-70 backdrop-blur-sm transition-all duration-200 hover:border-accent/30 hover:opacity-100 sm:flex [&>svg]:size-3.5"
           />
         </div>
-
-
       </div>
     </header>
 
@@ -240,18 +243,35 @@ const nextPost =
     </article>
 
     <!-- ═══════ Post footer section ═══════ -->
-    <div class="relative mt-12 mb-8 flex items-center justify-center gap-4" aria-hidden="true">
-      <div class="relative h-px flex-1 bg-linear-to-r from-transparent via-border/30 to-accent/20">
-        <div class="absolute inset-0 bg-linear-to-r from-transparent via-accent/40 to-accent/40 blur-[2px]"></div>
+    <div
+      class="relative mt-12 mb-8 flex items-center justify-center gap-4"
+      aria-hidden="true"
+    >
+      <div
+        class="relative h-px flex-1 bg-linear-to-r from-transparent via-border/30 to-accent/20"
+      >
+        <div
+          class="absolute inset-0 bg-linear-to-r from-transparent via-accent/40 to-accent/40 blur-[2px]"
+        >
+        </div>
       </div>
-      
-      <div class="relative z-10 flex items-center gap-2 font-cartograph text-[10px] tracking-widest text-accent/40 uppercase select-none">
-        <span class="h-1.5 w-1.5 rounded-full bg-accent/50 shadow-[0_0_8px_var(--color-accent)]"></span>
+
+      <div
+        class="relative z-10 flex items-center gap-2 font-cartograph text-[10px] tracking-widest text-accent/40 uppercase select-none"
+      >
+        <span
+          class="h-1.5 w-1.5 rounded-full bg-accent/50 shadow-[0_0_8px_var(--color-accent)]"
+        ></span>
         end
       </div>
 
-      <div class="relative h-px flex-1 bg-linear-to-l from-transparent via-border/30 to-accent/20">
-        <div class="absolute inset-0 bg-linear-to-l from-transparent via-accent/40 to-accent/40 blur-[2px]"></div>
+      <div
+        class="relative h-px flex-1 bg-linear-to-l from-transparent via-border/30 to-accent/20"
+      >
+        <div
+          class="absolute inset-0 bg-linear-to-l from-transparent via-accent/40 to-accent/40 blur-[2px]"
+        >
+        </div>
       </div>
     </div>
 
@@ -265,7 +285,10 @@ const nextPost =
       class="mt-6 mb-8 flex flex-col items-center gap-6 sm:flex-row sm:items-start sm:justify-between"
     >
       <!-- Tags (duplicated from header — aria-hidden to avoid double indexing) -->
-      <div class="flex flex-wrap justify-center gap-2 sm:justify-start" aria-hidden="true">
+      <div
+        class="flex flex-wrap justify-center gap-2 sm:justify-start"
+        aria-hidden="true"
+      >
         {
           tags.map((tag: string) => (
             <a
@@ -362,16 +385,22 @@ const nextPost =
   <Footer />
 </Layout>
 
-<script is:inline data-astro-rerun>
+<script>
+  let postCleanup: AbortController | null = null;
+
   /** Create a progress indicator
    *  at the top */
   function createProgressBar() {
-    // Guard: avoid duplicating the bar on View Transitions re-runs
-    if (document.querySelector(".progress-container")) return;
+    const existingBar = document.getElementById("myBar");
+    if (existingBar) {
+      existingBar.style.width = "0%";
+      return;
+    }
 
     const progressContainer = document.createElement("div");
     progressContainer.className =
       "progress-container fixed top-0 z-50 h-1 w-full bg-background";
+    progressContainer.setAttribute("aria-hidden", "true");
 
     const progressBar = document.createElement("div");
     progressBar.className = "progress-bar h-1 w-0 bg-accent";
@@ -380,13 +409,31 @@ const nextPost =
     progressContainer.appendChild(progressBar);
     document.body.appendChild(progressContainer);
   }
-  createProgressBar();
 
   /** Update the progress bar
    *  when user scrolls */
-  function updateScrollProgress() {
+  function updateScrollProgress(signal: AbortSignal) {
     const myBar = document.getElementById("myBar"); // cache ref once
     if (!myBar) return;
+
+    const usesNativeScrollTimeline =
+      CSS.supports("animation-timeline", "scroll()") &&
+      window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+
+    if (usesNativeScrollTimeline) {
+      myBar.style.width = "";
+      return;
+    }
+
+    const syncWidth = () => {
+      const winScroll = document.documentElement.scrollTop;
+      const height =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      myBar.style.width = height > 0 ? (winScroll / height) * 100 + "%" : "0%";
+    };
+
+    syncWidth();
 
     let ticking = false;
     document.addEventListener(
@@ -394,28 +441,24 @@ const nextPost =
       () => {
         if (!ticking) {
           requestAnimationFrame(() => {
-            const winScroll = document.documentElement.scrollTop;
-            const height =
-              document.documentElement.scrollHeight -
-              document.documentElement.clientHeight;
-            myBar.style.width = ((winScroll / height) * 100) + "%";
+            syncWidth();
             ticking = false;
           });
           ticking = true;
         }
       },
-      { passive: true } // lets the browser optimise scroll handling
+      { passive: true, signal } // lets the browser optimise scroll handling
     );
   }
-  updateScrollProgress();
 
   /** Attaches links to headings in the document,
    *  allowing sharing of sections easily */
   function addHeadingLinks() {
     const headings = Array.from(
-      document.querySelectorAll("h2, h3, h4, h5, h6")
+      document.querySelectorAll<HTMLElement>("h2, h3, h4, h5, h6")
     );
     for (const heading of headings) {
+      if (!heading.id || heading.querySelector(".heading-link")) continue;
       heading.classList.add("group");
       const link = document.createElement("a");
       link.className =
@@ -430,13 +473,14 @@ const nextPost =
       heading.appendChild(link);
     }
   }
-  addHeadingLinks();
 
   /** Attaches copy buttons to code blocks in the document,
    * allowing users to copy code easily. */
-  function attachCopyButtons() {
+  function attachCopyButtons(signal: AbortSignal) {
     const copyButtonLabel = "Copy";
-    const codeBlocks = Array.from(document.querySelectorAll("pre"));
+    const codeBlocks = Array.from(
+      document.querySelectorAll<HTMLElement>("pre:not(:has(.copy-code))")
+    );
 
     // Pass 1: read all computed styles before touching the DOM
     // (avoids a forced reflow on every iteration of the loop)
@@ -461,12 +505,16 @@ const nextPost =
       codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
       wrapper.appendChild(codeBlock);
 
-      copyButton.addEventListener("click", async () => {
-        await copyCode(codeBlock, copyButton);
-      });
+      copyButton.addEventListener(
+        "click",
+        async () => {
+          await copyCode(codeBlock, copyButton);
+        },
+        { signal }
+      );
     });
 
-    async function copyCode(block, button) {
+    async function copyCode(block: HTMLElement, button: HTMLButtonElement) {
       const code = block.querySelector("code");
       const text = code?.innerText;
 
@@ -480,58 +528,68 @@ const nextPost =
       }, 700);
     }
   }
-  attachCopyButtons();
 
   /**
    * TL;DR Button Handler
-   * 
+   *
    * Clicking the TL;DR button in the post header scrolls to the AI Assistant
    * panel at the bottom and automatically expands it, providing a seamless
    * one-click experience instead of requiring: scroll + manual expand.
-   * 
+   *
    * Wrapped in a function for re-initialization on view transitions
    * (Astro View Transitions swap the DOM without re-running scripts).
    */
-  function setupTldrButton() {
+  function setupTldrButton(signal: AbortSignal) {
     const tldrButton = document.getElementById("tldr-button");
     if (tldrButton) {
-      tldrButton.addEventListener("click", () => {
-        const aiAssistant = document.getElementById("ai-post-assistant");
-        const aiToggle = document.getElementById("ai-toggle");
-        
-        if (!aiAssistant || !aiToggle) return;
+      tldrButton.addEventListener(
+        "click",
+        () => {
+          const aiAssistant = document.getElementById("ai-post-assistant");
+          const aiToggle = document.getElementById("ai-toggle");
 
-        // Scroll smoothly to the AI Assistant section (block: start = align to top)
-        aiAssistant.scrollIntoView({ behavior: "smooth", block: "start" });
-        
-        // Auto-expand the panel if it's currently collapsed
-        const isExpanded = aiToggle.getAttribute("aria-expanded") === "true";
-        if (!isExpanded) {
-          // Delay click by 100ms to let the smooth scroll animation begin first,
-          // creating a fluid scrolling experience before the expansion animation
-          setTimeout(() => {
-            aiToggle.click();
-          }, 100);
-        }
-      });
+          if (!aiAssistant || !aiToggle) return;
+
+          // Scroll smoothly to the AI Assistant section (block: start = align to top)
+          aiAssistant.scrollIntoView({ behavior: "smooth", block: "start" });
+
+          // Auto-expand the panel if it's currently collapsed
+          const isExpanded = aiToggle.getAttribute("aria-expanded") === "true";
+          if (!isExpanded) {
+            // Delay click by 100ms to let the smooth scroll animation begin first,
+            // creating a fluid scrolling experience before the expansion animation
+            setTimeout(() => {
+              aiToggle.click();
+            }, 100);
+          }
+        },
+        { signal }
+      );
     }
   }
 
-  // Initialize the TL;DR button handler on initial page load
-  setupTldrButton();
+  document.addEventListener("astro:page-load", () => {
+    if (postCleanup) postCleanup.abort();
 
-  /**
-   * Re-initialize handlers after View Transitions
-   * 
-   * When navigating between posts with View Transitions enabled, the DOM
-   * content is swapped but this script block is not re-executed. We listen
-   * for astro:after-swap to re-attach event listeners to the new DOM.
-   */
+    // Only initialize post behaviors when on a post detail page
+    if (!document.getElementById("article")) {
+      document.querySelector(".progress-container")?.remove();
+      return;
+    }
+
+    postCleanup = new AbortController();
+    const { signal } = postCleanup;
+
+    createProgressBar();
+    updateScrollProgress(signal);
+    addHeadingLinks();
+    attachCopyButtons(signal);
+    setupTldrButton(signal);
+  });
+
   document.addEventListener("astro:after-swap", () => {
     // Scroll to top of page after navigation
     window.scrollTo({ left: 0, top: 0, behavior: "instant" });
-    // Re-attach the TL;DR button handler to newly-swapped DOM elements
-    setupTldrButton();
   });
 </script>
 
@@ -582,7 +640,11 @@ const nextPost =
      blur effect via filter:blur(16px), avoiding a second compositing layer */
     background: color-mix(in srgb, var(--muted) 5%, transparent);
     position: relative;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+    transition:
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s ease,
+      border-color 0.3s ease,
+      background-color 0.3s ease;
   }
 
   .post-nav-link:hover {
@@ -629,6 +691,26 @@ const nextPost =
   @media (pointer: fine) {
     .post-nav-bg {
       will-change: opacity;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+      @keyframes grow-progress {
+        from {
+          transform: scaleX(0);
+        }
+        to {
+          transform: scaleX(1);
+        }
+      }
+
+      :global(#myBar) {
+        width: 100%;
+        transform-origin: 0 50%;
+        animation: grow-progress auto linear;
+        animation-timeline: scroll();
+      }
     }
   }
 </style>

@@ -4,7 +4,10 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
-- **Oct 31, 2026** - `<pending>`: feat(about): overhaul About page with brief bio and visual bento grid
+- **Oct 31, 2026** - `<pending>`: fix(perf): prevent scroll and astro:after-swap event listener leaks in PostDetails.astro
+  > *Converted the inline rerun script in `PostDetails.astro` to a module script managed by `AbortController` on `astro:page-load`, added CSS `animation-timeline: scroll()` with a JS scroll fallback, and reset/cleaned up the reading progress bar across View Transitions.*
+
+- **Oct 31, 2026** - `aeecd6f`: feat(about): overhaul About page with brief bio and visual bento grid
   > *Replaced generic bullet lists on the About page with a concise 2-sentence bio and an interactive Bento Grid showcasing Featured Builds (CodeMateX, Compose Highlight, TRMNL, Snippet), Stack & AI Toolkit, Beyond the Terminal fun facts, and a quick-connect bar.*
 
 - **Oct 18, 2026** - `<pending>`: chore: update all dependencies to latest stable
