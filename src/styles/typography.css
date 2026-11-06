@@ -11,6 +11,7 @@
     h4,
     th {
       @apply mb-3 leading-tight text-foreground;
+      text-wrap: balance;
     }
 
     h1 {
@@ -37,6 +38,12 @@
     table,
     code {
       @apply leading-relaxed text-foreground;
+    }
+
+    p,
+    blockquote,
+    li {
+      text-wrap: pretty;
     }
 
     a {

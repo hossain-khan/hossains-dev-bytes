@@ -78,6 +78,19 @@ blockquote i {
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+  p,
+  blockquote,
+  li {
+    text-wrap: pretty;
+  }
 }
 
 @utility max-w-app {
