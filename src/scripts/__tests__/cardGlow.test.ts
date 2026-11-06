@@ -98,9 +98,22 @@ describe("cardGlow cursor tracking", () => {
 
     flushRaf();
 
-    // Should reflect the coordinates of the event that triggered the scheduled frame
-    expect(card.style.getPropertyValue("--mouse-x")).toBe("10px");
-    expect(card.style.getPropertyValue("--mouse-y")).toBe("10px");
+    // Should reflect the latest coordinates from the most recent mousemove event
+    expect(card.style.getPropertyValue("--mouse-x")).toBe("30px");
+    expect(card.style.getPropertyValue("--mouse-y")).toBe("30px");
+  });
+
+  it("cancels pending animation frame on abort/cleanup", () => {
+    const cancelSpy = vi.spyOn(window, "cancelAnimationFrame");
+    initCardGlow();
+
+    card.dispatchEvent(
+      new MouseEvent("mousemove", { clientX: 60, clientY: 110 })
+    );
+    expect(rafCallbacks.length).toBe(1);
+
+    cleanupCardGlow();
+    expect(cancelSpy).toHaveBeenCalled();
   });
 
   it("cancels previous listeners on re-initialization (View Transitions test)", () => {

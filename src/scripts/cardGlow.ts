@@ -44,18 +44,32 @@ export function initCardGlow(): void {
 
   cards.forEach(card => {
     let ticking = false;
+    let latestX = 0;
+    let latestY = 0;
+    let rafId: number | null = null;
+
+    signal.addEventListener("abort", () => {
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    });
 
     card.addEventListener(
       "mousemove",
       (e: MouseEvent) => {
+        latestX = e.clientX;
+        latestY = e.clientY;
+
         if (ticking) return;
         ticking = true;
 
-        window.requestAnimationFrame(() => {
+        rafId = window.requestAnimationFrame(() => {
           const rect = card.getBoundingClientRect();
-          card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
-          card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+          card.style.setProperty("--mouse-x", `${latestX - rect.left}px`);
+          card.style.setProperty("--mouse-y", `${latestY - rect.top}px`);
           ticking = false;
+          rafId = null;
         });
       },
       { signal, passive: true }
