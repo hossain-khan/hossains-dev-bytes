@@ -4,6 +4,9 @@ Below is a summary of all changes and visual improvements implemented in the blo
 
 ### Recent Modifications
 
+- **Nov 06, 2026** - `<pending>`: feat(ui): generalize card glow cursor tracking across all pages with leak prevention
+  > *Extracted and generalized card glow cursor tracking into `src/scripts/cardGlow.ts` with `requestAnimationFrame` frame batching and `AbortController` cleanup on `astro:page-load`, enabling smooth cursor-following radial highlights across `/posts`, `/tags`, `/archives`, and `/galleries` with touch device and reduced-motion guards.*
+
 - **Nov 06, 2026** - `<pending>`: feat(typography): enhance line wrapping with text-wrap balance and pretty
   > *Configured `text-wrap: balance` for all headings (`h1`–`h6`) in base styles and article prose to distribute multi-line titles symmetrically, and applied `text-wrap: pretty` to paragraphs, blockquotes, and list items to eliminate single-word orphans.*
 
